@@ -113,7 +113,7 @@ public final class EventHubManager extends Manager<EventHubManager, EventHubMana
     @Beta(SinceVersion.V2_0_0)
     public EventHubNamespaces namespaces() {
         if (this.namespaces == null) {
-            this.namespaces = new EventHubNamespacesImpl(this);
+            this.namespaces = new EventHubNamespacesImpl(this, this.storageManager);
         }
         return this.namespaces;
     }

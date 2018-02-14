@@ -96,6 +96,11 @@ public interface EventHubNamespace extends
     PagedList<EventHubNamespaceAuthorizationRule> listAuthorizationRules();
 
     /**
+     * @return entry point to manage event hubs in this namespace.
+     */
+    EventHubsInParentContext eventHubs();
+
+    /**
      * The entirety of the event hub namespace definition.
      */
     @Beta(Beta.SinceVersion.V1_7_0)

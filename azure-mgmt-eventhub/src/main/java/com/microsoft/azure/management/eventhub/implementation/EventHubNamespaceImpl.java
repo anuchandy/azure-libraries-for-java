@@ -12,12 +12,14 @@ import com.microsoft.azure.management.eventhub.EventHub;
 import com.microsoft.azure.management.eventhub.EventHubNamespace;
 import com.microsoft.azure.management.eventhub.EventHubNamespaceAuthorizationRule;
 import com.microsoft.azure.management.eventhub.EventHubNamespaceSkuType;
+import com.microsoft.azure.management.eventhub.EventHubsInParentContext;
 import com.microsoft.azure.management.eventhub.Sku;
 import com.microsoft.azure.management.eventhub.SkuName;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.GroupableResourceImpl;
 import com.microsoft.azure.management.resources.fluentcore.dag.FunctionalTaskItem;
 import com.microsoft.azure.management.resources.fluentcore.model.Indexable;
 import com.microsoft.azure.management.resources.fluentcore.utils.Utils;
+import com.microsoft.azure.management.storage.implementation.StorageManager;
 import org.joda.time.DateTime;
 import rx.Observable;
 
@@ -32,8 +34,11 @@ class EventHubNamespaceImpl
         EventHubNamespace.Definition,
         EventHubNamespace.Update {
 
-    protected EventHubNamespaceImpl(String name, EHNamespaceInner innerObject, EventHubManager manager) {
+    private final StorageManager storageManager;
+
+    protected EventHubNamespaceImpl(String name, EHNamespaceInner innerObject, EventHubManager manager, StorageManager storageManager) {
         super(name, innerObject, manager);
+        this.storageManager = storageManager;
     }
 
     @Override
@@ -268,6 +273,11 @@ class EventHubNamespaceImpl
     public PagedList<EventHubNamespaceAuthorizationRule> listAuthorizationRules() {
         return this.manager().namespaceAuthorizationRules()
                 .listByNamespace(this.resourceGroupName(), this.name());
+    }
+
+    @Override
+    public EventHubsInParentContext eventHubs() {
+        return new EventHubsInParentContextImpl(this.manager().inner().eventHubs(), this, this.manager(), this.storageManager);
     }
 
     @Override

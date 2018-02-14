@@ -14,6 +14,7 @@ import com.microsoft.azure.management.eventhub.EncodingCaptureDescription;
 import com.microsoft.azure.management.eventhub.EventHub;
 import com.microsoft.azure.management.eventhub.EventHubAuthorizationRule;
 import com.microsoft.azure.management.eventhub.EventHubConsumerGroup;
+import com.microsoft.azure.management.eventhub.EventHubInParentContext;
 import com.microsoft.azure.management.eventhub.EventHubNamespace;
 import com.microsoft.azure.management.resources.fluentcore.dag.FunctionalTaskItem;
 import com.microsoft.azure.management.resources.fluentcore.model.Creatable;
@@ -48,7 +49,10 @@ class EventHubImpl
         implements
         EventHub,
         EventHub.Definition,
-        EventHub.Update {
+        EventHub.Update,
+        EventHubInParentContext,
+        EventHubInParentContext.Definition,
+        EventHubInParentContext.Update {
 
     private Ancestors.OneAncestor ancestor;
     private CaptureSettings captureSettings;
