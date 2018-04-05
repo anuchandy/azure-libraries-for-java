@@ -19,7 +19,6 @@ import com.microsoft.azure.management.resources.fluentcore.arm.implementation.Ma
 import com.microsoft.azure.management.resources.fluentcore.utils.ProviderRegistrationInterceptor;
 import com.microsoft.azure.serializer.AzureJacksonAdapter;
 import com.microsoft.rest.RestClient;
-import com.microsoft.azure.management.keyvault.Secrets;
 import com.microsoft.azure.management.keyvault.AccessPolicies;
 import com.microsoft.azure.management.keyvault.DeletedVaults;
 import com.microsoft.azure.management.keyvault.Operations;
@@ -30,7 +29,6 @@ import com.microsoft.azure.management.keyvault.Vaults;
  */
 @Beta(SinceVersion.V1_7_0)
 public final class KeyVaultManager extends Manager<KeyVaultManager, KeyVaultManagementClientImpl> {
-    private Secrets secrets;
     private AccessPolicies accessPolicies;
     private DeletedVaults deletedVaults;
     private Operations operations;
@@ -81,16 +79,6 @@ public final class KeyVaultManager extends Manager<KeyVaultManager, KeyVaultMana
         * @return the interface exposing KeyVault management API entry points that work across subscriptions
         */
         KeyVaultManager authenticate(AzureTokenCredentials credentials, String subscriptionId);
-    }
-
-    /**
-     * @return Entry point to manage Secrets.
-     */
-    public Secrets secrets() {
-        if (this.secrets == null) {
-            this.secrets = new SecretsImpl(this);
-        }
-        return this.secrets;
     }
 
     /**

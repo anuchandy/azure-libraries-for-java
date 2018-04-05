@@ -29,11 +29,6 @@ public interface Vaults extends SupportsCreating<Vault.DefinitionStages.Blank>, 
     AccessPolicies accessPolicies();
 
     /**
-     * @return Entry point to manage Vault Secrets.
-     */
-    Secrets secrets();
-
-    /**
     * Checks that the vault name is valid and is not already in use.
     *
     * @param name The vault name.

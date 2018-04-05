@@ -159,19 +159,6 @@ public class KeyVaultManagementClientImpl extends AzureServiceClient {
     }
 
     /**
-     * The SecretsInner object to access its operations.
-     */
-    private SecretsInner secrets;
-
-    /**
-     * Gets the SecretsInner object to access its operations.
-     * @return the SecretsInner object.
-     */
-    public SecretsInner secrets() {
-        return this.secrets;
-    }
-
-    /**
      * Initializes an instance of KeyVaultManagementClient client.
      *
      * @param credentials the management credentials for Azure
@@ -208,7 +195,6 @@ public class KeyVaultManagementClientImpl extends AzureServiceClient {
         this.generateClientRequestId = true;
         this.vaults = new VaultsInner(restClient().retrofit(), this);
         this.operations = new OperationsInner(restClient().retrofit(), this);
-        this.secrets = new SecretsInner(restClient().retrofit(), this);
         this.azureClient = new AzureClient(this);
     }
 

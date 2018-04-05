@@ -23,7 +23,6 @@ import com.microsoft.azure.management.resources.fluentcore.utils.RXMapper;
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.Page;
 import com.microsoft.azure.management.keyvault.AccessPolicies;
-import com.microsoft.azure.management.keyvault.Secrets;
 
 class VaultsImpl extends GroupableResourcesImpl<Vault, VaultImpl, VaultInner, VaultsInner, KeyVaultManager>  implements Vaults {
     protected VaultsImpl(KeyVaultManager manager) {
@@ -33,12 +32,6 @@ class VaultsImpl extends GroupableResourcesImpl<Vault, VaultImpl, VaultInner, Va
     @Override
     public AccessPolicies accessPolicies() {
         AccessPolicies accessor = this.manager().accessPolicies();
-        return accessor;
-    }
-
-    @Override
-    public Secrets secrets() {
-        Secrets accessor = this.manager().secrets();
         return accessor;
     }
 
