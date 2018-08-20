@@ -644,7 +644,7 @@ class VirtualMachineImpl
         this.inner().storageProfile().osDisk().withCreateOption(DiskCreateOptionTypes.FROM_IMAGE);
         this.inner().storageProfile().withImageReference(imageReferenceInner);
         this.inner().osProfile().withWindowsConfiguration(new WindowsConfiguration());
-        // sets defaults for "Stored(User)Image", "VM(Platform | Custom | Gallery)Image"
+        // sets defaults for "Stored(User)Image", "VM(Platform | Custom | ComputeGallery)Image"
         this.inner().osProfile().windowsConfiguration().withProvisionVMAgent(true);
         this.inner().osProfile().windowsConfiguration().withEnableAutomaticUpdates(true);
         return this;

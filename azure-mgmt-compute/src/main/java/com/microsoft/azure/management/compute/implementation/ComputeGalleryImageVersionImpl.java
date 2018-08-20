@@ -7,8 +7,8 @@
 package com.microsoft.azure.management.compute.implementation;
 
 import com.microsoft.azure.management.apigeneration.LangDefinition;
+import com.microsoft.azure.management.compute.ComputeGalleryImageVersion;
 import com.microsoft.azure.management.compute.GalleryArtifactSource;
-import com.microsoft.azure.management.compute.GalleryImageVersion;
 import com.microsoft.azure.management.compute.GalleryImageVersionPublishingProfile;
 import com.microsoft.azure.management.compute.GalleryImageVersionStorageProfile;
 import com.microsoft.azure.management.compute.ManagedArtifact;
@@ -28,18 +28,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The implementation for GalleryImageVersion and its create and update interfaces.
+ * The implementation for ComputeGalleryImageVersion and its create and update interfaces.
  */
 @LangDefinition
-class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion, GalleryImageVersionInner, GalleryImageVersionImpl>
-        implements GalleryImageVersion, GalleryImageVersion.Definition, GalleryImageVersion.Update {
+class ComputeGalleryImageVersionImpl extends CreatableUpdatableImpl<ComputeGalleryImageVersion, GalleryImageVersionInner, ComputeGalleryImageVersionImpl>
+        implements ComputeGalleryImageVersion, ComputeGalleryImageVersion.Definition, ComputeGalleryImageVersion.Update {
     private final ComputeManager manager;
     private String resourceGroupName;
     private String galleryName;
     private String galleryImageName;
     private String galleryImageVersionName;
 
-    GalleryImageVersionImpl(String name, ComputeManager manager) {
+    ComputeGalleryImageVersionImpl(String name, ComputeManager manager) {
         super(name, new GalleryImageVersionInner());
         this.manager = manager;
         // Set resource name
@@ -47,14 +47,14 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
         //
     }
 
-    GalleryImageVersionImpl(GalleryImageVersionInner inner, ComputeManager manager) {
+    ComputeGalleryImageVersionImpl(GalleryImageVersionInner inner, ComputeManager manager) {
         super(inner.name(), inner);
         this.manager = manager;
         // Set resource name
         this.galleryImageVersionName = inner.name();
         // resource ancestor names
         this.resourceGroupName = getValueFromIdByName(inner.id(), "resourceGroups");
-        this.galleryName = getValueFromIdByName(inner.id(), "galleries");
+        this.galleryName = getValueFromIdByName(inner.id(), "computeGalleries");
         this.galleryImageName = getValueFromIdByName(inner.id(), "images");
         this.galleryImageVersionName = getValueFromIdByName(inner.id(), "versions");
         //
@@ -66,14 +66,14 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public Observable<GalleryImageVersion> createResourceAsync() {
+    public Observable<ComputeGalleryImageVersion> createResourceAsync() {
         GalleryImageVersionsInner client = this.manager().inner().galleryImageVersions();
         return client.createOrUpdateAsync(this.resourceGroupName, this.galleryName, this.galleryImageName, this.galleryImageVersionName, this.inner())
             .map(innerToFluentMap(this));
     }
 
     @Override
-    public Observable<GalleryImageVersion> updateResourceAsync() {
+    public Observable<ComputeGalleryImageVersion> updateResourceAsync() {
         GalleryImageVersionsInner client = this.manager().inner().galleryImageVersions();
         return client.createOrUpdateAsync(this.resourceGroupName, this.galleryName, this.galleryImageName, this.galleryImageVersionName, this.inner())
             .map(innerToFluentMap(this));
@@ -174,7 +174,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withExistingImage(String resourceGroupName, String galleryName, String galleryImageName) {
+    public ComputeGalleryImageVersionImpl withExistingImage(String resourceGroupName, String galleryName, String galleryImageName) {
         this.resourceGroupName = resourceGroupName;
         this.galleryName = galleryName;
         this.galleryImageName = galleryImageName;
@@ -182,7 +182,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withLocation(String location) {
+    public ComputeGalleryImageVersionImpl withLocation(String location) {
         this.inner().withLocation(location);
         return this;
     }
@@ -194,7 +194,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withSourceCustomImage(String customImageId) {
+    public ComputeGalleryImageVersionImpl withSourceCustomImage(String customImageId) {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -206,12 +206,12 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withSourceCustomImage(VirtualMachineCustomImage customImage) {
+    public ComputeGalleryImageVersionImpl withSourceCustomImage(VirtualMachineCustomImage customImage) {
         return this.withSourceCustomImage(customImage.id());
     }
 
     @Override
-    public GalleryImageVersionImpl withAvailableInRegion(Region region) {
+    public ComputeGalleryImageVersionImpl withAvailableInRegion(Region region) {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -232,7 +232,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
             this.inner().publishingProfile().regions().add(newRegionName);
         }
         //
-        // Gallery image version publishing profile regions list must contain the location of image version.
+        // ComputeGallery image version publishing profile regions list must contain the location of image version.
         //
         found = false;
         String locationTrimmed = this.location().replaceAll("\\s", "");
@@ -251,7 +251,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withAvailableInRegions(List<Region> regions) {
+    public ComputeGalleryImageVersionImpl withAvailableInRegions(List<Region> regions) {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -260,7 +260,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
             this.inner().publishingProfile().regions().add(region.toString());
         }
         //
-        // Gallery image version publishing profile regions list must contain the location of image version.
+        // ComputeGallery image version publishing profile regions list must contain the location of image version.
         //
         boolean found = false;
         String locationTrimmed = this.location().replaceAll("\\s", "");
@@ -302,7 +302,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withScaleTier(ScaleTier scaleTier) {
+    public ComputeGalleryImageVersionImpl withScaleTier(ScaleTier scaleTier) {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -312,7 +312,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
 
 
     @Override
-    public GalleryImageVersionImpl withEndOfLifeDate(DateTime endOfLifeDate) {
+    public ComputeGalleryImageVersionImpl withEndOfLifeDate(DateTime endOfLifeDate) {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -322,7 +322,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
 
 
     @Override
-    public GalleryImageVersionImpl withExcludedFromLatest() {
+    public ComputeGalleryImageVersionImpl withExcludedFromLatest() {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -331,7 +331,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withoutExcludedFromLatest() {
+    public ComputeGalleryImageVersionImpl withoutExcludedFromLatest() {
         if (this.inner().publishingProfile() == null) {
             this.inner().withPublishingProfile(new GalleryImageVersionPublishingProfile());
         }
@@ -340,7 +340,7 @@ class GalleryImageVersionImpl extends CreatableUpdatableImpl<GalleryImageVersion
     }
 
     @Override
-    public GalleryImageVersionImpl withTags(Map<String, String> tags) {
+    public ComputeGalleryImageVersionImpl withTags(Map<String, String> tags) {
         this.inner().withTags(tags);
         return this;
     }

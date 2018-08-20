@@ -34,7 +34,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
     public void canCreateUpdateListGetDeleteGallery() {
         // Create a gallery
         //
-        Gallery javaGallery = this.computeManager.galleries().define("JavaImageGallery")
+        ComputeGallery javaGallery = this.computeManager.computeGalleries().define("JavaImageGallery")
                 .withRegion(REGION)
                 .withNewResourceGroup(RG_NAME)
                 // Optionals - Start
@@ -58,14 +58,14 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         Assert.assertNotNull(javaGallery.tags());
         Assert.assertEquals(1, javaGallery.tags().size());
         //
-        // List galleries
+        // List computeGalleries
         //
-        PagedList<Gallery> galleries = this.computeManager.galleries().listByResourceGroup(RG_NAME);
+        PagedList<ComputeGallery> galleries = this.computeManager.computeGalleries().listByResourceGroup(RG_NAME);
         Assert.assertEquals(1, galleries.size());
-        galleries = this.computeManager.galleries().list();
+        galleries = this.computeManager.computeGalleries().list();
         Assert.assertTrue(galleries.size() > 0);
         //
-        this.computeManager.galleries().deleteByResourceGroup(javaGallery.resourceGroupName(), javaGallery.name());
+        this.computeManager.computeGalleries().deleteByResourceGroup(javaGallery.resourceGroupName(), javaGallery.name());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
 
         // Create a gallery
         //
-        Gallery javaGallery = this.computeManager.galleries().define(galleryName)
+        ComputeGallery javaGallery = this.computeManager.computeGalleries().define(galleryName)
                 .withRegion(Region.US_WEST_CENTRAL)
                 .withNewResourceGroup(RG_NAME)
                 .withDescription("java's image gallery")
@@ -83,7 +83,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         //
         // Create an image in the gallery
         //
-        GalleryImage galleryImage = this.computeManager.galleryImages().define(galleryImageName)
+        ComputeGalleryImage galleryImage = this.computeManager.computeGalleryImages().define(galleryImageName)
                 .withExistingGallery(javaGallery)
                 .withLocation(REGION)
                 .withIdentifier("JavaSDKTeam", "JDK", "Jdk-9")
@@ -137,20 +137,20 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         //
         // List images in the gallery
         //
-        PagedList<GalleryImage> images = this.computeManager.galleryImages().listByGallery(RG_NAME, galleryName);
+        PagedList<ComputeGalleryImage> images = this.computeManager.computeGalleryImages().listByGallery(RG_NAME, galleryName);
 
         Assert.assertEquals(1, images.size());
         //
         // Get image from gallery
         //
-        galleryImage = this.computeManager.galleryImages().getByGallery(RG_NAME, galleryName, galleryImageName);
+        galleryImage = this.computeManager.computeGalleryImages().getByGallery(RG_NAME, galleryName, galleryImageName);
 
         Assert.assertNotNull(galleryImage);
         Assert.assertNotNull(galleryImage.inner());
         //
         // Delete an image from gallery
         //
-        this.computeManager.galleryImages().deleteByGallery(RG_NAME, galleryName, galleryImageName);
+        this.computeManager.computeGalleryImages().deleteByGallery(RG_NAME, galleryName, galleryImageName);
     }
 
     @Test
@@ -161,7 +161,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         //
         final String galleryName = generateRandomResourceName("jsim", 15); // "jsim94f154754";
 
-        Gallery gallery = this.computeManager.galleries().define(galleryName)
+        ComputeGallery gallery = this.computeManager.computeGalleries().define(galleryName)
                 .withRegion(Region.US_WEST_CENTRAL)
                 .withNewResourceGroup(RG_NAME)
                 .withDescription("java's image gallery")
@@ -171,7 +171,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         //
         final String galleryImageName = "SampleImages";
 
-        GalleryImage galleryImage = this.computeManager.galleryImages().define(galleryImageName)
+        ComputeGalleryImage galleryImage = this.computeManager.computeGalleryImages().define(galleryImageName)
                 .withExistingGallery(gallery)
                 .withLocation(REGION)
                 .withIdentifier("JavaSDKTeam", "JDK", "Jdk-9")
@@ -188,7 +188,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
 
         final String versionName = "0.0.4";
 
-        GalleryImageVersion imageVersion = this.computeManager.galleryImageVersions().define(versionName)
+        ComputeGalleryImageVersion imageVersion = this.computeManager.computeGalleryImageVersions().define(versionName)
                 .withExistingImage(RG_NAME, gallery.name(), galleryImage.name())
                 .withLocation(REGION.toString())
                 .withSourceCustomImage(customImage)
@@ -220,7 +220,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         //
         // List image versions
         //
-        PagedList<GalleryImageVersion> versions = galleryImage.listVersions();
+        PagedList<ComputeGalleryImageVersion> versions = galleryImage.listVersions();
 
         Assert.assertNotNull(versions);
         Assert.assertTrue(versions.size() > 0);
@@ -228,7 +228,7 @@ public class SharedGalleryImageTests extends ComputeManagementTest {
         //
         // Delete the image version
         //
-        this.computeManager.galleryImageVersions().deleteByGalleryImage(RG_NAME, galleryName, galleryImageName, versionName);
+        this.computeManager.computeGalleryImageVersions().deleteByGalleryImage(RG_NAME, galleryName, galleryImageName, versionName);
     }
 
     private VirtualMachineCustomImage prepareCustomImage(String rgName, Region region, ComputeManager computeManager) {

@@ -11,12 +11,12 @@ import com.microsoft.azure.AzureResponseBuilder;
 import com.microsoft.azure.credentials.AzureTokenCredentials;
 import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.compute.AvailabilitySets;
+import com.microsoft.azure.management.compute.ComputeGalleries;
+import com.microsoft.azure.management.compute.ComputeGalleryImageVersions;
+import com.microsoft.azure.management.compute.ComputeGalleryImages;
 import com.microsoft.azure.management.compute.ComputeSkus;
 import com.microsoft.azure.management.compute.ComputeUsages;
 import com.microsoft.azure.management.compute.Disks;
-import com.microsoft.azure.management.compute.Galleries;
-import com.microsoft.azure.management.compute.GalleryImageVersions;
-import com.microsoft.azure.management.compute.GalleryImages;
 import com.microsoft.azure.management.compute.Snapshots;
 import com.microsoft.azure.management.compute.VirtualMachineCustomImages;
 import com.microsoft.azure.management.compute.VirtualMachineExtensionImages;
@@ -54,9 +54,9 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
     private Disks disks;
     private Snapshots snapshots;
     private ComputeSkus computeSkus;
-    private Galleries galleries;
-    private GalleryImages galleryImages;
-    private GalleryImageVersions galleryImageVersions;
+    private ComputeGalleries computeGalleries;
+    private ComputeGalleryImages computeGalleryImages;
+    private ComputeGalleryImageVersions computeGalleryImageVersions;
 
     /**
      * Get a Configurable instance that can be used to create ComputeManager with optional configuration.
@@ -245,32 +245,32 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
      * @return the compute service gallery management entry point
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    public Galleries galleries() {
-        if (galleries == null) {
-            galleries = new GalleriesImpl(this);
+    public ComputeGalleries computeGalleries() {
+        if (computeGalleries == null) {
+            computeGalleries = new ComputeGalleriesImpl(this);
         }
-        return galleries;
+        return computeGalleries;
     }
 
     /**
      * @return the compute service gallery image management entry point
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    public GalleryImages galleryImages() {
-        if (galleryImages == null) {
-            galleryImages = new GalleryImagesImpl(this);
+    public ComputeGalleryImages computeGalleryImages() {
+        if (computeGalleryImages == null) {
+            computeGalleryImages = new ComputeGalleryImagesImpl(this);
         }
-        return galleryImages;
+        return computeGalleryImages;
     }
 
     /**
      * @return the compute service gallery image version management entry point
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    public GalleryImageVersions galleryImageVersions() {
-        if (galleryImageVersions == null) {
-            galleryImageVersions = new GalleryImageVersionsImpl(this);
+    public ComputeGalleryImageVersions computeGalleryImageVersions() {
+        if (computeGalleryImageVersions == null) {
+            computeGalleryImageVersions = new ComputeGalleryImageVersionsImpl(this);
         }
-        return galleryImageVersions;
+        return computeGalleryImageVersions;
     }
 }

@@ -9,8 +9,8 @@ package com.microsoft.azure.management.compute.implementation;
 import com.microsoft.azure.Page;
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
-import com.microsoft.azure.management.compute.GalleryImageVersion;
-import com.microsoft.azure.management.compute.GalleryImageVersions;
+import com.microsoft.azure.management.compute.ComputeGalleryImageVersion;
+import com.microsoft.azure.management.compute.ComputeGalleryImageVersions;
 import com.microsoft.azure.management.resources.fluentcore.model.implementation.WrapperImpl;
 import com.microsoft.azure.management.resources.fluentcore.utils.PagedListConverter;
 import rx.Completable;
@@ -18,13 +18,13 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
- * The implementation for GalleryImageVersions.
+ * The implementation for ComputeGalleryImageVersions.
  */
 @LangDefinition
-class GalleryImageVersionsImpl extends WrapperImpl<GalleryImageVersionsInner> implements GalleryImageVersions {
+class ComputeGalleryImageVersionsImpl extends WrapperImpl<GalleryImageVersionsInner> implements ComputeGalleryImageVersions {
     private final ComputeManager manager;
 
-    GalleryImageVersionsImpl(ComputeManager manager) {
+    ComputeGalleryImageVersionsImpl(ComputeManager manager) {
         super(manager.inner().galleryImageVersions());
         this.manager = manager;
     }
@@ -34,20 +34,20 @@ class GalleryImageVersionsImpl extends WrapperImpl<GalleryImageVersionsInner> im
     }
 
     @Override
-    public GalleryImageVersionImpl define(String name) {
+    public ComputeGalleryImageVersionImpl define(String name) {
         return wrapModel(name);
     }
 
-    private GalleryImageVersionImpl wrapModel(GalleryImageVersionInner inner) {
-        return new GalleryImageVersionImpl(inner, manager());
+    private ComputeGalleryImageVersionImpl wrapModel(GalleryImageVersionInner inner) {
+        return new ComputeGalleryImageVersionImpl(inner, manager());
     }
 
-    private GalleryImageVersionImpl wrapModel(String name) {
-        return new GalleryImageVersionImpl(name, this.manager());
+    private ComputeGalleryImageVersionImpl wrapModel(String name) {
+        return new ComputeGalleryImageVersionImpl(name, this.manager());
     }
 
     @Override
-    public Observable<GalleryImageVersion> listByGalleryImageAsync(final String resourceGroupName, final String galleryName, final String galleryImageName) {
+    public Observable<ComputeGalleryImageVersion> listByGalleryImageAsync(final String resourceGroupName, final String galleryName, final String galleryImageName) {
         GalleryImageVersionsInner client = this.inner();
         return client.listByGalleryImageAsync(resourceGroupName, galleryName, galleryImageName)
         .flatMapIterable(new Func1<Page<GalleryImageVersionInner>, Iterable<GalleryImageVersionInner>>() {
@@ -56,38 +56,38 @@ class GalleryImageVersionsImpl extends WrapperImpl<GalleryImageVersionsInner> im
                 return page.items();
             }
         })
-        .map(new Func1<GalleryImageVersionInner, GalleryImageVersion>() {
+        .map(new Func1<GalleryImageVersionInner, ComputeGalleryImageVersion>() {
             @Override
-            public GalleryImageVersion call(GalleryImageVersionInner inner) {
+            public ComputeGalleryImageVersion call(GalleryImageVersionInner inner) {
                 return wrapModel(inner);
             }
         });
     }
 
     @Override
-    public PagedList<GalleryImageVersion> listByGalleryImage(String resourceGroupName, String galleryName, String galleryImageName) {
-        return (new PagedListConverter<GalleryImageVersionInner, GalleryImageVersion>() {
+    public PagedList<ComputeGalleryImageVersion> listByGalleryImage(String resourceGroupName, String galleryName, String galleryImageName) {
+        return (new PagedListConverter<GalleryImageVersionInner, ComputeGalleryImageVersion>() {
             @Override
-            public Observable<GalleryImageVersion> typeConvertAsync(final GalleryImageVersionInner inner) {
-                return Observable.<GalleryImageVersion>just(wrapModel(inner));
+            public Observable<ComputeGalleryImageVersion> typeConvertAsync(final GalleryImageVersionInner inner) {
+                return Observable.<ComputeGalleryImageVersion>just(wrapModel(inner));
             }
         }).convert(inner().listByGalleryImage(resourceGroupName, galleryName, galleryImageName));
     }
 
     @Override
-    public Observable<GalleryImageVersion> getByGalleryImageAsync(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName) {
+    public Observable<ComputeGalleryImageVersion> getByGalleryImageAsync(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName) {
         GalleryImageVersionsInner client = this.inner();
         return client.getAsync(resourceGroupName, galleryName, galleryImageName, galleryImageVersionName)
-        .map(new Func1<GalleryImageVersionInner, GalleryImageVersion>() {
+        .map(new Func1<GalleryImageVersionInner, ComputeGalleryImageVersion>() {
             @Override
-            public GalleryImageVersion call(GalleryImageVersionInner inner) {
+            public ComputeGalleryImageVersion call(GalleryImageVersionInner inner) {
                 return wrapModel(inner);
             }
        });
     }
 
     @Override
-    public GalleryImageVersion getByGalleryImage(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName) {
+    public ComputeGalleryImageVersion getByGalleryImage(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName) {
         return this.getByGalleryImageAsync(resourceGroupName, galleryName, galleryImageName, galleryImageVersionName).toBlocking().last();
     }
 

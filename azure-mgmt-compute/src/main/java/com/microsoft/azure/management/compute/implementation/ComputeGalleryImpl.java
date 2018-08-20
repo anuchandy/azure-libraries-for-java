@@ -8,31 +8,31 @@ package com.microsoft.azure.management.compute.implementation;
 
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
-import com.microsoft.azure.management.compute.Gallery;
-import com.microsoft.azure.management.compute.GalleryImage;
+import com.microsoft.azure.management.compute.ComputeGallery;
+import com.microsoft.azure.management.compute.ComputeGalleryImage;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.GroupableResourceImpl;
 import rx.Observable;
 
 /**
- * The implementation for Gallery and its create and update interfaces.
+ * The implementation for ComputeGallery and its create and update interfaces.
  */
 @LangDefinition
-class GalleryImpl
-        extends GroupableResourceImpl<Gallery, GalleryInner, GalleryImpl, ComputeManager>
-        implements Gallery, Gallery.Definition, Gallery.Update {
-    GalleryImpl(String name, GalleryInner inner, ComputeManager manager) {
+class ComputeGalleryImpl
+        extends GroupableResourceImpl<ComputeGallery, GalleryInner, ComputeGalleryImpl, ComputeManager>
+        implements ComputeGallery, ComputeGallery.Definition, ComputeGallery.Update {
+    ComputeGalleryImpl(String name, GalleryInner inner, ComputeManager manager) {
         super(name, inner, manager);
     }
 
     @Override
-    public Observable<Gallery> createResourceAsync() {
+    public Observable<ComputeGallery> createResourceAsync() {
         GalleriesInner client = this.manager().inner().galleries();
         return client.createOrUpdateAsync(this.resourceGroupName(), this.name(), this.inner())
             .map(innerToFluentMap(this));
     }
 
     @Override
-    public Observable<Gallery> updateResourceAsync() {
+    public Observable<ComputeGallery> updateResourceAsync() {
         GalleriesInner client = this.manager().inner().galleries();
         return client.createOrUpdateAsync(this.resourceGroupName(), this.name(), this.inner())
             .map(innerToFluentMap(this));
@@ -65,27 +65,27 @@ class GalleryImpl
     }
 
     @Override
-    public Observable<GalleryImage> getImageAsync(String imageName) {
-        return this.manager().galleryImages().getByGalleryAsync(this.resourceGroupName(), this.name(), imageName);
+    public Observable<ComputeGalleryImage> getImageAsync(String imageName) {
+        return this.manager().computeGalleryImages().getByGalleryAsync(this.resourceGroupName(), this.name(), imageName);
     }
 
     @Override
-    public GalleryImage getImage(String imageName) {
-        return this.manager().galleryImages().getByGallery(this.resourceGroupName(), this.name(), imageName);
+    public ComputeGalleryImage getImage(String imageName) {
+        return this.manager().computeGalleryImages().getByGallery(this.resourceGroupName(), this.name(), imageName);
     }
 
     @Override
-    public Observable<GalleryImage> listImagesAsync() {
-        return this.manager().galleryImages().listByGalleryAsync(this.resourceGroupName(), this.name());
+    public Observable<ComputeGalleryImage> listImagesAsync() {
+        return this.manager().computeGalleryImages().listByGalleryAsync(this.resourceGroupName(), this.name());
     }
 
     @Override
-    public PagedList<GalleryImage> listImages() {
-        return this.manager().galleryImages().listByGallery(this.resourceGroupName(), this.name());
+    public PagedList<ComputeGalleryImage> listImages() {
+        return this.manager().computeGalleryImages().listByGallery(this.resourceGroupName(), this.name());
     }
 
     @Override
-    public GalleryImpl withDescription(String description) {
+    public ComputeGalleryImpl withDescription(String description) {
         this.inner().withDescription(description);
         return this;
     }

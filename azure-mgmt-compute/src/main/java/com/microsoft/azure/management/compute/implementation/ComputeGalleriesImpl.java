@@ -8,8 +8,8 @@ package com.microsoft.azure.management.compute.implementation;
 
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
-import com.microsoft.azure.management.compute.Galleries;
-import com.microsoft.azure.management.compute.Gallery;
+import com.microsoft.azure.management.compute.ComputeGalleries;
+import com.microsoft.azure.management.compute.ComputeGallery;
 import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
 import com.microsoft.azure.management.resources.fluentcore.arm.collection.implementation.GroupableResourcesImpl;
 import com.microsoft.azure.management.resources.fluentcore.utils.RXMapper;
@@ -22,11 +22,11 @@ import rx.functions.Func1;
 import com.microsoft.azure.Page;
 
 /**
- * The implementation for Galleries.
+ * The implementation for ComputeGalleries.
  */
 @LangDefinition
-class GalleriesImpl extends GroupableResourcesImpl<Gallery, GalleryImpl, GalleryInner, GalleriesInner, ComputeManager> implements Galleries {
-    protected GalleriesImpl(ComputeManager manager) {
+class ComputeGalleriesImpl extends GroupableResourcesImpl<ComputeGallery, ComputeGalleryImpl, GalleryInner, GalleriesInner, ComputeManager> implements ComputeGalleries {
+    protected ComputeGalleriesImpl(ComputeManager manager) {
         super(manager.inner().galleries(), manager);
     }
 
@@ -75,13 +75,13 @@ class GalleriesImpl extends GroupableResourcesImpl<Gallery, GalleryImpl, Gallery
     }
 
     @Override
-    public PagedList<Gallery> listByResourceGroup(String resourceGroupName) {
+    public PagedList<ComputeGallery> listByResourceGroup(String resourceGroupName) {
         GalleriesInner client = this.inner();
         return this.wrapList(client.listByResourceGroup(resourceGroupName));
     }
 
     @Override
-    public Observable<Gallery> listByResourceGroupAsync(String resourceGroupName) {
+    public Observable<ComputeGallery> listByResourceGroupAsync(String resourceGroupName) {
         GalleriesInner client = this.inner();
         return client.listByResourceGroupAsync(resourceGroupName)
         .flatMapIterable(new Func1<Page<GalleryInner>, Iterable<GalleryInner>>() {
@@ -90,22 +90,22 @@ class GalleriesImpl extends GroupableResourcesImpl<Gallery, GalleryImpl, Gallery
                 return page.items();
             }
         })
-        .map(new Func1<GalleryInner, Gallery>() {
+        .map(new Func1<GalleryInner, ComputeGallery>() {
             @Override
-            public Gallery call(GalleryInner inner) {
+            public ComputeGallery call(GalleryInner inner) {
                 return wrapModel(inner);
             }
         });
     }
 
     @Override
-    public PagedList<Gallery> list() {
+    public PagedList<ComputeGallery> list() {
         GalleriesInner client = this.inner();
         return this.wrapList(client.list());
     }
 
     @Override
-    public Observable<Gallery> listAsync() {
+    public Observable<ComputeGallery> listAsync() {
         GalleriesInner client = this.inner();
         return client.listAsync()
         .flatMapIterable(new Func1<Page<GalleryInner>, Iterable<GalleryInner>>() {
@@ -114,26 +114,26 @@ class GalleriesImpl extends GroupableResourcesImpl<Gallery, GalleryImpl, Gallery
                 return page.items();
             }
         })
-        .map(new Func1<GalleryInner, Gallery>() {
+        .map(new Func1<GalleryInner, ComputeGallery>() {
             @Override
-            public Gallery call(GalleryInner inner) {
+            public ComputeGallery call(GalleryInner inner) {
                 return wrapModel(inner);
             }
         });
     }
 
     @Override
-    public GalleryImpl define(String name) {
+    public ComputeGalleryImpl define(String name) {
         return wrapModel(name);
     }
 
     @Override
-    protected GalleryImpl wrapModel(GalleryInner inner) {
-        return new GalleryImpl(inner.name(), inner, manager());
+    protected ComputeGalleryImpl wrapModel(GalleryInner inner) {
+        return new ComputeGalleryImpl(inner.name(), inner, manager());
     }
 
     @Override
-    protected GalleryImpl wrapModel(String name) {
-        return new GalleryImpl(name, new GalleryInner(), this.manager());
+    protected ComputeGalleryImpl wrapModel(String name) {
+        return new ComputeGalleryImpl(name, new GalleryInner(), this.manager());
     }
 }

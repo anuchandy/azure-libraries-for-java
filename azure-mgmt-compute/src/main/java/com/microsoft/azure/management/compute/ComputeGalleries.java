@@ -18,15 +18,15 @@ import com.microsoft.azure.management.resources.fluentcore.collection.SupportsLi
 import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
 
 /**
- * Entry point to galleries management API in Azure.
+ * Entry point to computeGalleries management API in Azure.
  */
 @Fluent
 @Beta(Beta.SinceVersion.V1_15_0)
-public interface Galleries extends SupportsCreating<Gallery.DefinitionStages.Blank>,
+public interface ComputeGalleries extends SupportsCreating<ComputeGallery.DefinitionStages.Blank>,
         SupportsDeletingByResourceGroup,
         SupportsBatchDeletion,
-        SupportsGettingByResourceGroup<Gallery>,
-        SupportsListingByResourceGroup<Gallery>,
-        SupportsListing<Gallery>,
+        SupportsGettingByResourceGroup<ComputeGallery>,
+        SupportsListingByResourceGroup<ComputeGallery>,
+        SupportsListing<ComputeGallery>,
         HasInner<GalleriesInner> {
 }

@@ -27,12 +27,12 @@ import rx.Observable;
  */
 @Fluent
 @Beta(Beta.SinceVersion.V1_15_0)
-public interface Gallery extends HasInner<GalleryInner>,
+public interface ComputeGallery extends HasInner<GalleryInner>,
         Resource,
         GroupableResource<ComputeManager, GalleryInner>,
         HasResourceGroup,
-        Refreshable<Gallery>,
-        Updatable<Gallery.Update>,
+        Refreshable<ComputeGallery>,
+        Updatable<ComputeGallery.Update>,
         HasManager<ComputeManager> {
     /**
      * @return description for the gallery resource.
@@ -60,7 +60,7 @@ public interface Gallery extends HasInner<GalleryInner>,
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImage> getImageAsync(String imageName);
+    Observable<ComputeGalleryImage> getImageAsync(String imageName);
 
     /**
      * Retrieves information about an image in the gallery.
@@ -70,7 +70,7 @@ public interface Gallery extends HasInner<GalleryInner>,
      * @return the gallery image
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    GalleryImage getImage(String imageName);
+    ComputeGalleryImage getImage(String imageName);
 
     /**
      * List images in the gallery.
@@ -78,7 +78,7 @@ public interface Gallery extends HasInner<GalleryInner>,
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImage> listImagesAsync();
+    Observable<ComputeGalleryImage> listImagesAsync();
 
     /**
      * List images in the gallery.
@@ -86,7 +86,7 @@ public interface Gallery extends HasInner<GalleryInner>,
      * @return the list of images in the gallery
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    PagedList<GalleryImage> listImages();
+    PagedList<ComputeGalleryImage> listImages();
 
     /**
      * The entirety of the gallery definition.
@@ -135,16 +135,16 @@ public interface Gallery extends HasInner<GalleryInner>,
          * for any other optional settings to be specified.
          */
         @Beta(Beta.SinceVersion.V1_15_0)
-        interface WithCreate extends Creatable<Gallery>,
+        interface WithCreate extends Creatable<ComputeGallery>,
                 Resource.DefinitionWithTags<WithCreate>,
                 DefinitionStages.WithDescription {
         }
     }
     /**
-     * The template for a Gallery update operation, containing all the settings that can be modified.
+     * The template for a ComputeGallery update operation, containing all the settings that can be modified.
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    interface Update extends Appliable<Gallery>,
+    interface Update extends Appliable<ComputeGallery>,
             Resource.UpdateWithTags<Update>,
             UpdateStages.WithDescription {
     }

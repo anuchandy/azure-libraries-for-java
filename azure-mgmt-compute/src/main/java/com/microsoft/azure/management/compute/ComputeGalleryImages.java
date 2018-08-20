@@ -20,7 +20,7 @@ import rx.Observable;
  */
 @Fluent
 @Beta(Beta.SinceVersion.V1_15_0)
-public interface GalleryImages extends SupportsCreating<GalleryImage.DefinitionStages.Blank>,
+public interface ComputeGalleryImages extends SupportsCreating<ComputeGalleryImage.DefinitionStages.Blank>,
         HasInner<GalleryImagesInner> {
     /**
      * Retrieves information about an image in a gallery.
@@ -32,7 +32,7 @@ public interface GalleryImages extends SupportsCreating<GalleryImage.DefinitionS
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImage> getByGalleryAsync(String resourceGroupName, String galleryName, String galleryImageName);
+    Observable<ComputeGalleryImage> getByGalleryAsync(String resourceGroupName, String galleryName, String galleryImageName);
 
     /**
      * Retrieves information about an image in a gallery.
@@ -44,7 +44,7 @@ public interface GalleryImages extends SupportsCreating<GalleryImage.DefinitionS
      * @return the gallery image
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    GalleryImage getByGallery(String resourceGroupName, String galleryName, String galleryImageName);
+    ComputeGalleryImage getByGallery(String resourceGroupName, String galleryName, String galleryImageName);
 
     /**
      * List images under a gallery.
@@ -55,7 +55,7 @@ public interface GalleryImages extends SupportsCreating<GalleryImage.DefinitionS
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImage> listByGalleryAsync(final String resourceGroupName, final String galleryName);
+    Observable<ComputeGalleryImage> listByGalleryAsync(final String resourceGroupName, final String galleryName);
 
     /**
      * List images under a gallery.
@@ -66,7 +66,7 @@ public interface GalleryImages extends SupportsCreating<GalleryImage.DefinitionS
      * @return the list of images in the gallery
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    PagedList<GalleryImage> listByGallery(final String resourceGroupName, final String galleryName);
+    PagedList<ComputeGalleryImage> listByGallery(final String resourceGroupName, final String galleryName);
 
     /**
      * Delete a gallery image in a gallery.

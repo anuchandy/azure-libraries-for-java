@@ -8,12 +8,12 @@ package com.microsoft.azure.management.compute.implementation;
 
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
+import com.microsoft.azure.management.compute.ComputeGallery;
+import com.microsoft.azure.management.compute.ComputeGalleryImage;
+import com.microsoft.azure.management.compute.ComputeGalleryImageVersion;
 import com.microsoft.azure.management.compute.Disallowed;
 import com.microsoft.azure.management.compute.DiskSkuTypes;
-import com.microsoft.azure.management.compute.Gallery;
-import com.microsoft.azure.management.compute.GalleryImage;
 import com.microsoft.azure.management.compute.GalleryImageIdentifier;
-import com.microsoft.azure.management.compute.GalleryImageVersion;
 import com.microsoft.azure.management.compute.ImagePurchasePlan;
 import com.microsoft.azure.management.compute.OperatingSystemStateTypes;
 import com.microsoft.azure.management.compute.OperatingSystemTypes;
@@ -33,18 +33,18 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 /**
- * The implementation for GalleryImage and its create and update interfaces.
+ * The implementation for ComputeGalleryImage and its create and update interfaces.
  */
 @LangDefinition
-class GalleryImageImpl
-        extends CreatableUpdatableImpl<GalleryImage, GalleryImageInner, GalleryImageImpl>
-        implements GalleryImage, GalleryImage.Definition, GalleryImage.Update {
+class ComputeGalleryImageImpl
+        extends CreatableUpdatableImpl<ComputeGalleryImage, GalleryImageInner, ComputeGalleryImageImpl>
+        implements ComputeGalleryImage, ComputeGalleryImage.Definition, ComputeGalleryImage.Update {
     private final ComputeManager manager;
     private String resourceGroupName;
     private String galleryName;
     private String galleryImageName;
 
-    GalleryImageImpl(String name, ComputeManager manager) {
+    ComputeGalleryImageImpl(String name, ComputeManager manager) {
         super(name, new GalleryImageInner());
         this.manager = manager;
         // Set resource name
@@ -52,36 +52,36 @@ class GalleryImageImpl
         //
     }
 
-    GalleryImageImpl(GalleryImageInner inner, ComputeManager manager) {
+    ComputeGalleryImageImpl(GalleryImageInner inner, ComputeManager manager) {
         super(inner.name(), inner);
         this.manager = manager;
         // Set resource name
         this.galleryImageName = inner.name();
         // resource ancestor names
         this.resourceGroupName = getValueFromIdByName(inner.id(), "resourceGroups");
-        this.galleryName = getValueFromIdByName(inner.id(), "galleries");
+        this.galleryName = getValueFromIdByName(inner.id(), "computeGalleries");
         this.galleryImageName = getValueFromIdByName(inner.id(), "images");
         //
     }
 
     @Override
-    public Observable<GalleryImageVersion> getVersionAsync(String versionName) {
-        return this.manager().galleryImageVersions().getByGalleryImageAsync(this.resourceGroupName, this.galleryName, this.galleryImageName, versionName);
+    public Observable<ComputeGalleryImageVersion> getVersionAsync(String versionName) {
+        return this.manager().computeGalleryImageVersions().getByGalleryImageAsync(this.resourceGroupName, this.galleryName, this.galleryImageName, versionName);
     }
 
     @Override
-    public GalleryImageVersion getVersion(String versionName) {
-        return this.manager().galleryImageVersions().getByGalleryImage(this.resourceGroupName, this.galleryName, this.galleryImageName, versionName);
+    public ComputeGalleryImageVersion getVersion(String versionName) {
+        return this.manager().computeGalleryImageVersions().getByGalleryImage(this.resourceGroupName, this.galleryName, this.galleryImageName, versionName);
     }
 
     @Override
-    public Observable<GalleryImageVersion> listVersionsAsync() {
-        return this.manager().galleryImageVersions().listByGalleryImageAsync(this.resourceGroupName, this.galleryName, this.galleryImageName);
+    public Observable<ComputeGalleryImageVersion> listVersionsAsync() {
+        return this.manager().computeGalleryImageVersions().listByGalleryImageAsync(this.resourceGroupName, this.galleryName, this.galleryImageName);
     }
 
     @Override
-    public PagedList<GalleryImageVersion> listVersions() {
-        return this.manager().galleryImageVersions().listByGalleryImage(this.resourceGroupName, this.galleryName, this.galleryImageName);
+    public PagedList<ComputeGalleryImageVersion> listVersions() {
+        return this.manager().computeGalleryImageVersions().listByGalleryImage(this.resourceGroupName, this.galleryName, this.galleryImageName);
     }
 
     @Override
@@ -90,14 +90,14 @@ class GalleryImageImpl
     }
 
     @Override
-    public Observable<GalleryImage> createResourceAsync() {
+    public Observable<ComputeGalleryImage> createResourceAsync() {
         GalleryImagesInner client = this.manager().inner().galleryImages();
         return client.createOrUpdateAsync(this.resourceGroupName, this.galleryName, this.galleryImageName, this.inner())
             .map(innerToFluentMap(this));
     }
 
     @Override
-    public Observable<GalleryImage> updateResourceAsync() {
+    public Observable<ComputeGalleryImage> updateResourceAsync() {
         GalleryImagesInner client = this.manager().inner().galleryImages();
         return client.createOrUpdateAsync(this.resourceGroupName, this.galleryName, this.galleryImageName, this.inner())
             .map(innerToFluentMap(this));
@@ -214,39 +214,39 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withExistingGallery(String resourceGroupName, String galleryName) {
+    public ComputeGalleryImageImpl withExistingGallery(String resourceGroupName, String galleryName) {
         this.resourceGroupName = resourceGroupName;
         this.galleryName = galleryName;
         return this;
     }
 
     @Override
-    public GalleryImageImpl withExistingGallery(Gallery gallery) {
+    public ComputeGalleryImageImpl withExistingGallery(ComputeGallery gallery) {
         this.resourceGroupName = gallery.resourceGroupName();
         this.galleryName = gallery.name();
         return this;
     }
 
     @Override
-    public GalleryImageImpl withLocation(String location) {
+    public ComputeGalleryImageImpl withLocation(String location) {
         this.inner().withLocation(location);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withLocation(Region location) {
+    public ComputeGalleryImageImpl withLocation(Region location) {
         this.inner().withLocation(location.toString());
         return this;
     }
 
     @Override
-    public GalleryImageImpl withIdentifier(GalleryImageIdentifier identifier) {
+    public ComputeGalleryImageImpl withIdentifier(GalleryImageIdentifier identifier) {
         this.inner().withIdentifier(identifier);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withIdentifier(String publisher, String offer, String sku) {
+    public ComputeGalleryImageImpl withIdentifier(String publisher, String offer, String sku) {
         this.inner().withIdentifier(new GalleryImageIdentifier()
                 .withPublisher(publisher)
                 .withOffer(offer)
@@ -255,17 +255,17 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withGeneralizedWindows() {
+    public ComputeGalleryImageImpl withGeneralizedWindows() {
         return this.withWindows(OperatingSystemStateTypes.GENERALIZED);
     }
 
     @Override
-    public GalleryImageImpl withGeneralizedLinux() {
+    public ComputeGalleryImageImpl withGeneralizedLinux() {
         return this.withLinux(OperatingSystemStateTypes.GENERALIZED);
     }
 
     @Override
-    public GalleryImageImpl withWindows(OperatingSystemStateTypes osState) {
+    public ComputeGalleryImageImpl withWindows(OperatingSystemStateTypes osState) {
         this.inner()
                 .withOsType(OperatingSystemTypes.WINDOWS)
                 .withOsState(osState);
@@ -273,7 +273,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withLinux(OperatingSystemStateTypes osState) {
+    public ComputeGalleryImageImpl withLinux(OperatingSystemStateTypes osState) {
         this.inner()
                 .withOsType(OperatingSystemTypes.LINUX)
                 .withOsState(osState);
@@ -281,13 +281,13 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withDescription(String description) {
+    public ComputeGalleryImageImpl withDescription(String description) {
         this.inner().withDescription(description);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withUnSupportedDiskType(DiskSkuTypes diskType) {
+    public ComputeGalleryImageImpl withUnSupportedDiskType(DiskSkuTypes diskType) {
         if (this.inner().disallowed() == null) {
             this.inner().withDisallowed(new Disallowed());
         }
@@ -309,7 +309,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withUnSupportedDiskTypes(List<DiskSkuTypes> diskTypes) {
+    public ComputeGalleryImageImpl withUnSupportedDiskTypes(List<DiskSkuTypes> diskTypes) {
         if (this.inner().disallowed() == null) {
             this.inner().withDisallowed(new Disallowed());
         }
@@ -321,7 +321,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withoutUnSupportedDiskType(DiskSkuTypes diskType) {
+    public ComputeGalleryImageImpl withoutUnSupportedDiskType(DiskSkuTypes diskType) {
         if (this.inner().disallowed() != null && this.inner().disallowed().diskTypes() != null) {
             int foundIndex = -1;
             int i = 0;
@@ -341,37 +341,37 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withDisallowed(Disallowed disallowed) {
+    public ComputeGalleryImageImpl withDisallowed(Disallowed disallowed) {
         this.inner().withDisallowed(disallowed);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withEndOfLifeDate(DateTime endOfLifeDate) {
+    public ComputeGalleryImageImpl withEndOfLifeDate(DateTime endOfLifeDate) {
         this.inner().withEndOfLifeDate(endOfLifeDate);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withEula(String eula) {
+    public ComputeGalleryImageImpl withEula(String eula) {
         this.inner().withEula(eula);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withOsState(OperatingSystemStateTypes osState) {
+    public ComputeGalleryImageImpl withOsState(OperatingSystemStateTypes osState) {
         this.inner().withOsState(osState);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withPrivacyStatementUri(String privacyStatementUri) {
+    public ComputeGalleryImageImpl withPrivacyStatementUri(String privacyStatementUri) {
         this.inner().withPrivacyStatementUri(privacyStatementUri);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withPurchasePlan(String name, String publisher, String product) {
+    public ComputeGalleryImageImpl withPurchasePlan(String name, String publisher, String product) {
         return this.withPurchasePlan(new ImagePurchasePlan()
                 .withName(name)
                 .withPublisher(publisher)
@@ -379,13 +379,13 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withPurchasePlan(ImagePurchasePlan purchasePlan) {
+    public ComputeGalleryImageImpl withPurchasePlan(ImagePurchasePlan purchasePlan) {
         this.inner().withPurchasePlan(purchasePlan);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withRecommendedMinimumCPUsCountForVirtualMachine(int minCount) {
+    public ComputeGalleryImageImpl withRecommendedMinimumCPUsCountForVirtualMachine(int minCount) {
         if (this.inner().recommended() == null) {
             this.inner().withRecommended(new RecommendedMachineConfiguration());
         }
@@ -397,7 +397,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withRecommendedMaximumCPUsCountForVirtualMachine(int maxCount) {
+    public ComputeGalleryImageImpl withRecommendedMaximumCPUsCountForVirtualMachine(int maxCount) {
         if (this.inner().recommended() == null) {
             this.inner().withRecommended(new RecommendedMachineConfiguration());
         }
@@ -409,7 +409,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withRecommendedCPUsCountForVirtualMachine(int minCount, int maxCount) {
+    public ComputeGalleryImageImpl withRecommendedCPUsCountForVirtualMachine(int minCount, int maxCount) {
         if (this.inner().recommended() == null) {
             this.inner().withRecommended(new RecommendedMachineConfiguration());
         }
@@ -420,7 +420,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withRecommendedMinimumMemoryForVirtualMachine(int minMB) {
+    public ComputeGalleryImageImpl withRecommendedMinimumMemoryForVirtualMachine(int minMB) {
         if (this.inner().recommended() == null) {
             this.inner().withRecommended(new RecommendedMachineConfiguration());
         }
@@ -432,7 +432,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withRecommendedMaximumMemoryForVirtualMachine(int maxMB) {
+    public ComputeGalleryImageImpl withRecommendedMaximumMemoryForVirtualMachine(int maxMB) {
         if (this.inner().recommended() == null) {
             this.inner().withRecommended(new RecommendedMachineConfiguration());
         }
@@ -444,7 +444,7 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withRecommendedMemoryForVirtualMachine(int minMB, int maxMB) {
+    public ComputeGalleryImageImpl withRecommendedMemoryForVirtualMachine(int minMB, int maxMB) {
         if (this.inner().recommended() == null) {
             this.inner().withRecommended(new RecommendedMachineConfiguration());
         }
@@ -455,19 +455,19 @@ class GalleryImageImpl
     }
 
     @Override
-    public GalleryImageImpl withRecommendedConfigurationForVirtualMachine(RecommendedMachineConfiguration recommendedConfig) {
+    public ComputeGalleryImageImpl withRecommendedConfigurationForVirtualMachine(RecommendedMachineConfiguration recommendedConfig) {
         this.inner().withRecommended(recommendedConfig);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withReleaseNoteUri(String releaseNoteUri) {
+    public ComputeGalleryImageImpl withReleaseNoteUri(String releaseNoteUri) {
         this.inner().withReleaseNoteUri(releaseNoteUri);
         return this;
     }
 
     @Override
-    public GalleryImageImpl withTags(Map<String, String> tags) {
+    public ComputeGalleryImageImpl withTags(Map<String, String> tags) {
         this.inner().withTags(tags);
         return this;
     }

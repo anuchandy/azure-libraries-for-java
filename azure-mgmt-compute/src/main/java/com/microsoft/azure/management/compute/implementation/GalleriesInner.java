@@ -40,7 +40,7 @@ import rx.Observable;
 
 /**
  * An instance of this class provides access to all the operations defined
- * in Galleries.
+ * in ComputeGalleries.
  */
 public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupportsDelete<Void>, InnerSupportsListing<GalleryInner> {
     /** The Retrofit service to perform REST calls. */
@@ -60,43 +60,43 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * The interface defining all the services for Galleries to be
+     * The interface defining all the services for ComputeGalleries to be
      * used by Retrofit to perform actually REST calls.
      */
     interface GalleriesService {
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries createOrUpdate" })
-        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries createOrUpdate" })
+        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/computeGalleries/{galleryName}")
         Observable<Response<ResponseBody>> createOrUpdate(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("galleryName") String galleryName, @Query("api-version") String apiVersion, @Body GalleryInner gallery, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries beginCreateOrUpdate" })
-        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries beginCreateOrUpdate" })
+        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/computeGalleries/{galleryName}")
         Observable<Response<ResponseBody>> beginCreateOrUpdate(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("galleryName") String galleryName, @Query("api-version") String apiVersion, @Body GalleryInner gallery, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries getByResourceGroup" })
-        @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries getByResourceGroup" })
+        @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/computeGalleries/{galleryName}")
         Observable<Response<ResponseBody>> getByResourceGroup(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("galleryName") String galleryName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries delete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}", method = "DELETE", hasBody = true)
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries delete" })
+        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/computeGalleries/{galleryName}", method = "DELETE", hasBody = true)
         Observable<Response<ResponseBody>> delete(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("galleryName") String galleryName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries beginDelete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/galleries/{galleryName}", method = "DELETE", hasBody = true)
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries beginDelete" })
+        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/computeGalleries/{galleryName}", method = "DELETE", hasBody = true)
         Observable<Response<ResponseBody>> beginDelete(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("galleryName") String galleryName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries listByResourceGroup" })
-        @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/galleries")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries listByResourceGroup" })
+        @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/computeGalleries")
         Observable<Response<ResponseBody>> listByResourceGroup(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries list" })
-        @GET("subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries")
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries list" })
+        @GET("subscriptions/{subscriptionId}/providers/Microsoft.Compute/computeGalleries")
         Observable<Response<ResponseBody>> list(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries listByResourceGroupNext" })
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries listByResourceGroupNext" })
         @GET
         Observable<Response<ResponseBody>> listByResourceGroupNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.Galleries listNext" })
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.compute.ComputeGalleries listNext" })
         @GET
         Observable<Response<ResponseBody>> listNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
@@ -507,7 +507,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -526,7 +526,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param resourceGroupName The name of the resource group.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
@@ -546,7 +546,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -563,7 +563,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -584,7 +584,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
     ServiceResponse<PageImpl1<GalleryInner>> * @param resourceGroupName The name of the resource group.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -620,7 +620,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @throws CloudException thrown if the request is rejected by server
@@ -638,7 +638,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -657,7 +657,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GalleryInner&gt; object
@@ -673,7 +673,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GalleryInner&gt; object
@@ -693,7 +693,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;GalleryInner&gt; object wrapped in {@link ServiceResponse} if successful.
@@ -725,7 +725,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -744,7 +744,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
@@ -765,7 +765,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -782,7 +782,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -803,7 +803,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a resource group.
+     * List computeGalleries under a resource group.
      *
     ServiceResponse<PageImpl1<GalleryInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -836,7 +836,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -855,7 +855,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
@@ -876,7 +876,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -893,7 +893,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation
@@ -914,7 +914,7 @@ public class GalleriesInner implements InnerSupportsGet<GalleryInner>, InnerSupp
     }
 
     /**
-     * List galleries under a subscription.
+     * List computeGalleries under a subscription.
      *
     ServiceResponse<PageImpl1<GalleryInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation

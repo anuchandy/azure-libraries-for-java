@@ -24,12 +24,12 @@ import com.microsoft.azure.management.batchai.implementation.BatchAIManager;
 import com.microsoft.azure.management.cdn.CdnProfiles;
 import com.microsoft.azure.management.cdn.implementation.CdnManager;
 import com.microsoft.azure.management.compute.AvailabilitySets;
+import com.microsoft.azure.management.compute.ComputeGalleryImages;
 import com.microsoft.azure.management.compute.ComputeSkus;
 import com.microsoft.azure.management.compute.ComputeUsages;
 import com.microsoft.azure.management.compute.Disks;
-import com.microsoft.azure.management.compute.Galleries;
-import com.microsoft.azure.management.compute.GalleryImageVersions;
-import com.microsoft.azure.management.compute.GalleryImages;
+import com.microsoft.azure.management.compute.ComputeGalleries;
+import com.microsoft.azure.management.compute.ComputeGalleryImageVersions;
 import com.microsoft.azure.management.compute.Snapshots;
 import com.microsoft.azure.management.compute.VirtualMachineCustomImages;
 import com.microsoft.azure.management.compute.VirtualMachineImages;
@@ -928,26 +928,26 @@ public final class Azure {
     }
 
     /**
-     * @return entry point to manage compute galleries.
+     * @return entry point to manage compute computeGalleries.
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    public Galleries galleries() {
-        return this.computeManager.galleries();
+    public ComputeGalleries computeGalleries() {
+        return this.computeManager.computeGalleries();
     }
 
     /**
      * @return entry point to manage compute gallery images.
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    public GalleryImages galleryImages() {
-        return this.computeManager.galleryImages();
+    public ComputeGalleryImages computeGalleryImages() {
+        return this.computeManager.computeGalleryImages();
     }
 
     /**
      * @return entry point to manage compute gallery image versions.
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    public GalleryImageVersions galleryImageVersions() {
-        return this.computeManager.galleryImageVersions();
+    public ComputeGalleryImageVersions computeGalleryImageVersions() {
+        return this.computeManager.computeGalleryImageVersions();
     }
 }

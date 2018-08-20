@@ -20,7 +20,7 @@ import rx.Observable;
  */
 @Fluent
 @Beta(Beta.SinceVersion.V1_15_0)
-public interface GalleryImageVersions extends SupportsCreating<GalleryImageVersion.DefinitionStages.Blank>,
+public interface ComputeGalleryImageVersions extends SupportsCreating<ComputeGalleryImageVersion.DefinitionStages.Blank>,
         HasInner<GalleryImageVersionsInner> {
     /**
      * Retrieves information about a gallery image version.
@@ -33,7 +33,7 @@ public interface GalleryImageVersions extends SupportsCreating<GalleryImageVersi
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImageVersion> getByGalleryImageAsync(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName);
+    Observable<ComputeGalleryImageVersion> getByGalleryImageAsync(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName);
 
     /**
      * Retrieves information about a gallery image version.
@@ -46,7 +46,7 @@ public interface GalleryImageVersions extends SupportsCreating<GalleryImageVersi
      * @return the gallery image version resource
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    GalleryImageVersion getByGalleryImage(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName);
+    ComputeGalleryImageVersion getByGalleryImage(String resourceGroupName, String galleryName, String galleryImageName, String galleryImageVersionName);
 
     /**
      * List gallery image versions under a gallery image.
@@ -58,7 +58,7 @@ public interface GalleryImageVersions extends SupportsCreating<GalleryImageVersi
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImageVersion> listByGalleryImageAsync(final String resourceGroupName, final String galleryName, final String galleryImageName);
+    Observable<ComputeGalleryImageVersion> listByGalleryImageAsync(final String resourceGroupName, final String galleryName, final String galleryImageName);
 
     /**
      * List gallery image versions under a gallery image.
@@ -70,7 +70,7 @@ public interface GalleryImageVersions extends SupportsCreating<GalleryImageVersi
      * @return list of gallery image versions
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    PagedList<GalleryImageVersion> listByGalleryImage(final String resourceGroupName, final String galleryName, final String galleryImageName);
+    PagedList<ComputeGalleryImageVersion> listByGalleryImage(final String resourceGroupName, final String galleryName, final String galleryImageName);
 
     /**
      * Delete a gallery image version.

@@ -31,10 +31,10 @@ import java.util.Map;
  */
 @Fluent
 @Beta(Beta.SinceVersion.V1_15_0)
-public interface GalleryImage extends HasInner<GalleryImageInner>,
+public interface ComputeGalleryImage extends HasInner<GalleryImageInner>,
         Indexable,
-        Refreshable<GalleryImage>,
-        Updatable<GalleryImage.Update>,
+        Refreshable<ComputeGalleryImage>,
+        Updatable<ComputeGalleryImage.Update>,
         HasManager<ComputeManager> {
     /**
      * @return the description of the image.
@@ -153,7 +153,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImageVersion> getVersionAsync(String versionName);
+    Observable<ComputeGalleryImageVersion> getVersionAsync(String versionName);
 
     /**
      * Retrieves information about an image version.
@@ -163,7 +163,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
      * @return the image version
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    GalleryImageVersion getVersion(String versionName);
+    ComputeGalleryImageVersion getVersion(String versionName);
 
     /**
      * List image versions.
@@ -171,7 +171,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
      * @return the observable for the request
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    Observable<GalleryImageVersion> listVersionsAsync();
+    Observable<ComputeGalleryImageVersion> listVersionsAsync();
 
     /**
      * List image versions.
@@ -179,7 +179,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
      * @return the list of image versions
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    PagedList<GalleryImageVersion> listVersions();
+    PagedList<ComputeGalleryImageVersion> listVersions();
 
     /**
      * The entirety of the gallery image definition.
@@ -227,7 +227,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
              * @return the next definition stage
              */
             @Beta(Beta.SinceVersion.V1_15_0)
-            WithLocation withExistingGallery(Gallery gallery);
+            WithLocation withExistingGallery(ComputeGallery gallery);
         }
 
         /**
@@ -546,7 +546,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
          * for any other optional settings to be specified.
          */
         @Beta(Beta.SinceVersion.V1_15_0)
-        interface WithCreate extends Creatable<GalleryImage>,
+        interface WithCreate extends Creatable<ComputeGalleryImage>,
                 DefinitionStages.WithDescription,
                 DefinitionStages.WithDisallowed,
                 DefinitionStages.WithEndOfLifeDate,
@@ -562,7 +562,7 @@ public interface GalleryImage extends HasInner<GalleryImageInner>,
      * The template for a gallery image update operation, containing all the settings that can be modified.
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    interface Update extends Appliable<GalleryImage>,
+    interface Update extends Appliable<ComputeGalleryImage>,
             UpdateStages.WithDescription,
             UpdateStages.WithDisallowed,
             UpdateStages.WithEndOfLifeDate,

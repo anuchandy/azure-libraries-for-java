@@ -28,10 +28,10 @@ import java.util.Map;
  */
 @Fluent
 @Beta(Beta.SinceVersion.V1_15_0)
-public interface GalleryImageVersion extends HasInner<GalleryImageVersionInner>,
+public interface ComputeGalleryImageVersion extends HasInner<GalleryImageVersionInner>,
         Indexable,
-        Refreshable<GalleryImageVersion>,
-        Updatable<GalleryImageVersion.Update>,
+        Refreshable<ComputeGalleryImageVersion>,
+        Updatable<ComputeGalleryImageVersion.Update>,
         HasManager<ComputeManager> {
     /**
      * @return the ARM id of the image version.
@@ -292,7 +292,7 @@ public interface GalleryImageVersion extends HasInner<GalleryImageVersionInner>,
          * for any other optional settings to be specified.
          */
         @Beta(Beta.SinceVersion.V1_15_0)
-        interface WithCreate extends Creatable<GalleryImageVersion>,
+        interface WithCreate extends Creatable<ComputeGalleryImageVersion>,
                 DefinitionStages.WithAvailableRegion,
                 DefinitionStages.WithScaleTier,
                 DefinitionStages.WithEndOfLifeDate,
@@ -304,7 +304,7 @@ public interface GalleryImageVersion extends HasInner<GalleryImageVersionInner>,
      * The template for a gallery image version update operation, containing all the settings that can be modified.
      */
     @Beta(Beta.SinceVersion.V1_15_0)
-    interface Update extends Appliable<GalleryImageVersion>,
+    interface Update extends Appliable<ComputeGalleryImageVersion>,
             UpdateStages.WithAvailableRegion,
             UpdateStages.WithScaleTier,
             UpdateStages.WithEndOfLifeDate,
