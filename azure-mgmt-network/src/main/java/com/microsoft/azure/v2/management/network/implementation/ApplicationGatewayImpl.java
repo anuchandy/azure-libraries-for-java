@@ -9,11 +9,11 @@ import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayAuthenticationCertificate;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackend;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealth;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealthPool;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSettings;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontend;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendIPConfiguration;
+import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendPort;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayHttpListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayIPConfiguration;
@@ -914,16 +914,16 @@ class ApplicationGatewayImpl
     @Override
     public ApplicationGatewayImpl withFrontendPort(int portNumber, String name) {
         // Ensure inner ports list initialized
-        List<ApplicationGatewayFrontendPortInner> frontendPorts = this.inner().frontendPorts();
+        List<ApplicationGatewayFrontendPort> frontendPorts = this.inner().frontendPorts();
         if (frontendPorts == null) {
-            frontendPorts = new ArrayList<ApplicationGatewayFrontendPortInner>();
+            frontendPorts = new ArrayList<ApplicationGatewayFrontendPort>();
             this.inner().withFrontendPorts(frontendPorts);
         }
 
         // Attempt to find inner port by name if provided, or port number otherwise
-        ApplicationGatewayFrontendPortInner frontendPortByName = null;
-        ApplicationGatewayFrontendPortInner frontendPortByNumber = null;
-        for (ApplicationGatewayFrontendPortInner inner : this.inner().frontendPorts()) {
+        ApplicationGatewayFrontendPort frontendPortByName = null;
+        ApplicationGatewayFrontendPort frontendPortByNumber = null;
+        for (ApplicationGatewayFrontendPort inner : this.inner().frontendPorts()) {
             if (name != null && name.equalsIgnoreCase(inner.name())) {
                 frontendPortByName = inner;
             }
@@ -940,7 +940,7 @@ class ApplicationGatewayImpl
                 name = SdkContext.randomResourceName("port", 9);
             }
 
-            frontendPortByName = new ApplicationGatewayFrontendPortInner()
+            frontendPortByName = new ApplicationGatewayFrontendPort()
                     .withName(name)
                     .withPort(portNumber);
             frontendPorts.add(frontendPortByName);
@@ -1035,7 +1035,7 @@ class ApplicationGatewayImpl
         }
 
         for (int i = 0; i < this.inner().frontendPorts().size(); i++) {
-            ApplicationGatewayFrontendPortInner inner = this.inner().frontendPorts().get(i);
+            ApplicationGatewayFrontendPort inner = this.inner().frontendPorts().get(i);
             if (inner.name().equalsIgnoreCase(name)) {
                 this.inner().frontendPorts().remove(i);
                 break;
@@ -1048,7 +1048,7 @@ class ApplicationGatewayImpl
     @Override
     public ApplicationGatewayImpl withoutFrontendPort(int portNumber) {
         for (int i = 0; i < this.inner().frontendPorts().size(); i++) {
-            ApplicationGatewayFrontendPortInner inner = this.inner().frontendPorts().get(i);
+            ApplicationGatewayFrontendPort inner = this.inner().frontendPorts().get(i);
             if (inner.port().equals(portNumber)) {
                 this.inner().frontendPorts().remove(i);
                 break;
@@ -1321,7 +1321,7 @@ class ApplicationGatewayImpl
     public Map<String, Integer> frontendPorts() {
         Map<String, Integer> ports = new TreeMap<>();
         if (this.inner().frontendPorts() != null) {
-            for (ApplicationGatewayFrontendPortInner portInner : this.inner().frontendPorts()) {
+            for (ApplicationGatewayFrontendPort portInner : this.inner().frontendPorts()) {
                 ports.put(portInner.name(), portInner.port());
             }
         }
@@ -1525,7 +1525,7 @@ class ApplicationGatewayImpl
                     public Map<String, ApplicationGatewayBackendHealth> call(ApplicationGatewayBackendHealthInner inner) {
                         Map<String, ApplicationGatewayBackendHealth> backendHealths = new TreeMap<>();
                         if (inner != null) {
-                            for (ApplicationGatewayBackendHealthPool healthInner : inner.backendAddressPools()) {
+                            for (ApplicationGatewayBackendHealthPoolInner healthInner : inner.backendAddressPools()) {
                                 ApplicationGatewayBackendHealth backendHealth = new ApplicationGatewayBackendHealthImpl(healthInner, ApplicationGatewayImpl.this);
                                 backendHealths.put(backendHealth.name(), backendHealth);
                             }

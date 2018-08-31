@@ -9,8 +9,9 @@ import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Beta.SinceVersion;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.apigeneration.Method;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasParent;
-import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
+import com.microsoft.azure.v2.management.network.implementation.ApplicationGatewayBackendHealthServerInner;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.HasParent;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.HasInner;
 
 /**
  * A client-side representation of the health information of an application gateway backend server.
@@ -18,8 +19,8 @@ import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
 @Fluent
 @Beta(SinceVersion.V1_4_0)
 public interface ApplicationGatewayBackendServerHealth extends
-    HasInner<ApplicationGatewayBackendHealthServer>,
-    HasParent<ApplicationGatewayBackendHttpConfigurationHealth> {
+        HasInner<ApplicationGatewayBackendHealthServerInner>,
+        HasParent<ApplicationGatewayBackendHttpConfigurationHealth> {
 
     /**
      * @return IP address of the server this health information pertains to

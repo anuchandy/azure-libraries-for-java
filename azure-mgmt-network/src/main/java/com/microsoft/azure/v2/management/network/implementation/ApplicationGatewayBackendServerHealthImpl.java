@@ -6,13 +6,12 @@
 package com.microsoft.azure.v2.management.network.implementation;
 
 import com.microsoft.azure.management.apigeneration.LangDefinition;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealthServer;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealthStatus;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpConfigurationHealth;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendServerHealth;
 import com.microsoft.azure.v2.management.network.NetworkInterface;
 import com.microsoft.azure.v2.management.network.NicIPConfiguration;
-import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.ResourceUtils;
 
 /**
  * Implementation of application gateway backend server health information.
@@ -20,16 +19,16 @@ import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
 @LangDefinition
 public class ApplicationGatewayBackendServerHealthImpl implements ApplicationGatewayBackendServerHealth {
 
-    private final ApplicationGatewayBackendHealthServer inner;
+    private final ApplicationGatewayBackendHealthServerInner inner;
     private final ApplicationGatewayBackendHttpConfigurationHealthImpl httpConfigHealth;
 
-    ApplicationGatewayBackendServerHealthImpl(ApplicationGatewayBackendHealthServer inner, ApplicationGatewayBackendHttpConfigurationHealthImpl httpConfigHealth) {
+    ApplicationGatewayBackendServerHealthImpl(ApplicationGatewayBackendHealthServerInner inner, ApplicationGatewayBackendHttpConfigurationHealthImpl httpConfigHealth) {
         this.inner = inner;
         this.httpConfigHealth = httpConfigHealth;
     }
 
     @Override
-    public ApplicationGatewayBackendHealthServer inner() {
+    public ApplicationGatewayBackendHealthServerInner inner() {
         return this.inner;
     }
 

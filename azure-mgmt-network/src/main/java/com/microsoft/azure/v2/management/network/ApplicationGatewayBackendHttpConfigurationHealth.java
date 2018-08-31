@@ -10,9 +10,10 @@ import java.util.Map;
 import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Beta.SinceVersion;
 import com.microsoft.azure.management.apigeneration.Fluent;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasName;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasParent;
-import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
+import com.microsoft.azure.v2.management.network.implementation.ApplicationGatewayBackendHealthHttpSettingsInner;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.HasName;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.HasParent;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.HasInner;
 
 /**
  * A client-side representation of the health information of an application gateway backend HTTP settings configuration.
@@ -20,9 +21,9 @@ import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
 @Fluent
 @Beta(SinceVersion.V1_4_0)
 public interface ApplicationGatewayBackendHttpConfigurationHealth extends
-    HasInner<ApplicationGatewayBackendHealthHttpSettings>,
-    HasParent<ApplicationGatewayBackendHealth>,
-    HasName {
+        HasInner<ApplicationGatewayBackendHealthHttpSettingsInner>,
+        HasParent<ApplicationGatewayBackendHealth>,
+        HasName {
 
     /**
      * @return the associated application gateway backend HTTP configuration settings this health information pertains to
