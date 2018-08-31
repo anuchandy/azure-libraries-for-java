@@ -7,24 +7,23 @@ package com.microsoft.azure.v2.management.network;
 
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.apigeneration.Method;
-import com.microsoft.azure.v2.management.network.implementation.ApplicationGatewayHttpListenerInner;
 import com.microsoft.azure.v2.management.network.model.HasHostName;
 import com.microsoft.azure.v2.management.network.model.HasProtocol;
 import com.microsoft.azure.v2.management.network.model.HasPublicIPAddress;
 import com.microsoft.azure.v2.management.network.model.HasServerNameIndication;
 import com.microsoft.azure.v2.management.network.model.HasSslCertificate;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.ChildResource;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasSubnet;
-import com.microsoft.azure.management.resources.fluentcore.model.Attachable;
-import com.microsoft.azure.management.resources.fluentcore.model.Settable;
-import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.ChildResource;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.HasSubnet;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.Attachable;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.Settable;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.HasInner;
 
 /**
  * A client-side representation of an application gateway's HTTP listener.
  */
 @Fluent()
 public interface ApplicationGatewayListener extends
-    HasInner<ApplicationGatewayHttpListenerInner>,
+    HasInner<ApplicationGatewayHttpListener>,
     ChildResource<ApplicationGateway>,
     HasSslCertificate<ApplicationGatewaySslCertificate>,
     HasPublicIPAddress,

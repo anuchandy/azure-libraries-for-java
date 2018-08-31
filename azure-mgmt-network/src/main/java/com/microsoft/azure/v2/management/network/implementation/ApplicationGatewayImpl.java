@@ -14,6 +14,7 @@ import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpCo
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSettings;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontend;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendIPConfiguration;
+import com.microsoft.azure.v2.management.network.ApplicationGatewayHttpListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayIPConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayOperationalState;
@@ -202,9 +203,9 @@ class ApplicationGatewayImpl
 
     private void initializeHttpListenersFromInner() {
         this.listeners = new TreeMap<>();
-        List<ApplicationGatewayHttpListenerInner> inners = this.inner().httpListeners();
+        List<ApplicationGatewayHttpListener> inners = this.inner().httpListeners();
         if (inners != null) {
-            for (ApplicationGatewayHttpListenerInner inner : inners) {
+            for (ApplicationGatewayHttpListener inner : inners) {
                 ApplicationGatewayListenerImpl httpListener = new ApplicationGatewayListenerImpl(inner, this);
                 this.listeners.put(inner.name(), httpListener);
             }
@@ -824,7 +825,7 @@ class ApplicationGatewayImpl
     public ApplicationGatewayListenerImpl defineListener(String name) {
         ApplicationGatewayListener httpListener = this.listeners.get(name);
         if (httpListener == null) {
-            ApplicationGatewayHttpListenerInner inner = new ApplicationGatewayHttpListenerInner()
+            ApplicationGatewayHttpListener inner = new ApplicationGatewayHttpListener()
                     .withName(name);
             return new ApplicationGatewayListenerImpl(inner, this);
         } else {
