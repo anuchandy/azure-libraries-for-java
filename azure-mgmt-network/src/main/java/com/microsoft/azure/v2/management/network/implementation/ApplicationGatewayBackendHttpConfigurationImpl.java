@@ -15,19 +15,20 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.google.common.io.BaseEncoding;
-import com.microsoft.azure.SubResource;
+import com.microsoft.azure.v2.SubResource;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayAuthenticationCertificate;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpConfiguration;
+import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSettings;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayConnectionDraining;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayCookieBasedAffinity;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayProbe;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayProtocol;
-import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
-import com.microsoft.azure.management.resources.fluentcore.utils.SdkContext;
-import com.microsoft.azure.management.resources.fluentcore.utils.Utils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.ResourceUtils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
+import com.microsoft.azure.v2.management.resources.fluentcore.utils.SdkContext;
+import com.microsoft.azure.v2.management.resources.fluentcore.utils.Utils;
 
 /**
  *  Base implementation for ApplicationGatewayBackendConfiguration.
@@ -35,14 +36,14 @@ import com.microsoft.azure.management.resources.fluentcore.utils.Utils;
 @LangDefinition
 class ApplicationGatewayBackendHttpConfigurationImpl
     extends
-        ChildResourceImpl<ApplicationGatewayBackendHttpSettingsInner, ApplicationGatewayImpl, ApplicationGateway>
+        ChildResourceImpl<ApplicationGatewayBackendHttpSettings, ApplicationGatewayImpl, ApplicationGateway>
     implements
         ApplicationGatewayBackendHttpConfiguration,
         ApplicationGatewayBackendHttpConfiguration.Definition<ApplicationGateway.DefinitionStages.WithCreate>,
         ApplicationGatewayBackendHttpConfiguration.UpdateDefinition<ApplicationGateway.Update>,
         ApplicationGatewayBackendHttpConfiguration.Update {
 
-    ApplicationGatewayBackendHttpConfigurationImpl(ApplicationGatewayBackendHttpSettingsInner inner, ApplicationGatewayImpl parent) {
+    ApplicationGatewayBackendHttpConfigurationImpl(ApplicationGatewayBackendHttpSettings inner, ApplicationGatewayImpl parent) {
         super(inner, parent);
     }
 

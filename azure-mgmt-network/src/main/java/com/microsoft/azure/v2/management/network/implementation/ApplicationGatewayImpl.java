@@ -11,6 +11,7 @@ import com.microsoft.azure.v2.management.network.ApplicationGatewayBackend;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealth;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealthPool;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpConfiguration;
+import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSettings;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontend;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayIPConfiguration;
@@ -189,9 +190,9 @@ class ApplicationGatewayImpl
 
     private void initializeBackendHttpConfigsFromInner() {
         this.backendConfigs = new TreeMap<>();
-        List<ApplicationGatewayBackendHttpSettingsInner> inners = this.inner().backendHttpSettingsCollection();
+        List<ApplicationGatewayBackendHttpSettings> inners = this.inner().backendHttpSettingsCollection();
         if (inners != null) {
-            for (ApplicationGatewayBackendHttpSettingsInner inner : inners) {
+            for (ApplicationGatewayBackendHttpSettings inner : inners) {
                 ApplicationGatewayBackendHttpConfigurationImpl httpConfig = new ApplicationGatewayBackendHttpConfigurationImpl(inner, this);
                 this.backendConfigs.put(inner.name(), httpConfig);
             }
@@ -858,7 +859,7 @@ class ApplicationGatewayImpl
     public ApplicationGatewayBackendHttpConfigurationImpl defineBackendHttpConfiguration(String name) {
         ApplicationGatewayBackendHttpConfiguration httpConfig = this.backendConfigs.get(name);
         if (httpConfig == null) {
-            ApplicationGatewayBackendHttpSettingsInner inner = new ApplicationGatewayBackendHttpSettingsInner()
+            ApplicationGatewayBackendHttpSettings inner = new ApplicationGatewayBackendHttpSettings()
                     .withName(name)
                     .withPort(80); // Default port
             return new ApplicationGatewayBackendHttpConfigurationImpl(inner, this);
