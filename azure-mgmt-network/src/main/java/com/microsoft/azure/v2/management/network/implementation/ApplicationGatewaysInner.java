@@ -547,6 +547,11 @@ public final class ApplicationGatewaysInner implements InnerSupportsGet<Applicat
         };
     }
 
+    @Override
+    public Observable<Page<ApplicationGatewayInner>> listAsync() {
+        return null;
+    }
+
     /**
      * Lists all application gateways in a resource group.
      *
@@ -592,8 +597,8 @@ public final class ApplicationGatewaysInner implements InnerSupportsGet<Applicat
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;ApplicationGatewayInner&gt; object if successful.
      */
-    public PagedList<ApplicationGatewayInner> List() {
-        Page<ApplicationGatewayInner> response = ListSinglePageAsync().blockingGet();
+    public PagedList<ApplicationGatewayInner> list() {
+        Page<ApplicationGatewayInner> response = listSinglePageAsync().blockingGet();
         return new PagedList<ApplicationGatewayInner>(response) {
             @Override
             public Page<ApplicationGatewayInner> nextPage(String nextPageLink) {
@@ -605,26 +610,9 @@ public final class ApplicationGatewaysInner implements InnerSupportsGet<Applicat
     /**
      * Gets all the application gateways in a subscription.
      *
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object.
-     */
-    public Observable<Page<ApplicationGatewayInner>> ListAsync() {
-        return ListSinglePageAsync()
-            .toObservable()
-            .concatMap((Page<ApplicationGatewayInner> page) -> {
-                String nextPageLink = page.nextPageLink();
-                if (nextPageLink == null) {
-                    return Observable.just(page);
-                }
-                return Observable.just(page).concatWith(listAllNextAsync(nextPageLink));
-            });
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
      * @return the Single&lt;Page&lt;ApplicationGatewayInner&gt;&gt; object if successful.
      */
-    public Single<Page<ApplicationGatewayInner>> ListSinglePageAsync() {
+    public Single<Page<ApplicationGatewayInner>> listSinglePageAsync() {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }

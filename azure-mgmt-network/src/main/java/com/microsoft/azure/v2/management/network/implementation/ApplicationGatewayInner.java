@@ -14,11 +14,7 @@ import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSe
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendIPConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendPort;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayHttpListener;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayIPConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayOperationalState;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayProbe;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayRedirectConfiguration;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayRequestRoutingRule;
 import com.microsoft.azure.v2.management.network.ApplicationGatewaySku;
 import com.microsoft.azure.v2.management.network.ApplicationGatewaySslPolicy;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayUrlPathMap;

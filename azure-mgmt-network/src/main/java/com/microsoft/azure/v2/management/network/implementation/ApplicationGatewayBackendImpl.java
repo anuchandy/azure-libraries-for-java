@@ -16,8 +16,8 @@ import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackend;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendAddress;
-import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.ResourceUtils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
 
 /**
  *  Implementation for ApplicationGatewayBackend.
@@ -97,7 +97,7 @@ class ApplicationGatewayBackendImpl
         }
 
         ApplicationGatewayBackendAddress address = new ApplicationGatewayBackendAddress()
-                .withIPAddress(ipAddress);
+                .withIpAddress(ipAddress);
         List<ApplicationGatewayBackendAddress> addresses = ensureAddresses();
         for (ApplicationGatewayBackendAddress a : addresses) {
             if (ipAddress.equalsIgnoreCase(a.ipAddress())) {

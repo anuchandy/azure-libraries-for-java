@@ -60,17 +60,6 @@ class ApplicationGatewayRequestRoutingRuleImpl
     }
 
     @Override
-    public ApplicationGatewayUrlPathMap urlPathMap() {
-        SubResource urlMapRef = this.inner().urlPathMap();
-        if (urlMapRef != null) {
-            String urlMapName = ResourceUtils.nameFromResourceId(urlMapRef.id());
-            return this.parent().urlPathMaps().get(urlMapName);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public boolean cookieBasedAffinity() {
         final ApplicationGatewayBackendHttpConfiguration backendConfig = this.backendHttpConfiguration();
         return (backendConfig != null) ? backendConfig.cookieBasedAffinity() : false;

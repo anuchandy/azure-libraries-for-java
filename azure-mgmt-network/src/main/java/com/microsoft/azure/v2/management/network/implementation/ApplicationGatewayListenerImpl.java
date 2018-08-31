@@ -8,7 +8,7 @@ package com.microsoft.azure.v2.management.network.implementation;
 import java.io.File;
 import java.io.IOException;
 
-import com.microsoft.azure.SubResource;
+import com.microsoft.azure.v2.SubResource;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontend;
@@ -17,9 +17,9 @@ import com.microsoft.azure.v2.management.network.ApplicationGatewayListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayProtocol;
 import com.microsoft.azure.v2.management.network.ApplicationGatewaySslCertificate;
 import com.microsoft.azure.v2.management.network.PublicIPAddress;
-import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
-import com.microsoft.azure.management.resources.fluentcore.utils.SdkContext;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.ResourceUtils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
+import com.microsoft.azure.v2.management.resources.fluentcore.utils.SdkContext;
 
 /**
  *  Implementation for ApplicationGatewayListener.

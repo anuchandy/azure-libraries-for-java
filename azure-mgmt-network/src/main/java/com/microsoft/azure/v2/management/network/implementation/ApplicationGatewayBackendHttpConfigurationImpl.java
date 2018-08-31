@@ -9,12 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.google.common.io.BaseEncoding;
 import com.microsoft.azure.v2.SubResource;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.v2.management.network.ApplicationGateway;
@@ -265,8 +265,7 @@ class ApplicationGatewayBackendHttpConfigurationImpl
         if (derData == null) {
             return this;
         }
-
-        String encoded = new String(BaseEncoding.base64().encode(derData));
+        String encoded = Base64.getEncoder().encodeToString(derData);
         return this.withAuthenticationCertificateFromBase64(encoded);
     }
 

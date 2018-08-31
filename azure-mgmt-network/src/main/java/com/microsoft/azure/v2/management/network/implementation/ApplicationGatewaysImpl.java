@@ -13,10 +13,9 @@ import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewaySkuName;
 import com.microsoft.azure.v2.management.network.ApplicationGateways;
-import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
-import com.microsoft.azure.management.resources.fluentcore.arm.collection.implementation.TopLevelModifiableResourcesImpl;
-import com.microsoft.azure.management.resources.fluentcore.utils.RXMapper;
-
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.ResourceUtils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.collection.implementation.TopLevelModifiableResourcesImpl;
+import com.microsoft.azure.v2.management.resources.fluentcore.utils.RXMapper;
 import rx.Observable;
 
 /**
@@ -25,11 +24,11 @@ import rx.Observable;
 @LangDefinition
 class ApplicationGatewaysImpl
         extends TopLevelModifiableResourcesImpl<
-            ApplicationGateway,
-            ApplicationGatewayImpl,
-            ApplicationGatewayInner,
-            ApplicationGatewaysInner,
-            NetworkManager>
+                    ApplicationGateway,
+                    ApplicationGatewayImpl,
+                    ApplicationGatewayInner,
+                    ApplicationGatewaysInner,
+                    NetworkManager>
         implements ApplicationGateways {
 
     ApplicationGatewaysImpl(final NetworkManager networkManager) {

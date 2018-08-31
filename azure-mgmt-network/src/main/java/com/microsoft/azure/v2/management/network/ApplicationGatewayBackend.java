@@ -10,19 +10,19 @@ import java.util.Collection;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.v2.management.network.implementation.ApplicationGatewayBackendAddressPoolInner;
 import com.microsoft.azure.v2.management.network.model.HasBackendNics;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.ChildResource;
-import com.microsoft.azure.management.resources.fluentcore.model.Attachable;
-import com.microsoft.azure.management.resources.fluentcore.model.Settable;
-import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.Attachable;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.Settable;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.ChildResource;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.HasInner;
 
 /**
  * A client-side representation of an application gateway backend.
  */
 @Fluent()
 public interface ApplicationGatewayBackend extends
-    HasInner<ApplicationGatewayBackendAddressPoolInner>,
-    ChildResource<ApplicationGateway>,
-    HasBackendNics {
+        HasInner<ApplicationGatewayBackendAddressPoolInner>,
+        ChildResource<ApplicationGateway>,
+        HasBackendNics {
 
     /**
      * @return addresses on the backend of the application gateway
