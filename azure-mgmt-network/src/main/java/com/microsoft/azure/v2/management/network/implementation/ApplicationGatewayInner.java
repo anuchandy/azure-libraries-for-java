@@ -56,7 +56,7 @@ public class ApplicationGatewayInner extends Resource {
      * Subnets of application the gateway resource.
      */
     @JsonProperty(value = "properties.gatewayIPConfigurations")
-    private List<ApplicationGatewayIPConfiguration> gatewayIPConfigurations;
+    private List<ApplicationGatewayIPConfigurationInner> gatewayIPConfigurations;
 
     /**
      * Authentication certificates of the application gateway resource.
@@ -209,7 +209,7 @@ public class ApplicationGatewayInner extends Resource {
      *
      * @return the gatewayIPConfigurations value.
      */
-    public List<ApplicationGatewayIPConfiguration> gatewayIPConfigurations() {
+    public List<ApplicationGatewayIPConfigurationInner> gatewayIPConfigurations() {
         return this.gatewayIPConfigurations;
     }
 
@@ -219,7 +219,7 @@ public class ApplicationGatewayInner extends Resource {
      * @param gatewayIPConfigurations the gatewayIPConfigurations value to set.
      * @return the ApplicationGatewayInner object itself.
      */
-    public ApplicationGatewayInner withGatewayIPConfigurations(List<ApplicationGatewayIPConfiguration> gatewayIPConfigurations) {
+    public ApplicationGatewayInner withGatewayIPConfigurations(List<ApplicationGatewayIPConfigurationInner> gatewayIPConfigurations) {
         this.gatewayIPConfigurations = gatewayIPConfigurations;
         return this;
     }
