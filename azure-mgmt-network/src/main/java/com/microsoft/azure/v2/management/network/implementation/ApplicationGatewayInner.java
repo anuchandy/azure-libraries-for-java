@@ -122,7 +122,7 @@ public class ApplicationGatewayInner extends Resource {
      * Redirect configurations of the application gateway resource.
      */
     @JsonProperty(value = "properties.redirectConfigurations")
-    private List<ApplicationGatewayRedirectConfiguration> redirectConfigurations;
+    private List<ApplicationGatewayRedirectConfigurationInner> redirectConfigurations;
 
     /**
      * Web application firewall configuration.
@@ -432,7 +432,7 @@ public class ApplicationGatewayInner extends Resource {
      *
      * @return the redirectConfigurations value.
      */
-    public List<ApplicationGatewayRedirectConfiguration> redirectConfigurations() {
+    public List<ApplicationGatewayRedirectConfigurationInner> redirectConfigurations() {
         return this.redirectConfigurations;
     }
 
@@ -442,7 +442,7 @@ public class ApplicationGatewayInner extends Resource {
      * @param redirectConfigurations the redirectConfigurations value to set.
      * @return the ApplicationGatewayInner object itself.
      */
-    public ApplicationGatewayInner withRedirectConfigurations(List<ApplicationGatewayRedirectConfiguration> redirectConfigurations) {
+    public ApplicationGatewayInner withRedirectConfigurations(List<ApplicationGatewayRedirectConfigurationInner> redirectConfigurations) {
         this.redirectConfigurations = redirectConfigurations;
         return this;
     }
