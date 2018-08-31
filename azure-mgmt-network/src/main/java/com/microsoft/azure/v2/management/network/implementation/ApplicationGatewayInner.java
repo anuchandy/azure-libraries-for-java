@@ -116,7 +116,7 @@ public class ApplicationGatewayInner extends Resource {
      * Request routing rules of the application gateway resource.
      */
     @JsonProperty(value = "properties.requestRoutingRules")
-    private List<ApplicationGatewayRequestRoutingRule> requestRoutingRules;
+    private List<ApplicationGatewayRequestRoutingRuleInner> requestRoutingRules;
 
     /**
      * Redirect configurations of the application gateway resource.
@@ -412,7 +412,7 @@ public class ApplicationGatewayInner extends Resource {
      *
      * @return the requestRoutingRules value.
      */
-    public List<ApplicationGatewayRequestRoutingRule> requestRoutingRules() {
+    public List<ApplicationGatewayRequestRoutingRuleInner> requestRoutingRules() {
         return this.requestRoutingRules;
     }
 
@@ -422,7 +422,7 @@ public class ApplicationGatewayInner extends Resource {
      * @param requestRoutingRules the requestRoutingRules value to set.
      * @return the ApplicationGatewayInner object itself.
      */
-    public ApplicationGatewayInner withRequestRoutingRules(List<ApplicationGatewayRequestRoutingRule> requestRoutingRules) {
+    public ApplicationGatewayInner withRequestRoutingRules(List<ApplicationGatewayRequestRoutingRuleInner> requestRoutingRules) {
         this.requestRoutingRules = requestRoutingRules;
         return this;
     }
