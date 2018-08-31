@@ -21,10 +21,10 @@ import com.microsoft.azure.v2.management.network.ApplicationGatewayProbe;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayRedirectConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayRequestRoutingRule;
 import com.microsoft.azure.v2.management.network.ApplicationGatewaySku;
-import com.microsoft.azure.v2.management.network.ApplicationGatewaySslCertificate;
 import com.microsoft.azure.v2.management.network.ApplicationGatewaySslPolicy;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayUrlPathMap;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayWebApplicationFirewallConfiguration;
+import com.microsoft.rest.v2.annotations.SkipParentValidation;
 import com.microsoft.rest.v2.serializer.JsonFlatten;
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class ApplicationGatewayInner extends Resource {
      * SSL certificates of the application gateway resource.
      */
     @JsonProperty(value = "properties.sslCertificates")
-    private List<ApplicationGatewaySslCertificate> sslCertificates;
+    private List<ApplicationGatewaySslCertificateInner> sslCertificates;
 
     /**
      * Frontend IP addresses of the application gateway resource.
@@ -251,7 +251,7 @@ public class ApplicationGatewayInner extends Resource {
      *
      * @return the sslCertificates value.
      */
-    public List<ApplicationGatewaySslCertificate> sslCertificates() {
+    public List<ApplicationGatewaySslCertificateInner> sslCertificates() {
         return this.sslCertificates;
     }
 
@@ -261,7 +261,7 @@ public class ApplicationGatewayInner extends Resource {
      * @param sslCertificates the sslCertificates value to set.
      * @return the ApplicationGatewayInner object itself.
      */
-    public ApplicationGatewayInner withSslCertificates(List<ApplicationGatewaySslCertificate> sslCertificates) {
+    public ApplicationGatewayInner withSslCertificates(List<ApplicationGatewaySslCertificateInner> sslCertificates) {
         this.sslCertificates = sslCertificates;
         return this;
     }
