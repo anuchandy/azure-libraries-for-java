@@ -13,6 +13,7 @@ import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHealth
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSettings;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontend;
+import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendIPConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayListener;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayIPConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayOperationalState;
@@ -157,9 +158,9 @@ class ApplicationGatewayImpl
 
     private void initializeFrontendsFromInner() {
         this.frontends = new TreeMap<>();
-        List<ApplicationGatewayFrontendIPConfigurationInner> inners = this.inner().frontendIPConfigurations();
+        List<ApplicationGatewayFrontendIPConfiguration> inners = this.inner().frontendIPConfigurations();
         if (inners != null) {
-            for (ApplicationGatewayFrontendIPConfigurationInner inner : inners) {
+            for (ApplicationGatewayFrontendIPConfiguration inner : inners) {
                 ApplicationGatewayFrontendImpl frontend = new ApplicationGatewayFrontendImpl(inner, this);
                 this.frontends.put(inner.name(), frontend);
             }
@@ -777,7 +778,7 @@ class ApplicationGatewayImpl
     private ApplicationGatewayFrontendImpl defineFrontend(String name) {
         ApplicationGatewayFrontend frontend = this.frontends.get(name);
         if (frontend == null) {
-            ApplicationGatewayFrontendIPConfigurationInner inner = new ApplicationGatewayFrontendIPConfigurationInner()
+            ApplicationGatewayFrontendIPConfiguration inner = new ApplicationGatewayFrontendIPConfiguration()
                     .withName(name);
             return new ApplicationGatewayFrontendImpl(inner, this);
         } else {

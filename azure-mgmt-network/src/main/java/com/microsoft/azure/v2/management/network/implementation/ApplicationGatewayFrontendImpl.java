@@ -9,11 +9,12 @@ import com.microsoft.azure.SubResource;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontend;
+import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendIPConfiguration;
 import com.microsoft.azure.v2.management.network.IPAllocationMethod;
 import com.microsoft.azure.v2.management.network.Network;
 import com.microsoft.azure.v2.management.network.PublicIPAddress;
 import com.microsoft.azure.v2.management.network.Subnet;
-import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.ResourceUtils;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
 
 /**
@@ -21,14 +22,14 @@ import com.microsoft.azure.management.resources.fluentcore.arm.models.implementa
  */
 @LangDefinition
 class ApplicationGatewayFrontendImpl
-    extends ChildResourceImpl<ApplicationGatewayFrontendIPConfigurationInner, ApplicationGatewayImpl, ApplicationGateway>
+    extends ChildResourceImpl<ApplicationGatewayFrontendIPConfiguration, ApplicationGatewayImpl, ApplicationGateway>
     implements
         ApplicationGatewayFrontend,
         ApplicationGatewayFrontend.Definition<ApplicationGateway.DefinitionStages.WithListener>,
         ApplicationGatewayFrontend.UpdateDefinition<ApplicationGateway.Update>,
         ApplicationGatewayFrontend.Update {
 
-    ApplicationGatewayFrontendImpl(ApplicationGatewayFrontendIPConfigurationInner inner, ApplicationGatewayImpl parent) {
+    ApplicationGatewayFrontendImpl(ApplicationGatewayFrontendIPConfiguration inner, ApplicationGatewayImpl parent) {
         super(inner, parent);
     }
 

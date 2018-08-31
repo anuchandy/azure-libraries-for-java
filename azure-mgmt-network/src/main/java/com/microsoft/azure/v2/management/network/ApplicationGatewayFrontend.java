@@ -6,24 +6,23 @@
 package com.microsoft.azure.v2.management.network;
 
 import com.microsoft.azure.management.apigeneration.Fluent;
-import com.microsoft.azure.v2.management.network.implementation.ApplicationGatewayFrontendIPConfigurationInner;
 import com.microsoft.azure.v2.management.network.model.HasPrivateIPAddress;
 import com.microsoft.azure.v2.management.network.model.HasPublicIPAddress;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.ChildResource;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasSubnet;
-import com.microsoft.azure.management.resources.fluentcore.model.Attachable;
-import com.microsoft.azure.management.resources.fluentcore.model.Settable;
-import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.ChildResource;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.HasSubnet;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.Attachable;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.Settable;
+import com.microsoft.azure.v2.management.resources.fluentcore.model.HasInner;
 
 /**
  * A client-side representation of an application gateway frontend.
  */
 @Fluent()
 public interface ApplicationGatewayFrontend extends
-    HasInner<ApplicationGatewayFrontendIPConfigurationInner>,
-    ChildResource<ApplicationGateway>,
+        HasInner<ApplicationGatewayFrontendIPConfiguration>,
+        ChildResource<ApplicationGateway>,
     HasPrivateIPAddress,
-    HasSubnet,
+        HasSubnet,
     HasPublicIPAddress {
 
     /**
