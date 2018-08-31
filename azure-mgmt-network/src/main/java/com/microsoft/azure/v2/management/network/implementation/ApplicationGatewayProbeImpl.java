@@ -16,7 +16,7 @@ import com.microsoft.azure.v2.management.network.ApplicationGateway;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayProbe;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayProbeHealthResponseMatch;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayProtocol;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
+import com.microsoft.azure.v2.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
 
 /**
  *  Implementation for ApplicationGatewayProbe.
