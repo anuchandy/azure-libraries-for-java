@@ -8,10 +8,10 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.SubResource;
-import com.microsoft.azure.v2.management.network.VirtualNetworkPeeringState;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
+import com.microsoft.azure.v2.SubResource;
+import com.microsoft.azure.v2.management.network.VirtualNetworkPeeringState;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
 
 /**
  * Peerings in a virtual network resource.
@@ -85,7 +85,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the allowVirtualNetworkAccess value.
      *
-     * @return the allowVirtualNetworkAccess value
+     * @return the allowVirtualNetworkAccess value.
      */
     public Boolean allowVirtualNetworkAccess() {
         return this.allowVirtualNetworkAccess;
@@ -94,7 +94,8 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the allowVirtualNetworkAccess value.
      *
-     * @param allowVirtualNetworkAccess the allowVirtualNetworkAccess value to set
+     * @param allowVirtualNetworkAccess the allowVirtualNetworkAccess value to
+     * set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withAllowVirtualNetworkAccess(Boolean allowVirtualNetworkAccess) {
@@ -105,7 +106,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the allowForwardedTraffic value.
      *
-     * @return the allowForwardedTraffic value
+     * @return the allowForwardedTraffic value.
      */
     public Boolean allowForwardedTraffic() {
         return this.allowForwardedTraffic;
@@ -114,7 +115,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the allowForwardedTraffic value.
      *
-     * @param allowForwardedTraffic the allowForwardedTraffic value to set
+     * @param allowForwardedTraffic the allowForwardedTraffic value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withAllowForwardedTraffic(Boolean allowForwardedTraffic) {
@@ -125,7 +126,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the allowGatewayTransit value.
      *
-     * @return the allowGatewayTransit value
+     * @return the allowGatewayTransit value.
      */
     public Boolean allowGatewayTransit() {
         return this.allowGatewayTransit;
@@ -134,7 +135,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the allowGatewayTransit value.
      *
-     * @param allowGatewayTransit the allowGatewayTransit value to set
+     * @param allowGatewayTransit the allowGatewayTransit value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withAllowGatewayTransit(Boolean allowGatewayTransit) {
@@ -145,7 +146,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the useRemoteGateways value.
      *
-     * @return the useRemoteGateways value
+     * @return the useRemoteGateways value.
      */
     public Boolean useRemoteGateways() {
         return this.useRemoteGateways;
@@ -154,7 +155,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the useRemoteGateways value.
      *
-     * @param useRemoteGateways the useRemoteGateways value to set
+     * @param useRemoteGateways the useRemoteGateways value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withUseRemoteGateways(Boolean useRemoteGateways) {
@@ -165,7 +166,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the remoteVirtualNetwork value.
      *
-     * @return the remoteVirtualNetwork value
+     * @return the remoteVirtualNetwork value.
      */
     public SubResource remoteVirtualNetwork() {
         return this.remoteVirtualNetwork;
@@ -174,7 +175,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the remoteVirtualNetwork value.
      *
-     * @param remoteVirtualNetwork the remoteVirtualNetwork value to set
+     * @param remoteVirtualNetwork the remoteVirtualNetwork value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withRemoteVirtualNetwork(SubResource remoteVirtualNetwork) {
@@ -185,7 +186,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the peeringState value.
      *
-     * @return the peeringState value
+     * @return the peeringState value.
      */
     public VirtualNetworkPeeringState peeringState() {
         return this.peeringState;
@@ -194,7 +195,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the peeringState value.
      *
-     * @param peeringState the peeringState value to set
+     * @param peeringState the peeringState value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withPeeringState(VirtualNetworkPeeringState peeringState) {
@@ -205,7 +206,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -214,7 +215,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withProvisioningState(String provisioningState) {
@@ -225,7 +226,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the name value.
      *
-     * @return the name value
+     * @return the name value.
      */
     public String name() {
         return this.name;
@@ -234,7 +235,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the name value.
      *
-     * @param name the name value to set
+     * @param name the name value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withName(String name) {
@@ -245,7 +246,7 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -254,12 +255,11 @@ public class VirtualNetworkPeeringInner extends SubResource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the VirtualNetworkPeeringInner object itself.
      */
     public VirtualNetworkPeeringInner withEtag(String etag) {
         this.etag = etag;
         return this;
     }
-
 }

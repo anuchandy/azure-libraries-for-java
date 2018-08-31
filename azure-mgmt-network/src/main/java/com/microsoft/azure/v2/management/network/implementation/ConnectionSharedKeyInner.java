@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Response for GetConnectionSharedKey API service call.
  */
-public class ConnectionSharedKeyInner {
+public final class ConnectionSharedKeyInner {
     /**
      * The virtual network connection shared key value.
      */
@@ -23,7 +23,7 @@ public class ConnectionSharedKeyInner {
     /**
      * Get the value value.
      *
-     * @return the value value
+     * @return the value value.
      */
     public String value() {
         return this.value;
@@ -32,12 +32,11 @@ public class ConnectionSharedKeyInner {
     /**
      * Set the value value.
      *
-     * @param value the value value to set
+     * @param value the value value to set.
      * @return the ConnectionSharedKeyInner object itself.
      */
     public ConnectionSharedKeyInner withValue(String value) {
         this.value = value;
         return this;
     }
-
 }

@@ -8,58 +8,49 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for IkeIntegrity.
  */
-public final class IkeIntegrity {
-    /** Static value MD5 for IkeIntegrity. */
-    public static final IkeIntegrity MD5 = new IkeIntegrity("MD5");
-
-    /** Static value SHA1 for IkeIntegrity. */
-    public static final IkeIntegrity SHA1 = new IkeIntegrity("SHA1");
-
-    /** Static value SHA256 for IkeIntegrity. */
-    public static final IkeIntegrity SHA256 = new IkeIntegrity("SHA256");
-
-    /** Static value SHA384 for IkeIntegrity. */
-    public static final IkeIntegrity SHA384 = new IkeIntegrity("SHA384");
-
-    private String value;
+public final class IkeIntegrity extends ExpandableStringEnum<IkeIntegrity> {
+    /**
+     * Static value MD5 for IkeIntegrity.
+     */
+    public static final IkeIntegrity MD5 = fromString("MD5");
 
     /**
-     * Creates a custom value for IkeIntegrity.
-     * @param value the custom value
+     * Static value SHA1 for IkeIntegrity.
      */
-    public IkeIntegrity(String value) {
-        this.value = value;
+    public static final IkeIntegrity SHA1 = fromString("SHA1");
+
+    /**
+     * Static value SHA256 for IkeIntegrity.
+     */
+    public static final IkeIntegrity SHA256 = fromString("SHA256");
+
+    /**
+     * Static value SHA384 for IkeIntegrity.
+     */
+    public static final IkeIntegrity SHA384 = fromString("SHA384");
+
+    /**
+     * Creates or finds a IkeIntegrity from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding IkeIntegrity.
+     */
+    @JsonCreator
+    public static IkeIntegrity fromString(String name) {
+        return fromString(name, IkeIntegrity.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof IkeIntegrity)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        IkeIntegrity rhs = (IkeIntegrity) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known IkeIntegrity values.
+     */
+    public static Collection<IkeIntegrity> values() {
+        return values(IkeIntegrity.class);
     }
 }

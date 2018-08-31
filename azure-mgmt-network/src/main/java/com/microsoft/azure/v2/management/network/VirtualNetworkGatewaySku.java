@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * VirtualNetworkGatewaySku details.
  */
-public class VirtualNetworkGatewaySku {
+public final class VirtualNetworkGatewaySku {
     /**
      * Gateway SKU name. Possible values include: 'Basic', 'HighPerformance',
      * 'Standard', 'UltraPerformance', 'VpnGw1', 'VpnGw2', 'VpnGw3'.
@@ -37,7 +37,7 @@ public class VirtualNetworkGatewaySku {
     /**
      * Get the name value.
      *
-     * @return the name value
+     * @return the name value.
      */
     public VirtualNetworkGatewaySkuName name() {
         return this.name;
@@ -46,7 +46,7 @@ public class VirtualNetworkGatewaySku {
     /**
      * Set the name value.
      *
-     * @param name the name value to set
+     * @param name the name value to set.
      * @return the VirtualNetworkGatewaySku object itself.
      */
     public VirtualNetworkGatewaySku withName(VirtualNetworkGatewaySkuName name) {
@@ -57,7 +57,7 @@ public class VirtualNetworkGatewaySku {
     /**
      * Get the tier value.
      *
-     * @return the tier value
+     * @return the tier value.
      */
     public VirtualNetworkGatewaySkuTier tier() {
         return this.tier;
@@ -66,7 +66,7 @@ public class VirtualNetworkGatewaySku {
     /**
      * Set the tier value.
      *
-     * @param tier the tier value to set
+     * @param tier the tier value to set.
      * @return the VirtualNetworkGatewaySku object itself.
      */
     public VirtualNetworkGatewaySku withTier(VirtualNetworkGatewaySkuTier tier) {
@@ -77,7 +77,7 @@ public class VirtualNetworkGatewaySku {
     /**
      * Get the capacity value.
      *
-     * @return the capacity value
+     * @return the capacity value.
      */
     public Integer capacity() {
         return this.capacity;
@@ -86,12 +86,11 @@ public class VirtualNetworkGatewaySku {
     /**
      * Set the capacity value.
      *
-     * @param capacity the capacity value to set
+     * @param capacity the capacity value to set.
      * @return the VirtualNetworkGatewaySku object itself.
      */
     public VirtualNetworkGatewaySku withCapacity(Integer capacity) {
         this.capacity = capacity;
         return this;
     }
-
 }

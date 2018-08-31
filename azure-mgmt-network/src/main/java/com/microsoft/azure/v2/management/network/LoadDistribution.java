@@ -8,55 +8,44 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for LoadDistribution.
  */
-public final class LoadDistribution {
-    /** Static value Default for LoadDistribution. */
-    public static final LoadDistribution DEFAULT = new LoadDistribution("Default");
-
-    /** Static value SourceIP for LoadDistribution. */
-    public static final LoadDistribution SOURCE_IP = new LoadDistribution("SourceIP");
-
-    /** Static value SourceIPProtocol for LoadDistribution. */
-    public static final LoadDistribution SOURCE_IPPROTOCOL = new LoadDistribution("SourceIPProtocol");
-
-    private String value;
+public final class LoadDistribution extends ExpandableStringEnum<LoadDistribution> {
+    /**
+     * Static value Default for LoadDistribution.
+     */
+    public static final LoadDistribution DEFAULT = fromString("Default");
 
     /**
-     * Creates a custom value for LoadDistribution.
-     * @param value the custom value
+     * Static value SourceIP for LoadDistribution.
      */
-    public LoadDistribution(String value) {
-        this.value = value;
+    public static final LoadDistribution SOURCE_IP = fromString("SourceIP");
+
+    /**
+     * Static value SourceIPProtocol for LoadDistribution.
+     */
+    public static final LoadDistribution SOURCE_IPPROTOCOL = fromString("SourceIPProtocol");
+
+    /**
+     * Creates or finds a LoadDistribution from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding LoadDistribution.
+     */
+    @JsonCreator
+    public static LoadDistribution fromString(String name) {
+        return fromString(name, LoadDistribution.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof LoadDistribution)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        LoadDistribution rhs = (LoadDistribution) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known LoadDistribution values.
+     */
+    public static Collection<LoadDistribution> values() {
+        return values(LoadDistribution.class);
     }
 }

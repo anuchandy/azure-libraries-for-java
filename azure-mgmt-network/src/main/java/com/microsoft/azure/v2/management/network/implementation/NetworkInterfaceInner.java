@@ -8,17 +8,18 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.SubResource;
-import java.util.List;
-import com.microsoft.azure.v2.management.network.NetworkInterfaceDnsSettings;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
+import com.microsoft.azure.v2.Resource;
+import com.microsoft.azure.v2.SubResource;
+import com.microsoft.azure.v2.management.network.NetworkInterfaceDnsSettings;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
+import java.util.List;
 
 /**
  * A network interface in a resource group.
  */
 @JsonFlatten
+@SkipParentValidation
 public class NetworkInterfaceInner extends Resource {
     /**
      * The reference of a virtual machine.
@@ -30,7 +31,7 @@ public class NetworkInterfaceInner extends Resource {
      * The reference of the NetworkSecurityGroup resource.
      */
     @JsonProperty(value = "properties.networkSecurityGroup")
-    private SubResource networkSecurityGroup;
+    private NetworkSecurityGroupInner networkSecurityGroup;
 
     /**
      * A list of IPConfigurations of the network interface.
@@ -88,9 +89,15 @@ public class NetworkInterfaceInner extends Resource {
     private String etag;
 
     /**
+     * Resource ID.
+     */
+    @JsonProperty(value = "id")
+    private String id;
+
+    /**
      * Get the virtualMachine value.
      *
-     * @return the virtualMachine value
+     * @return the virtualMachine value.
      */
     public SubResource virtualMachine() {
         return this.virtualMachine;
@@ -99,7 +106,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the virtualMachine value.
      *
-     * @param virtualMachine the virtualMachine value to set
+     * @param virtualMachine the virtualMachine value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withVirtualMachine(SubResource virtualMachine) {
@@ -110,19 +117,19 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the networkSecurityGroup value.
      *
-     * @return the networkSecurityGroup value
+     * @return the networkSecurityGroup value.
      */
-    public SubResource networkSecurityGroup() {
+    public NetworkSecurityGroupInner networkSecurityGroup() {
         return this.networkSecurityGroup;
     }
 
     /**
      * Set the networkSecurityGroup value.
      *
-     * @param networkSecurityGroup the networkSecurityGroup value to set
+     * @param networkSecurityGroup the networkSecurityGroup value to set.
      * @return the NetworkInterfaceInner object itself.
      */
-    public NetworkInterfaceInner withNetworkSecurityGroup(SubResource networkSecurityGroup) {
+    public NetworkInterfaceInner withNetworkSecurityGroup(NetworkSecurityGroupInner networkSecurityGroup) {
         this.networkSecurityGroup = networkSecurityGroup;
         return this;
     }
@@ -130,7 +137,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the ipConfigurations value.
      *
-     * @return the ipConfigurations value
+     * @return the ipConfigurations value.
      */
     public List<NetworkInterfaceIPConfigurationInner> ipConfigurations() {
         return this.ipConfigurations;
@@ -139,7 +146,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the ipConfigurations value.
      *
-     * @param ipConfigurations the ipConfigurations value to set
+     * @param ipConfigurations the ipConfigurations value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withIpConfigurations(List<NetworkInterfaceIPConfigurationInner> ipConfigurations) {
@@ -150,7 +157,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the dnsSettings value.
      *
-     * @return the dnsSettings value
+     * @return the dnsSettings value.
      */
     public NetworkInterfaceDnsSettings dnsSettings() {
         return this.dnsSettings;
@@ -159,7 +166,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the dnsSettings value.
      *
-     * @param dnsSettings the dnsSettings value to set
+     * @param dnsSettings the dnsSettings value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withDnsSettings(NetworkInterfaceDnsSettings dnsSettings) {
@@ -170,7 +177,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the macAddress value.
      *
-     * @return the macAddress value
+     * @return the macAddress value.
      */
     public String macAddress() {
         return this.macAddress;
@@ -179,7 +186,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the macAddress value.
      *
-     * @param macAddress the macAddress value to set
+     * @param macAddress the macAddress value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withMacAddress(String macAddress) {
@@ -190,7 +197,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the primary value.
      *
-     * @return the primary value
+     * @return the primary value.
      */
     public Boolean primary() {
         return this.primary;
@@ -199,7 +206,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the primary value.
      *
-     * @param primary the primary value to set
+     * @param primary the primary value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withPrimary(Boolean primary) {
@@ -210,7 +217,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the enableAcceleratedNetworking value.
      *
-     * @return the enableAcceleratedNetworking value
+     * @return the enableAcceleratedNetworking value.
      */
     public Boolean enableAcceleratedNetworking() {
         return this.enableAcceleratedNetworking;
@@ -219,7 +226,8 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the enableAcceleratedNetworking value.
      *
-     * @param enableAcceleratedNetworking the enableAcceleratedNetworking value to set
+     * @param enableAcceleratedNetworking the enableAcceleratedNetworking value
+     * to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withEnableAcceleratedNetworking(Boolean enableAcceleratedNetworking) {
@@ -230,7 +238,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the enableIPForwarding value.
      *
-     * @return the enableIPForwarding value
+     * @return the enableIPForwarding value.
      */
     public Boolean enableIPForwarding() {
         return this.enableIPForwarding;
@@ -239,7 +247,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the enableIPForwarding value.
      *
-     * @param enableIPForwarding the enableIPForwarding value to set
+     * @param enableIPForwarding the enableIPForwarding value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withEnableIPForwarding(Boolean enableIPForwarding) {
@@ -250,7 +258,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the resourceGuid value.
      *
-     * @return the resourceGuid value
+     * @return the resourceGuid value.
      */
     public String resourceGuid() {
         return this.resourceGuid;
@@ -259,7 +267,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the resourceGuid value.
      *
-     * @param resourceGuid the resourceGuid value to set
+     * @param resourceGuid the resourceGuid value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withResourceGuid(String resourceGuid) {
@@ -270,7 +278,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -279,7 +287,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withProvisioningState(String provisioningState) {
@@ -290,7 +298,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -299,7 +307,7 @@ public class NetworkInterfaceInner extends Resource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the NetworkInterfaceInner object itself.
      */
     public NetworkInterfaceInner withEtag(String etag) {
@@ -307,4 +315,23 @@ public class NetworkInterfaceInner extends Resource {
         return this;
     }
 
+    /**
+     * Get the id value.
+     *
+     * @return the id value.
+     */
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * Set the id value.
+     *
+     * @param id the id value to set.
+     * @return the NetworkInterfaceInner object itself.
+     */
+    public NetworkInterfaceInner withId(String id) {
+        this.id = id;
+        return this;
+    }
 }

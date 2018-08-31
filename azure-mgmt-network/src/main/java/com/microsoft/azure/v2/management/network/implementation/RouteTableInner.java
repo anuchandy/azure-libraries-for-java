@@ -8,27 +8,28 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
+import com.microsoft.azure.v2.Resource;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
+import java.util.List;
 
 /**
  * Route table resource.
  */
 @JsonFlatten
+@SkipParentValidation
 public class RouteTableInner extends Resource {
     /**
      * Collection of routes contained within a route table.
      */
     @JsonProperty(value = "properties.routes")
-    private List<RouteInner> routes;
+    private List<RouteInner> routesProperty;
 
     /**
      * A collection of references to subnets.
      */
     @JsonProperty(value = "properties.subnets", access = JsonProperty.Access.WRITE_ONLY)
-    private List<SubnetInner> subnets;
+    private List<SubnetInner> subnetsProperty;
 
     /**
      * The provisioning state of the resource. Possible values are: 'Updating',
@@ -45,38 +46,44 @@ public class RouteTableInner extends Resource {
     private String etag;
 
     /**
-     * Get the routes value.
-     *
-     * @return the routes value
+     * Resource ID.
      */
-    public List<RouteInner> routes() {
-        return this.routes;
+    @JsonProperty(value = "id")
+    private String id;
+
+    /**
+     * Get the routesProperty value.
+     *
+     * @return the routesProperty value.
+     */
+    public List<RouteInner> routesProperty() {
+        return this.routesProperty;
     }
 
     /**
-     * Set the routes value.
+     * Set the routesProperty value.
      *
-     * @param routes the routes value to set
+     * @param routesProperty the routesProperty value to set.
      * @return the RouteTableInner object itself.
      */
-    public RouteTableInner withRoutes(List<RouteInner> routes) {
-        this.routes = routes;
+    public RouteTableInner withRoutesProperty(List<RouteInner> routesProperty) {
+        this.routesProperty = routesProperty;
         return this;
     }
 
     /**
-     * Get the subnets value.
+     * Get the subnetsProperty value.
      *
-     * @return the subnets value
+     * @return the subnetsProperty value.
      */
-    public List<SubnetInner> subnets() {
-        return this.subnets;
+    public List<SubnetInner> subnetsProperty() {
+        return this.subnetsProperty;
     }
 
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -85,7 +92,7 @@ public class RouteTableInner extends Resource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the RouteTableInner object itself.
      */
     public RouteTableInner withProvisioningState(String provisioningState) {
@@ -96,7 +103,7 @@ public class RouteTableInner extends Resource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -105,7 +112,7 @@ public class RouteTableInner extends Resource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the RouteTableInner object itself.
      */
     public RouteTableInner withEtag(String etag) {
@@ -113,4 +120,23 @@ public class RouteTableInner extends Resource {
         return this;
     }
 
+    /**
+     * Get the id value.
+     *
+     * @return the id value.
+     */
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * Set the id value.
+     *
+     * @param id the id value to set.
+     * @return the RouteTableInner object itself.
+     */
+    public RouteTableInner withId(String id) {
+        this.id = id;
+        return this;
+    }
 }

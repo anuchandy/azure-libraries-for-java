@@ -8,11 +8,11 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.SubResource;
-import com.microsoft.azure.v2.management.network.TransportProtocol;
-import com.microsoft.azure.v2.management.network.LoadDistribution;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
+import com.microsoft.azure.v2.SubResource;
+import com.microsoft.azure.v2.management.network.LoadDistribution;
+import com.microsoft.azure.v2.management.network.TransportProtocol;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
 
 /**
  * A load balancing rule for a load balancer.
@@ -55,7 +55,7 @@ public class LoadBalancingRuleInner extends SubResource {
     private LoadDistribution loadDistribution;
 
     /**
-     * The port for the external endpoint. Port numbers for each Rule must be
+     * The port for the external endpoint. Port numbers for each rule must be
      * unique within the Load Balancer. Acceptable values are between 1 and
      * 65534.
      */
@@ -116,7 +116,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the frontendIPConfiguration value.
      *
-     * @return the frontendIPConfiguration value
+     * @return the frontendIPConfiguration value.
      */
     public SubResource frontendIPConfiguration() {
         return this.frontendIPConfiguration;
@@ -125,7 +125,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the frontendIPConfiguration value.
      *
-     * @param frontendIPConfiguration the frontendIPConfiguration value to set
+     * @param frontendIPConfiguration the frontendIPConfiguration value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withFrontendIPConfiguration(SubResource frontendIPConfiguration) {
@@ -136,7 +136,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the backendAddressPool value.
      *
-     * @return the backendAddressPool value
+     * @return the backendAddressPool value.
      */
     public SubResource backendAddressPool() {
         return this.backendAddressPool;
@@ -145,7 +145,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the backendAddressPool value.
      *
-     * @param backendAddressPool the backendAddressPool value to set
+     * @param backendAddressPool the backendAddressPool value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withBackendAddressPool(SubResource backendAddressPool) {
@@ -156,7 +156,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the probe value.
      *
-     * @return the probe value
+     * @return the probe value.
      */
     public SubResource probe() {
         return this.probe;
@@ -165,7 +165,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the probe value.
      *
-     * @param probe the probe value to set
+     * @param probe the probe value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withProbe(SubResource probe) {
@@ -176,7 +176,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the protocol value.
      *
-     * @return the protocol value
+     * @return the protocol value.
      */
     public TransportProtocol protocol() {
         return this.protocol;
@@ -185,7 +185,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the protocol value.
      *
-     * @param protocol the protocol value to set
+     * @param protocol the protocol value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withProtocol(TransportProtocol protocol) {
@@ -196,7 +196,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the loadDistribution value.
      *
-     * @return the loadDistribution value
+     * @return the loadDistribution value.
      */
     public LoadDistribution loadDistribution() {
         return this.loadDistribution;
@@ -205,7 +205,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the loadDistribution value.
      *
-     * @param loadDistribution the loadDistribution value to set
+     * @param loadDistribution the loadDistribution value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withLoadDistribution(LoadDistribution loadDistribution) {
@@ -216,7 +216,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the frontendPort value.
      *
-     * @return the frontendPort value
+     * @return the frontendPort value.
      */
     public int frontendPort() {
         return this.frontendPort;
@@ -225,7 +225,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the frontendPort value.
      *
-     * @param frontendPort the frontendPort value to set
+     * @param frontendPort the frontendPort value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withFrontendPort(int frontendPort) {
@@ -236,7 +236,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the backendPort value.
      *
-     * @return the backendPort value
+     * @return the backendPort value.
      */
     public Integer backendPort() {
         return this.backendPort;
@@ -245,7 +245,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the backendPort value.
      *
-     * @param backendPort the backendPort value to set
+     * @param backendPort the backendPort value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withBackendPort(Integer backendPort) {
@@ -256,7 +256,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the idleTimeoutInMinutes value.
      *
-     * @return the idleTimeoutInMinutes value
+     * @return the idleTimeoutInMinutes value.
      */
     public Integer idleTimeoutInMinutes() {
         return this.idleTimeoutInMinutes;
@@ -265,7 +265,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the idleTimeoutInMinutes value.
      *
-     * @param idleTimeoutInMinutes the idleTimeoutInMinutes value to set
+     * @param idleTimeoutInMinutes the idleTimeoutInMinutes value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withIdleTimeoutInMinutes(Integer idleTimeoutInMinutes) {
@@ -276,7 +276,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the enableFloatingIP value.
      *
-     * @return the enableFloatingIP value
+     * @return the enableFloatingIP value.
      */
     public Boolean enableFloatingIP() {
         return this.enableFloatingIP;
@@ -285,7 +285,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the enableFloatingIP value.
      *
-     * @param enableFloatingIP the enableFloatingIP value to set
+     * @param enableFloatingIP the enableFloatingIP value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withEnableFloatingIP(Boolean enableFloatingIP) {
@@ -296,7 +296,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the disableOutboundSnat value.
      *
-     * @return the disableOutboundSnat value
+     * @return the disableOutboundSnat value.
      */
     public Boolean disableOutboundSnat() {
         return this.disableOutboundSnat;
@@ -305,7 +305,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the disableOutboundSnat value.
      *
-     * @param disableOutboundSnat the disableOutboundSnat value to set
+     * @param disableOutboundSnat the disableOutboundSnat value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withDisableOutboundSnat(Boolean disableOutboundSnat) {
@@ -316,7 +316,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -325,7 +325,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withProvisioningState(String provisioningState) {
@@ -336,7 +336,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the name value.
      *
-     * @return the name value
+     * @return the name value.
      */
     public String name() {
         return this.name;
@@ -345,7 +345,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the name value.
      *
-     * @param name the name value to set
+     * @param name the name value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withName(String name) {
@@ -356,7 +356,7 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -365,12 +365,11 @@ public class LoadBalancingRuleInner extends SubResource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the LoadBalancingRuleInner object itself.
      */
     public LoadBalancingRuleInner withEtag(String etag) {
         this.etag = etag;
         return this;
     }
-
 }

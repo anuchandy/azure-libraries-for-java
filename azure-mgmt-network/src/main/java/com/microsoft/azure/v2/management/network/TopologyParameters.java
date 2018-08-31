@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Parameters that define the representation of topology.
  */
-public class TopologyParameters {
+public final class TopologyParameters {
     /**
      * The name of the target resource group to perform topology on.
      */
@@ -23,7 +23,7 @@ public class TopologyParameters {
     /**
      * Get the targetResourceGroupName value.
      *
-     * @return the targetResourceGroupName value
+     * @return the targetResourceGroupName value.
      */
     public String targetResourceGroupName() {
         return this.targetResourceGroupName;
@@ -32,12 +32,11 @@ public class TopologyParameters {
     /**
      * Set the targetResourceGroupName value.
      *
-     * @param targetResourceGroupName the targetResourceGroupName value to set
+     * @param targetResourceGroupName the targetResourceGroupName value to set.
      * @return the TopologyParameters object itself.
      */
     public TopologyParameters withTargetResourceGroupName(String targetResourceGroupName) {
         this.targetResourceGroupName = targetResourceGroupName;
         return this;
     }
-
 }

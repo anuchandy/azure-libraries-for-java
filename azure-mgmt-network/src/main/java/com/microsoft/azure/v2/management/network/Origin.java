@@ -8,55 +8,44 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for Origin.
  */
-public final class Origin {
-    /** Static value Local for Origin. */
-    public static final Origin LOCAL = new Origin("Local");
-
-    /** Static value Inbound for Origin. */
-    public static final Origin INBOUND = new Origin("Inbound");
-
-    /** Static value Outbound for Origin. */
-    public static final Origin OUTBOUND = new Origin("Outbound");
-
-    private String value;
+public final class Origin extends ExpandableStringEnum<Origin> {
+    /**
+     * Static value Local for Origin.
+     */
+    public static final Origin LOCAL = fromString("Local");
 
     /**
-     * Creates a custom value for Origin.
-     * @param value the custom value
+     * Static value Inbound for Origin.
      */
-    public Origin(String value) {
-        this.value = value;
+    public static final Origin INBOUND = fromString("Inbound");
+
+    /**
+     * Static value Outbound for Origin.
+     */
+    public static final Origin OUTBOUND = fromString("Outbound");
+
+    /**
+     * Creates or finds a Origin from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding Origin.
+     */
+    @JsonCreator
+    public static Origin fromString(String name) {
+        return fromString(name, Origin.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Origin)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        Origin rhs = (Origin) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known Origin values.
+     */
+    public static Collection<Origin> values() {
+        return values(Origin.class);
     }
 }

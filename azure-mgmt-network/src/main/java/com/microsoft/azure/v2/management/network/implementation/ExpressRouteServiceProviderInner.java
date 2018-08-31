@@ -8,16 +8,17 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import java.util.List;
-import com.microsoft.azure.v2.management.network.ExpressRouteServiceProviderBandwidthsOffered;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
+import com.microsoft.azure.v2.Resource;
+import com.microsoft.azure.v2.management.network.ExpressRouteServiceProviderBandwidthsOffered;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
+import java.util.List;
 
 /**
  * A ExpressRouteResourceProvider object.
  */
 @JsonFlatten
+@SkipParentValidation
 public class ExpressRouteServiceProviderInner extends Resource {
     /**
      * Get a list of peering locations.
@@ -38,9 +39,15 @@ public class ExpressRouteServiceProviderInner extends Resource {
     private String provisioningState;
 
     /**
+     * Resource ID.
+     */
+    @JsonProperty(value = "id")
+    private String id;
+
+    /**
      * Get the peeringLocations value.
      *
-     * @return the peeringLocations value
+     * @return the peeringLocations value.
      */
     public List<String> peeringLocations() {
         return this.peeringLocations;
@@ -49,7 +56,7 @@ public class ExpressRouteServiceProviderInner extends Resource {
     /**
      * Set the peeringLocations value.
      *
-     * @param peeringLocations the peeringLocations value to set
+     * @param peeringLocations the peeringLocations value to set.
      * @return the ExpressRouteServiceProviderInner object itself.
      */
     public ExpressRouteServiceProviderInner withPeeringLocations(List<String> peeringLocations) {
@@ -60,7 +67,7 @@ public class ExpressRouteServiceProviderInner extends Resource {
     /**
      * Get the bandwidthsOffered value.
      *
-     * @return the bandwidthsOffered value
+     * @return the bandwidthsOffered value.
      */
     public List<ExpressRouteServiceProviderBandwidthsOffered> bandwidthsOffered() {
         return this.bandwidthsOffered;
@@ -69,7 +76,7 @@ public class ExpressRouteServiceProviderInner extends Resource {
     /**
      * Set the bandwidthsOffered value.
      *
-     * @param bandwidthsOffered the bandwidthsOffered value to set
+     * @param bandwidthsOffered the bandwidthsOffered value to set.
      * @return the ExpressRouteServiceProviderInner object itself.
      */
     public ExpressRouteServiceProviderInner withBandwidthsOffered(List<ExpressRouteServiceProviderBandwidthsOffered> bandwidthsOffered) {
@@ -80,7 +87,7 @@ public class ExpressRouteServiceProviderInner extends Resource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -89,7 +96,7 @@ public class ExpressRouteServiceProviderInner extends Resource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the ExpressRouteServiceProviderInner object itself.
      */
     public ExpressRouteServiceProviderInner withProvisioningState(String provisioningState) {
@@ -97,4 +104,23 @@ public class ExpressRouteServiceProviderInner extends Resource {
         return this;
     }
 
+    /**
+     * Get the id value.
+     *
+     * @return the id value.
+     */
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * Set the id value.
+     *
+     * @param id the id value to set.
+     * @return the ExpressRouteServiceProviderInner object itself.
+     */
+    public ExpressRouteServiceProviderInner withId(String id) {
+        this.id = id;
+        return this;
+    }
 }

@@ -8,52 +8,39 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for Direction.
  */
-public final class Direction {
-    /** Static value Inbound for Direction. */
-    public static final Direction INBOUND = new Direction("Inbound");
-
-    /** Static value Outbound for Direction. */
-    public static final Direction OUTBOUND = new Direction("Outbound");
-
-    private String value;
+public final class Direction extends ExpandableStringEnum<Direction> {
+    /**
+     * Static value Inbound for Direction.
+     */
+    public static final Direction INBOUND = fromString("Inbound");
 
     /**
-     * Creates a custom value for Direction.
-     * @param value the custom value
+     * Static value Outbound for Direction.
      */
-    public Direction(String value) {
-        this.value = value;
+    public static final Direction OUTBOUND = fromString("Outbound");
+
+    /**
+     * Creates or finds a Direction from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding Direction.
+     */
+    @JsonCreator
+    public static Direction fromString(String name) {
+        return fromString(name, Direction.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Direction)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        Direction rhs = (Direction) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known Direction values.
+     */
+    public static Collection<Direction> values() {
+        return values(Direction.class);
     }
 }

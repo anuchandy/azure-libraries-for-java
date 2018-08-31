@@ -8,70 +8,69 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for DhGroup.
  */
-public final class DhGroup {
-    /** Static value None for DhGroup. */
-    public static final DhGroup NONE = new DhGroup("None");
-
-    /** Static value DHGroup1 for DhGroup. */
-    public static final DhGroup DHGROUP1 = new DhGroup("DHGroup1");
-
-    /** Static value DHGroup2 for DhGroup. */
-    public static final DhGroup DHGROUP2 = new DhGroup("DHGroup2");
-
-    /** Static value DHGroup14 for DhGroup. */
-    public static final DhGroup DHGROUP14 = new DhGroup("DHGroup14");
-
-    /** Static value DHGroup2048 for DhGroup. */
-    public static final DhGroup DHGROUP2048 = new DhGroup("DHGroup2048");
-
-    /** Static value ECP256 for DhGroup. */
-    public static final DhGroup ECP256 = new DhGroup("ECP256");
-
-    /** Static value ECP384 for DhGroup. */
-    public static final DhGroup ECP384 = new DhGroup("ECP384");
-
-    /** Static value DHGroup24 for DhGroup. */
-    public static final DhGroup DHGROUP24 = new DhGroup("DHGroup24");
-
-    private String value;
+public final class DhGroup extends ExpandableStringEnum<DhGroup> {
+    /**
+     * Static value None for DhGroup.
+     */
+    public static final DhGroup NONE = fromString("None");
 
     /**
-     * Creates a custom value for DhGroup.
-     * @param value the custom value
+     * Static value DHGroup1 for DhGroup.
      */
-    public DhGroup(String value) {
-        this.value = value;
+    public static final DhGroup DHGROUP1 = fromString("DHGroup1");
+
+    /**
+     * Static value DHGroup2 for DhGroup.
+     */
+    public static final DhGroup DHGROUP2 = fromString("DHGroup2");
+
+    /**
+     * Static value DHGroup14 for DhGroup.
+     */
+    public static final DhGroup DHGROUP14 = fromString("DHGroup14");
+
+    /**
+     * Static value DHGroup2048 for DhGroup.
+     */
+    public static final DhGroup DHGROUP2048 = fromString("DHGroup2048");
+
+    /**
+     * Static value ECP256 for DhGroup.
+     */
+    public static final DhGroup ECP256 = fromString("ECP256");
+
+    /**
+     * Static value ECP384 for DhGroup.
+     */
+    public static final DhGroup ECP384 = fromString("ECP384");
+
+    /**
+     * Static value DHGroup24 for DhGroup.
+     */
+    public static final DhGroup DHGROUP24 = fromString("DHGroup24");
+
+    /**
+     * Creates or finds a DhGroup from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding DhGroup.
+     */
+    @JsonCreator
+    public static DhGroup fromString(String name) {
+        return fromString(name, DhGroup.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof DhGroup)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        DhGroup rhs = (DhGroup) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known DhGroup values.
+     */
+    public static Collection<DhGroup> values() {
+        return values(DhGroup.class);
     }
 }

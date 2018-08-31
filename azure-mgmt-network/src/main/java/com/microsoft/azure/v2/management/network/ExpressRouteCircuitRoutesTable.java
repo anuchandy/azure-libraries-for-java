@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * The routes table associated with the ExpressRouteCircuit.
  */
-public class ExpressRouteCircuitRoutesTable {
+public final class ExpressRouteCircuitRoutesTable {
     /**
      * network.
      */
@@ -47,7 +47,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Get the network value.
      *
-     * @return the network value
+     * @return the network value.
      */
     public String network() {
         return this.network;
@@ -56,7 +56,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Set the network value.
      *
-     * @param network the network value to set
+     * @param network the network value to set.
      * @return the ExpressRouteCircuitRoutesTable object itself.
      */
     public ExpressRouteCircuitRoutesTable withNetwork(String network) {
@@ -67,7 +67,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Get the nextHop value.
      *
-     * @return the nextHop value
+     * @return the nextHop value.
      */
     public String nextHop() {
         return this.nextHop;
@@ -76,7 +76,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Set the nextHop value.
      *
-     * @param nextHop the nextHop value to set
+     * @param nextHop the nextHop value to set.
      * @return the ExpressRouteCircuitRoutesTable object itself.
      */
     public ExpressRouteCircuitRoutesTable withNextHop(String nextHop) {
@@ -87,7 +87,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Get the locPrf value.
      *
-     * @return the locPrf value
+     * @return the locPrf value.
      */
     public String locPrf() {
         return this.locPrf;
@@ -96,7 +96,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Set the locPrf value.
      *
-     * @param locPrf the locPrf value to set
+     * @param locPrf the locPrf value to set.
      * @return the ExpressRouteCircuitRoutesTable object itself.
      */
     public ExpressRouteCircuitRoutesTable withLocPrf(String locPrf) {
@@ -107,7 +107,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Get the weight value.
      *
-     * @return the weight value
+     * @return the weight value.
      */
     public Integer weight() {
         return this.weight;
@@ -116,7 +116,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Set the weight value.
      *
-     * @param weight the weight value to set
+     * @param weight the weight value to set.
      * @return the ExpressRouteCircuitRoutesTable object itself.
      */
     public ExpressRouteCircuitRoutesTable withWeight(Integer weight) {
@@ -127,7 +127,7 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Get the path value.
      *
-     * @return the path value
+     * @return the path value.
      */
     public String path() {
         return this.path;
@@ -136,12 +136,11 @@ public class ExpressRouteCircuitRoutesTable {
     /**
      * Set the path value.
      *
-     * @param path the path value to set
+     * @param path the path value to set.
      * @return the ExpressRouteCircuitRoutesTable object itself.
      */
     public ExpressRouteCircuitRoutesTable withPath(String path) {
         this.path = path;
         return this;
     }
-
 }

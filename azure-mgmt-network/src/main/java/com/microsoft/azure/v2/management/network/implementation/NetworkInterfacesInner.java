@@ -8,151 +8,182 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsGet;
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsDelete;
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsListing;
-import retrofit2.Retrofit;
-import com.google.common.reflect.TypeToken;
-import com.microsoft.azure.AzureServiceFuture;
-import com.microsoft.azure.CloudException;
-import com.microsoft.azure.ListOperationCallback;
-import com.microsoft.azure.Page;
-import com.microsoft.azure.PagedList;
-import com.microsoft.rest.ServiceCallback;
-import com.microsoft.rest.ServiceFuture;
-import com.microsoft.rest.ServiceResponse;
-import com.microsoft.rest.Validator;
-import java.io.IOException;
-import java.util.List;
-import okhttp3.ResponseBody;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.HTTP;
-import retrofit2.http.Path;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Query;
-import retrofit2.http.Url;
-import retrofit2.Response;
-import rx.functions.Func1;
-import rx.Observable;
+import com.microsoft.azure.v2.AzureProxy;
+import com.microsoft.azure.v2.CloudException;
+import com.microsoft.azure.v2.OperationStatus;
+import com.microsoft.azure.v2.Page;
+import com.microsoft.azure.v2.PagedList;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsDelete;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsGet;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsListing;
+import com.microsoft.azure.v2.util.ServiceFutureUtil;
+import com.microsoft.rest.v2.BodyResponse;
+import com.microsoft.rest.v2.OperationDescription;
+import com.microsoft.rest.v2.ServiceCallback;
+import com.microsoft.rest.v2.ServiceFuture;
+import com.microsoft.rest.v2.Validator;
+import com.microsoft.rest.v2.VoidResponse;
+import com.microsoft.rest.v2.annotations.BodyParam;
+import com.microsoft.rest.v2.annotations.DELETE;
+import com.microsoft.rest.v2.annotations.ExpectedResponses;
+import com.microsoft.rest.v2.annotations.GET;
+import com.microsoft.rest.v2.annotations.HeaderParam;
+import com.microsoft.rest.v2.annotations.Host;
+import com.microsoft.rest.v2.annotations.PathParam;
+import com.microsoft.rest.v2.annotations.POST;
+import com.microsoft.rest.v2.annotations.PUT;
+import com.microsoft.rest.v2.annotations.QueryParam;
+import com.microsoft.rest.v2.annotations.ResumeOperation;
+import com.microsoft.rest.v2.annotations.UnexpectedResponseExceptionType;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
 
 /**
- * An instance of this class provides access to all the operations defined
- * in NetworkInterfaces.
+ * An instance of this class provides access to all the operations defined in
+ * NetworkInterfaces.
  */
-public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterfaceInner>, InnerSupportsDelete<Void>, InnerSupportsListing<NetworkInterfaceInner> {
-    /** The Retrofit service to perform REST calls. */
+public final class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterfaceInner>, InnerSupportsDelete<Void>, InnerSupportsListing<NetworkInterfaceInner> {
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private NetworkInterfacesService service;
-    /** The service client containing this operation class. */
+
+    /**
+     * The service client containing this operation class.
+     */
     private NetworkManagementClientImpl client;
 
     /**
      * Initializes an instance of NetworkInterfacesInner.
      *
-     * @param retrofit the Retrofit instance built from a Retrofit Builder.
      * @param client the instance of the service client containing this operation class.
      */
-    public NetworkInterfacesInner(Retrofit retrofit, NetworkManagementClientImpl client) {
-        this.service = retrofit.create(NetworkInterfacesService.class);
+    public NetworkInterfacesInner(NetworkManagementClientImpl client) {
+        this.service = AzureProxy.create(NetworkInterfacesService.class, client);
         this.client = client;
     }
 
     /**
-     * The interface defining all the services for NetworkInterfaces to be
-     * used by Retrofit to perform actually REST calls.
+     * The interface defining all the services for NetworkInterfaces to be used
+     * by the proxy service to perform REST calls.
      */
-    interface NetworkInterfacesService {
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces delete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> delete(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+    @Host("https://management.azure.com")
+    private interface NetworkInterfacesService {
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<Void>> beginDelete(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces beginDelete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> beginDelete(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<VoidResponse> delete(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces getByResourceGroup" })
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<Void>> resumeDelete(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
-        Observable<Response<ResponseBody>> getByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Query("$expand") String expand, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<NetworkInterfaceInner>> getByResourceGroup(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @QueryParam("$expand") String expand, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces createOrUpdate" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
-        Observable<Response<ResponseBody>> createOrUpdate(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Body NetworkInterfaceInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<NetworkInterfaceInner>> beginCreateOrUpdate(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") NetworkInterfaceInner parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces beginCreateOrUpdate" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
-        Observable<Response<ResponseBody>> beginCreateOrUpdate(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Body NetworkInterfaceInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<NetworkInterfaceInner>> createOrUpdate(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") NetworkInterfaceInner parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces list" })
+        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}")
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<NetworkInterfaceInner>> resumeCreateOrUpdate(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Network/networkInterfaces")
-        Observable<Response<ResponseBody>> list(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> list(@PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listByResourceGroup" })
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces")
-        Observable<Response<ResponseBody>> listByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listByResourceGroup(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces getEffectiveRouteTable" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveRouteTable")
-        Observable<Response<ResponseBody>> getEffectiveRouteTable(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<EffectiveRouteListResultInner>> beginGetEffectiveRouteTable(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces beginGetEffectiveRouteTable" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveRouteTable")
-        Observable<Response<ResponseBody>> beginGetEffectiveRouteTable(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<EffectiveRouteListResultInner>> getEffectiveRouteTable(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listEffectiveNetworkSecurityGroups" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveRouteTable")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<EffectiveRouteListResultInner>> resumeGetEffectiveRouteTable(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveNetworkSecurityGroups")
-        Observable<Response<ResponseBody>> listEffectiveNetworkSecurityGroups(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<EffectiveNetworkSecurityGroupListResultInner>> beginListEffectiveNetworkSecurityGroups(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces beginListEffectiveNetworkSecurityGroups" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveNetworkSecurityGroups")
-        Observable<Response<ResponseBody>> beginListEffectiveNetworkSecurityGroups(@Path("resourceGroupName") String resourceGroupName, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<EffectiveNetworkSecurityGroupListResultInner>> listEffectiveNetworkSecurityGroups(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listVirtualMachineScaleSetVMNetworkInterfaces" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}/effectiveNetworkSecurityGroups")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<EffectiveNetworkSecurityGroupListResultInner>> resumeListEffectiveNetworkSecurityGroups(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces")
-        Observable<Response<ResponseBody>> listVirtualMachineScaleSetVMNetworkInterfaces(@Path("resourceGroupName") String resourceGroupName, @Path("virtualMachineScaleSetName") String virtualMachineScaleSetName, @Path("virtualmachineIndex") String virtualmachineIndex, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listVirtualMachineScaleSetVMNetworkInterfaces(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualMachineScaleSetName") String virtualMachineScaleSetName, @PathParam("virtualmachineIndex") String virtualmachineIndex, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listVirtualMachineScaleSetNetworkInterfaces" })
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/networkInterfaces")
-        Observable<Response<ResponseBody>> listVirtualMachineScaleSetNetworkInterfaces(@Path("resourceGroupName") String resourceGroupName, @Path("virtualMachineScaleSetName") String virtualMachineScaleSetName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listVirtualMachineScaleSetNetworkInterfaces(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualMachineScaleSetName") String virtualMachineScaleSetName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces getVirtualMachineScaleSetNetworkInterface" })
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.Compute/virtualMachineScaleSets/{virtualMachineScaleSetName}/virtualMachines/{virtualmachineIndex}/networkInterfaces/{networkInterfaceName}")
-        Observable<Response<ResponseBody>> getVirtualMachineScaleSetNetworkInterface(@Path("resourceGroupName") String resourceGroupName, @Path("virtualMachineScaleSetName") String virtualMachineScaleSetName, @Path("virtualmachineIndex") String virtualmachineIndex, @Path("networkInterfaceName") String networkInterfaceName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Query("$expand") String expand, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<NetworkInterfaceInner>> getVirtualMachineScaleSetNetworkInterface(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualMachineScaleSetName") String virtualMachineScaleSetName, @PathParam("virtualmachineIndex") String virtualmachineIndex, @PathParam("networkInterfaceName") String networkInterfaceName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @QueryParam("$expand") String expand, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listNext" })
-        @GET
-        Observable<Response<ResponseBody>> listNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listAllNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listByResourceGroupNext" })
-        @GET
-        Observable<Response<ResponseBody>> listByResourceGroupNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces getEffectiveRouteTableNext" })
-        @GET
-        Observable<Response<ResponseBody>> getEffectiveRouteTableNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listVirtualMachineScaleSetVMNetworkInterfacesNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces beginGetEffectiveRouteTableNext" })
-        @GET
-        Observable<Response<ResponseBody>> beginGetEffectiveRouteTableNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listEffectiveNetworkSecurityGroupsNext" })
-        @GET
-        Observable<Response<ResponseBody>> listEffectiveNetworkSecurityGroupsNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces beginListEffectiveNetworkSecurityGroupsNext" })
-        @GET
-        Observable<Response<ResponseBody>> beginListEffectiveNetworkSecurityGroupsNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listVirtualMachineScaleSetVMNetworkInterfacesNext" })
-        @GET
-        Observable<Response<ResponseBody>> listVirtualMachineScaleSetVMNetworkInterfacesNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.NetworkInterfaces listVirtualMachineScaleSetNetworkInterfacesNext" })
-        @GET
-        Observable<Response<ResponseBody>> listVirtualMachineScaleSetNetworkInterfacesNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<NetworkInterfaceInner>>> listVirtualMachineScaleSetNetworkInterfacesNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
     }
 
     /**
@@ -160,12 +191,12 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void delete(String resourceGroupName, String networkInterfaceName) {
-        deleteWithServiceResponseAsync(resourceGroupName, networkInterfaceName).toBlocking().last().body();
+    public void beginDelete(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        beginDeleteAsync(resourceGroupName, networkInterfaceName).blockingLast();
     }
 
     /**
@@ -174,11 +205,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;Void&gt; object.
      */
-    public ServiceFuture<Void> deleteAsync(String resourceGroupName, String networkInterfaceName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(deleteWithServiceResponseAsync(resourceGroupName, networkInterfaceName), serviceCallback);
+    public ServiceFuture<Void> beginDeleteAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginDeleteAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -186,27 +217,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Void> deleteAsync(String resourceGroupName, String networkInterfaceName) {
-        return deleteWithServiceResponseAsync(resourceGroupName, networkInterfaceName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the specified network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String networkInterfaceName) {
+    public Observable<OperationStatus<Void>> beginDeleteAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -217,8 +231,7 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.delete(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<Void>() { }.getType());
+        return service.beginDelete(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -226,12 +239,12 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void beginDelete(String resourceGroupName, String networkInterfaceName) {
-        beginDeleteWithServiceResponseAsync(resourceGroupName, networkInterfaceName).toBlocking().single().body();
+    public void delete(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        deleteAsync(resourceGroupName, networkInterfaceName).blockingGet();
     }
 
     /**
@@ -240,11 +253,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<Void> beginDeleteAsync(String resourceGroupName, String networkInterfaceName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(beginDeleteWithServiceResponseAsync(resourceGroupName, networkInterfaceName), serviceCallback);
+    public ServiceFuture<Void> deleteAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFuture.fromBody(deleteAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -252,27 +265,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Void> beginDeleteAsync(String resourceGroupName, String networkInterfaceName) {
-        return beginDeleteWithServiceResponseAsync(resourceGroupName, networkInterfaceName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the specified network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<ServiceResponse<Void>> beginDeleteWithServiceResponseAsync(String resourceGroupName, String networkInterfaceName) {
+    public Single<VoidResponse> deleteWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -283,27 +279,34 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginDelete(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
-                @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<Void> clientResponse = beginDeleteDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.delete(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<Void> beginDeleteDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
-                .register(204, new TypeToken<Void>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .register(200, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Deletes the specified network interface.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param networkInterfaceName The name of the network interface.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<Void> deleteAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return deleteWithRestResponseAsync(resourceGroupName, networkInterfaceName)
+            .flatMapMaybe((VoidResponse res) -> Maybe.empty());
+    }
+
+    /**
+     * Deletes the specified network interface. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<Void>> resumeDelete(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeDelete(operationDescription);
     }
 
     /**
@@ -311,13 +314,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the NetworkInterfaceInner object if successful.
      */
-    public NetworkInterfaceInner getByResourceGroup(String resourceGroupName, String networkInterfaceName) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, networkInterfaceName).toBlocking().single().body();
+    public NetworkInterfaceInner getByResourceGroup(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return getByResourceGroupAsync(resourceGroupName, networkInterfaceName).blockingGet();
     }
 
     /**
@@ -326,11 +329,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<NetworkInterfaceInner> getByResourceGroupAsync(String resourceGroupName, String networkInterfaceName, final ServiceCallback<NetworkInterfaceInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getByResourceGroupWithServiceResponseAsync(resourceGroupName, networkInterfaceName), serviceCallback);
+    public ServiceFuture<NetworkInterfaceInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<NetworkInterfaceInner> serviceCallback) {
+        return ServiceFuture.fromBody(getByResourceGroupAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -338,27 +341,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<NetworkInterfaceInner> getByResourceGroupAsync(String resourceGroupName, String networkInterfaceName) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, networkInterfaceName).map(new Func1<ServiceResponse<NetworkInterfaceInner>, NetworkInterfaceInner>() {
-            @Override
-            public NetworkInterfaceInner call(ServiceResponse<NetworkInterfaceInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets information about the specified network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
-     */
-    public Observable<ServiceResponse<NetworkInterfaceInner>> getByResourceGroupWithServiceResponseAsync(String resourceGroupName, String networkInterfaceName) {
+    public Single<BodyResponse<NetworkInterfaceInner>> getByResourceGroupWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -370,18 +356,20 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
         }
         final String apiVersion = "2017-08-01";
         final String expand = null;
-        return service.getByResourceGroup(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<NetworkInterfaceInner>>>() {
-                @Override
-                public Observable<ServiceResponse<NetworkInterfaceInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<NetworkInterfaceInner> clientResponse = getByResourceGroupDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getByResourceGroup(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
+    }
+
+    /**
+     * Gets information about the specified network interface.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param networkInterfaceName The name of the network interface.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<NetworkInterfaceInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return getByResourceGroupWithRestResponseAsync(resourceGroupName, networkInterfaceName)
+            .flatMapMaybe((BodyResponse<NetworkInterfaceInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -390,13 +378,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param expand Expands referenced resources.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the NetworkInterfaceInner object if successful.
      */
-    public NetworkInterfaceInner getByResourceGroup(String resourceGroupName, String networkInterfaceName, String expand) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, networkInterfaceName, expand).toBlocking().single().body();
+    public NetworkInterfaceInner getByResourceGroup(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, String expand) {
+        return getByResourceGroupAsync(resourceGroupName, networkInterfaceName, expand).blockingGet();
     }
 
     /**
@@ -406,11 +394,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param networkInterfaceName The name of the network interface.
      * @param expand Expands referenced resources.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<NetworkInterfaceInner> getByResourceGroupAsync(String resourceGroupName, String networkInterfaceName, String expand, final ServiceCallback<NetworkInterfaceInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getByResourceGroupWithServiceResponseAsync(resourceGroupName, networkInterfaceName, expand), serviceCallback);
+    public ServiceFuture<NetworkInterfaceInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, String expand, ServiceCallback<NetworkInterfaceInner> serviceCallback) {
+        return ServiceFuture.fromBody(getByResourceGroupAsync(resourceGroupName, networkInterfaceName, expand), serviceCallback);
     }
 
     /**
@@ -419,28 +407,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param expand Expands referenced resources.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<NetworkInterfaceInner> getByResourceGroupAsync(String resourceGroupName, String networkInterfaceName, String expand) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, networkInterfaceName, expand).map(new Func1<ServiceResponse<NetworkInterfaceInner>, NetworkInterfaceInner>() {
-            @Override
-            public NetworkInterfaceInner call(ServiceResponse<NetworkInterfaceInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets information about the specified network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @param expand Expands referenced resources.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
-     */
-    public Observable<ServiceResponse<NetworkInterfaceInner>> getByResourceGroupWithServiceResponseAsync(String resourceGroupName, String networkInterfaceName, String expand) {
+    public Single<BodyResponse<NetworkInterfaceInner>> getByResourceGroupWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, String expand) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -451,25 +421,21 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.getByResourceGroup(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<NetworkInterfaceInner>>>() {
-                @Override
-                public Observable<ServiceResponse<NetworkInterfaceInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<NetworkInterfaceInner> clientResponse = getByResourceGroupDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getByResourceGroup(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<NetworkInterfaceInner> getByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<NetworkInterfaceInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<NetworkInterfaceInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets information about the specified network interface.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param networkInterfaceName The name of the network interface.
+     * @param expand Expands referenced resources.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<NetworkInterfaceInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, String expand) {
+        return getByResourceGroupWithRestResponseAsync(resourceGroupName, networkInterfaceName, expand)
+            .flatMapMaybe((BodyResponse<NetworkInterfaceInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -478,13 +444,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param parameters Parameters supplied to the create or update network interface operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the NetworkInterfaceInner object if successful.
      */
-    public NetworkInterfaceInner createOrUpdate(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters) {
-        return createOrUpdateWithServiceResponseAsync(resourceGroupName, networkInterfaceName, parameters).toBlocking().last().body();
+    public NetworkInterfaceInner beginCreateOrUpdate(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters) {
+        return beginCreateOrUpdateAsync(resourceGroupName, networkInterfaceName, parameters).blockingLast().result();
     }
 
     /**
@@ -494,11 +460,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param networkInterfaceName The name of the network interface.
      * @param parameters Parameters supplied to the create or update network interface operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<NetworkInterfaceInner> createOrUpdateAsync(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters, final ServiceCallback<NetworkInterfaceInner> serviceCallback) {
-        return ServiceFuture.fromResponse(createOrUpdateWithServiceResponseAsync(resourceGroupName, networkInterfaceName, parameters), serviceCallback);
+    public ServiceFuture<NetworkInterfaceInner> beginCreateOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters, ServiceCallback<NetworkInterfaceInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginCreateOrUpdateAsync(resourceGroupName, networkInterfaceName, parameters), serviceCallback);
     }
 
     /**
@@ -507,28 +473,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param parameters Parameters supplied to the create or update network interface operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<NetworkInterfaceInner> createOrUpdateAsync(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters) {
-        return createOrUpdateWithServiceResponseAsync(resourceGroupName, networkInterfaceName, parameters).map(new Func1<ServiceResponse<NetworkInterfaceInner>, NetworkInterfaceInner>() {
-            @Override
-            public NetworkInterfaceInner call(ServiceResponse<NetworkInterfaceInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Creates or updates a network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @param parameters Parameters supplied to the create or update network interface operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<NetworkInterfaceInner>> createOrUpdateWithServiceResponseAsync(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters) {
+    public Observable<OperationStatus<NetworkInterfaceInner>> beginCreateOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -543,8 +491,7 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.createOrUpdate(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPutOrPatchResultAsync(observable, new TypeToken<NetworkInterfaceInner>() { }.getType());
+        return service.beginCreateOrUpdate(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -553,13 +500,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param parameters Parameters supplied to the create or update network interface operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the NetworkInterfaceInner object if successful.
      */
-    public NetworkInterfaceInner beginCreateOrUpdate(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters) {
-        return beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, networkInterfaceName, parameters).toBlocking().single().body();
+    public NetworkInterfaceInner createOrUpdate(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters) {
+        return createOrUpdateAsync(resourceGroupName, networkInterfaceName, parameters).blockingGet();
     }
 
     /**
@@ -569,11 +516,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param networkInterfaceName The name of the network interface.
      * @param parameters Parameters supplied to the create or update network interface operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<NetworkInterfaceInner> beginCreateOrUpdateAsync(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters, final ServiceCallback<NetworkInterfaceInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, networkInterfaceName, parameters), serviceCallback);
+    public ServiceFuture<NetworkInterfaceInner> createOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters, ServiceCallback<NetworkInterfaceInner> serviceCallback) {
+        return ServiceFuture.fromBody(createOrUpdateAsync(resourceGroupName, networkInterfaceName, parameters), serviceCallback);
     }
 
     /**
@@ -582,28 +529,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param parameters Parameters supplied to the create or update network interface operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<NetworkInterfaceInner> beginCreateOrUpdateAsync(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters) {
-        return beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, networkInterfaceName, parameters).map(new Func1<ServiceResponse<NetworkInterfaceInner>, NetworkInterfaceInner>() {
-            @Override
-            public NetworkInterfaceInner call(ServiceResponse<NetworkInterfaceInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Creates or updates a network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @param parameters Parameters supplied to the create or update network interface operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
-     */
-    public Observable<ServiceResponse<NetworkInterfaceInner>> beginCreateOrUpdateWithServiceResponseAsync(String resourceGroupName, String networkInterfaceName, NetworkInterfaceInner parameters) {
+    public Single<BodyResponse<NetworkInterfaceInner>> createOrUpdateWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -618,42 +547,50 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        return service.beginCreateOrUpdate(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<NetworkInterfaceInner>>>() {
-                @Override
-                public Observable<ServiceResponse<NetworkInterfaceInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<NetworkInterfaceInner> clientResponse = beginCreateOrUpdateDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.createOrUpdate(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<NetworkInterfaceInner> beginCreateOrUpdateDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<NetworkInterfaceInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(201, new TypeToken<NetworkInterfaceInner>() { }.getType())
-                .register(200, new TypeToken<NetworkInterfaceInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Creates or updates a network interface.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param networkInterfaceName The name of the network interface.
+     * @param parameters Parameters supplied to the create or update network interface operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<NetworkInterfaceInner> createOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, @NonNull NetworkInterfaceInner parameters) {
+        return createOrUpdateWithRestResponseAsync(resourceGroupName, networkInterfaceName, parameters)
+            .flatMapMaybe((BodyResponse<NetworkInterfaceInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Creates or updates a network interface. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<NetworkInterfaceInner>> resumeCreateOrUpdate(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeCreateOrUpdate(operationDescription);
     }
 
     /**
      * Gets all network interfaces in a subscription.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
     public PagedList<NetworkInterfaceInner> list() {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listSinglePageAsync().toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+        Page<NetworkInterfaceInner> response = listSinglePageAsync().blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listAllNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -661,105 +598,49 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
     /**
      * Gets all network interfaces in a subscription.
      *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<NetworkInterfaceInner>> listAsync(final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listSinglePageAsync(),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network interfaces in a subscription.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
     public Observable<Page<NetworkInterfaceInner>> listAsync() {
-        return listWithServiceResponseAsync()
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network interfaces in a subscription.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listWithServiceResponseAsync() {
         return listSinglePageAsync()
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listAllNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets all network interfaces in a subscription.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listSinglePageAsync() {
+    public Single<Page<NetworkInterfaceInner>> listSinglePageAsync() {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.list(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.list(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
     }
 
     /**
      * Gets all network interfaces in a resource group.
      *
      * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
-    public PagedList<NetworkInterfaceInner> listByResourceGroup(final String resourceGroupName) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listByResourceGroupSinglePageAsync(resourceGroupName).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+    public PagedList<NetworkInterfaceInner> listByResourceGroup(@NonNull String resourceGroupName) {
+        Page<NetworkInterfaceInner> response = listByResourceGroupSinglePageAsync(resourceGroupName).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -768,68 +649,29 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * Gets all network interfaces in a resource group.
      *
      * @param resourceGroupName The name of the resource group.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<List<NetworkInterfaceInner>> listByResourceGroupAsync(final String resourceGroupName, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listByResourceGroupSinglePageAsync(resourceGroupName),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listByResourceGroupNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network interfaces in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listByResourceGroupAsync(final String resourceGroupName) {
-        return listByResourceGroupWithServiceResponseAsync(resourceGroupName)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network interfaces in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listByResourceGroupWithServiceResponseAsync(final String resourceGroupName) {
+    public Observable<Page<NetworkInterfaceInner>> listByResourceGroupAsync(@NonNull String resourceGroupName) {
         return listByResourceGroupSinglePageAsync(resourceGroupName)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listByResourceGroupNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets all network interfaces in a resource group.
      *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param resourceGroupName The name of the resource group.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listByResourceGroupSinglePageAsync(final String resourceGroupName) {
+    public Single<Page<NetworkInterfaceInner>> listByResourceGroupSinglePageAsync(@NonNull String resourceGroupName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -837,25 +679,8 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listByResourceGroup(resourceGroupName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listByResourceGroupDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listByResourceGroup(resourceGroupName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
     }
 
     /**
@@ -863,19 +688,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the EffectiveRouteListResultInner object if successful.
      */
-    public PagedList<EffectiveRouteInner> getEffectiveRouteTable(final String resourceGroupName, final String networkInterfaceName) {
-        ServiceResponse<Page<EffectiveRouteInner>> response = getEffectiveRouteTableSinglePageAsync(resourceGroupName, networkInterfaceName).toBlocking().single();
-        return new PagedList<EffectiveRouteInner>(response.body()) {
-            @Override
-            public Page<EffectiveRouteInner> nextPage(String nextPageLink) {
-                return getEffectiveRouteTableNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
+    public EffectiveRouteListResultInner beginGetEffectiveRouteTable(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return beginGetEffectiveRouteTableAsync(resourceGroupName, networkInterfaceName).blockingLast().result();
     }
 
     /**
@@ -884,19 +703,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;EffectiveRouteListResultInner&gt; object.
      */
-    public ServiceFuture<List<EffectiveRouteInner>> getEffectiveRouteTableAsync(final String resourceGroupName, final String networkInterfaceName, final ListOperationCallback<EffectiveRouteInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            getEffectiveRouteTableSinglePageAsync(resourceGroupName, networkInterfaceName),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(String nextPageLink) {
-                    return getEffectiveRouteTableNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
+    public ServiceFuture<EffectiveRouteListResultInner> beginGetEffectiveRouteTableAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<EffectiveRouteListResultInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGetEffectiveRouteTableAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -904,50 +715,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Page<EffectiveRouteInner>> getEffectiveRouteTableAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return getEffectiveRouteTableWithServiceResponseAsync(resourceGroupName, networkInterfaceName)
-            .map(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Page<EffectiveRouteInner>>() {
-                @Override
-                public Page<EffectiveRouteInner> call(ServiceResponse<Page<EffectiveRouteInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> getEffectiveRouteTableWithServiceResponseAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return getEffectiveRouteTableSinglePageAsync(resourceGroupName, networkInterfaceName)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(ServiceResponse<Page<EffectiveRouteInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(getEffectiveRouteTableNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveRouteInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<EffectiveRouteInner>> * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> getEffectiveRouteTableSinglePageAsync(final String resourceGroupName, final String networkInterfaceName) {
+    public Observable<OperationStatus<EffectiveRouteListResultInner>> beginGetEffectiveRouteTableAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -958,26 +729,7 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.getEffectiveRouteTable(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveRouteInner>> result = getEffectiveRouteTableDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveRouteInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<EffectiveRouteInner>> getEffectiveRouteTableDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException, InterruptedException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveRouteInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveRouteInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.beginGetEffectiveRouteTable(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -985,19 +737,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the EffectiveRouteListResultInner object if successful.
      */
-    public PagedList<EffectiveRouteInner> beginGetEffectiveRouteTable(final String resourceGroupName, final String networkInterfaceName) {
-        ServiceResponse<Page<EffectiveRouteInner>> response = beginGetEffectiveRouteTableSinglePageAsync(resourceGroupName, networkInterfaceName).toBlocking().single();
-        return new PagedList<EffectiveRouteInner>(response.body()) {
-            @Override
-            public Page<EffectiveRouteInner> nextPage(String nextPageLink) {
-                return beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
+    public EffectiveRouteListResultInner getEffectiveRouteTable(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return getEffectiveRouteTableAsync(resourceGroupName, networkInterfaceName).blockingGet();
     }
 
     /**
@@ -1006,19 +752,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<List<EffectiveRouteInner>> beginGetEffectiveRouteTableAsync(final String resourceGroupName, final String networkInterfaceName, final ListOperationCallback<EffectiveRouteInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            beginGetEffectiveRouteTableSinglePageAsync(resourceGroupName, networkInterfaceName),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(String nextPageLink) {
-                    return beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
+    public ServiceFuture<EffectiveRouteListResultInner> getEffectiveRouteTableAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<EffectiveRouteListResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(getEffectiveRouteTableAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -1026,50 +764,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Page<EffectiveRouteInner>> beginGetEffectiveRouteTableAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return beginGetEffectiveRouteTableWithServiceResponseAsync(resourceGroupName, networkInterfaceName)
-            .map(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Page<EffectiveRouteInner>>() {
-                @Override
-                public Page<EffectiveRouteInner> call(ServiceResponse<Page<EffectiveRouteInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> beginGetEffectiveRouteTableWithServiceResponseAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return beginGetEffectiveRouteTableSinglePageAsync(resourceGroupName, networkInterfaceName)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(ServiceResponse<Page<EffectiveRouteInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(beginGetEffectiveRouteTableNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveRouteInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<EffectiveRouteInner>> * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> beginGetEffectiveRouteTableSinglePageAsync(final String resourceGroupName, final String networkInterfaceName) {
+    public Single<BodyResponse<EffectiveRouteListResultInner>> getEffectiveRouteTableWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1080,26 +778,34 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginGetEffectiveRouteTable(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveRouteInner>> result = beginGetEffectiveRouteTableDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveRouteInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getEffectiveRouteTable(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<PageImpl<EffectiveRouteInner>> beginGetEffectiveRouteTableDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveRouteInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveRouteInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets all route tables applied to a network interface.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param networkInterfaceName The name of the network interface.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<EffectiveRouteListResultInner> getEffectiveRouteTableAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return getEffectiveRouteTableWithRestResponseAsync(resourceGroupName, networkInterfaceName)
+            .flatMapMaybe((BodyResponse<EffectiveRouteListResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Gets all route tables applied to a network interface. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<EffectiveRouteListResultInner>> resumeGetEffectiveRouteTable(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGetEffectiveRouteTable(operationDescription);
     }
 
     /**
@@ -1107,19 +813,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the EffectiveNetworkSecurityGroupListResultInner object if successful.
      */
-    public PagedList<EffectiveNetworkSecurityGroupInner> listEffectiveNetworkSecurityGroups(final String resourceGroupName, final String networkInterfaceName) {
-        ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response = listEffectiveNetworkSecurityGroupsSinglePageAsync(resourceGroupName, networkInterfaceName).toBlocking().single();
-        return new PagedList<EffectiveNetworkSecurityGroupInner>(response.body()) {
-            @Override
-            public Page<EffectiveNetworkSecurityGroupInner> nextPage(String nextPageLink) {
-                return listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
+    public EffectiveNetworkSecurityGroupListResultInner beginListEffectiveNetworkSecurityGroups(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return beginListEffectiveNetworkSecurityGroupsAsync(resourceGroupName, networkInterfaceName).blockingLast().result();
     }
 
     /**
@@ -1128,19 +828,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;EffectiveNetworkSecurityGroupListResultInner&gt; object.
      */
-    public ServiceFuture<List<EffectiveNetworkSecurityGroupInner>> listEffectiveNetworkSecurityGroupsAsync(final String resourceGroupName, final String networkInterfaceName, final ListOperationCallback<EffectiveNetworkSecurityGroupInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listEffectiveNetworkSecurityGroupsSinglePageAsync(resourceGroupName, networkInterfaceName),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(String nextPageLink) {
-                    return listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
+    public ServiceFuture<EffectiveNetworkSecurityGroupListResultInner> beginListEffectiveNetworkSecurityGroupsAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<EffectiveNetworkSecurityGroupListResultInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginListEffectiveNetworkSecurityGroupsAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -1148,50 +840,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Page<EffectiveNetworkSecurityGroupInner>> listEffectiveNetworkSecurityGroupsAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return listEffectiveNetworkSecurityGroupsWithServiceResponseAsync(resourceGroupName, networkInterfaceName)
-            .map(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Page<EffectiveNetworkSecurityGroupInner>>() {
-                @Override
-                public Page<EffectiveNetworkSecurityGroupInner> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> listEffectiveNetworkSecurityGroupsWithServiceResponseAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return listEffectiveNetworkSecurityGroupsSinglePageAsync(resourceGroupName, networkInterfaceName)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> listEffectiveNetworkSecurityGroupsSinglePageAsync(final String resourceGroupName, final String networkInterfaceName) {
+    public Observable<OperationStatus<EffectiveNetworkSecurityGroupListResultInner>> beginListEffectiveNetworkSecurityGroupsAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1202,26 +854,7 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listEffectiveNetworkSecurityGroups(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> result = listEffectiveNetworkSecurityGroupsDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> listEffectiveNetworkSecurityGroupsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException, InterruptedException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveNetworkSecurityGroupInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveNetworkSecurityGroupInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.beginListEffectiveNetworkSecurityGroups(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1229,19 +862,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the EffectiveNetworkSecurityGroupListResultInner object if successful.
      */
-    public PagedList<EffectiveNetworkSecurityGroupInner> beginListEffectiveNetworkSecurityGroups(final String resourceGroupName, final String networkInterfaceName) {
-        ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response = beginListEffectiveNetworkSecurityGroupsSinglePageAsync(resourceGroupName, networkInterfaceName).toBlocking().single();
-        return new PagedList<EffectiveNetworkSecurityGroupInner>(response.body()) {
-            @Override
-            public Page<EffectiveNetworkSecurityGroupInner> nextPage(String nextPageLink) {
-                return beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
+    public EffectiveNetworkSecurityGroupListResultInner listEffectiveNetworkSecurityGroups(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return listEffectiveNetworkSecurityGroupsAsync(resourceGroupName, networkInterfaceName).blockingGet();
     }
 
     /**
@@ -1250,19 +877,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<List<EffectiveNetworkSecurityGroupInner>> beginListEffectiveNetworkSecurityGroupsAsync(final String resourceGroupName, final String networkInterfaceName, final ListOperationCallback<EffectiveNetworkSecurityGroupInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            beginListEffectiveNetworkSecurityGroupsSinglePageAsync(resourceGroupName, networkInterfaceName),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(String nextPageLink) {
-                    return beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
+    public ServiceFuture<EffectiveNetworkSecurityGroupListResultInner> listEffectiveNetworkSecurityGroupsAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName, ServiceCallback<EffectiveNetworkSecurityGroupListResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(listEffectiveNetworkSecurityGroupsAsync(resourceGroupName, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -1270,50 +889,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Page<EffectiveNetworkSecurityGroupInner>> beginListEffectiveNetworkSecurityGroupsAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return beginListEffectiveNetworkSecurityGroupsWithServiceResponseAsync(resourceGroupName, networkInterfaceName)
-            .map(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Page<EffectiveNetworkSecurityGroupInner>>() {
-                @Override
-                public Page<EffectiveNetworkSecurityGroupInner> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> beginListEffectiveNetworkSecurityGroupsWithServiceResponseAsync(final String resourceGroupName, final String networkInterfaceName) {
-        return beginListEffectiveNetworkSecurityGroupsSinglePageAsync(resourceGroupName, networkInterfaceName)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(beginListEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> beginListEffectiveNetworkSecurityGroupsSinglePageAsync(final String resourceGroupName, final String networkInterfaceName) {
+    public Single<BodyResponse<EffectiveNetworkSecurityGroupListResultInner>> listEffectiveNetworkSecurityGroupsWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1324,26 +903,34 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginListEffectiveNetworkSecurityGroups(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> result = beginListEffectiveNetworkSecurityGroupsDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.listEffectiveNetworkSecurityGroups(resourceGroupName, networkInterfaceName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> beginListEffectiveNetworkSecurityGroupsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveNetworkSecurityGroupInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveNetworkSecurityGroupInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets all network security groups applied to a network interface.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param networkInterfaceName The name of the network interface.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<EffectiveNetworkSecurityGroupListResultInner> listEffectiveNetworkSecurityGroupsAsync(@NonNull String resourceGroupName, @NonNull String networkInterfaceName) {
+        return listEffectiveNetworkSecurityGroupsWithRestResponseAsync(resourceGroupName, networkInterfaceName)
+            .flatMapMaybe((BodyResponse<EffectiveNetworkSecurityGroupListResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Gets all network security groups applied to a network interface. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<EffectiveNetworkSecurityGroupListResultInner>> resumeListEffectiveNetworkSecurityGroups(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeListEffectiveNetworkSecurityGroups(operationDescription);
     }
 
     /**
@@ -1352,17 +939,17 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param virtualMachineScaleSetName The name of the virtual machine scale set.
      * @param virtualmachineIndex The virtual machine index.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
-    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetVMNetworkInterfaces(final String resourceGroupName, final String virtualMachineScaleSetName, final String virtualmachineIndex) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listVirtualMachineScaleSetVMNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetVMNetworkInterfaces(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex) {
+        Page<NetworkInterfaceInner> response = listVirtualMachineScaleSetVMNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -1373,74 +960,31 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param resourceGroupName The name of the resource group.
      * @param virtualMachineScaleSetName The name of the virtual machine scale set.
      * @param virtualmachineIndex The virtual machine index.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<List<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesAsync(final String resourceGroupName, final String virtualMachineScaleSetName, final String virtualmachineIndex, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listVirtualMachineScaleSetVMNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @param virtualmachineIndex The virtual machine index.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesAsync(final String resourceGroupName, final String virtualMachineScaleSetName, final String virtualmachineIndex) {
-        return listVirtualMachineScaleSetVMNetworkInterfacesWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @param virtualmachineIndex The virtual machine index.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetVMNetworkInterfacesWithServiceResponseAsync(final String resourceGroupName, final String virtualMachineScaleSetName, final String virtualmachineIndex) {
+    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex) {
         return listVirtualMachineScaleSetVMNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listVirtualMachineScaleSetVMNetworkInterfacesNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listVirtualMachineScaleSetVMNetworkInterfacesNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
      *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param virtualmachineIndex The virtual machine index.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
+     * @param virtualmachineIndex The virtual machine index.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetVMNetworkInterfacesSinglePageAsync(final String resourceGroupName, final String virtualMachineScaleSetName, final String virtualmachineIndex) {
+    public Single<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesSinglePageAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1454,25 +998,8 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-03-30";
-        return service.listVirtualMachineScaleSetVMNetworkInterfaces(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listVirtualMachineScaleSetVMNetworkInterfacesDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listVirtualMachineScaleSetVMNetworkInterfaces(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
     }
 
     /**
@@ -1480,17 +1007,17 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
-    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetNetworkInterfaces(final String resourceGroupName, final String virtualMachineScaleSetName) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listVirtualMachineScaleSetNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetNetworkInterfaces(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName) {
+        Page<NetworkInterfaceInner> response = listVirtualMachineScaleSetNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -1500,71 +1027,30 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<List<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesAsync(final String resourceGroupName, final String virtualMachineScaleSetName, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listVirtualMachineScaleSetNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network interfaces in a virtual machine scale set.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesAsync(final String resourceGroupName, final String virtualMachineScaleSetName) {
-        return listVirtualMachineScaleSetNetworkInterfacesWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network interfaces in a virtual machine scale set.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetNetworkInterfacesWithServiceResponseAsync(final String resourceGroupName, final String virtualMachineScaleSetName) {
+    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName) {
         return listVirtualMachineScaleSetNetworkInterfacesSinglePageAsync(resourceGroupName, virtualMachineScaleSetName)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listVirtualMachineScaleSetNetworkInterfacesNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listVirtualMachineScaleSetNetworkInterfacesNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets all network interfaces in a virtual machine scale set.
      *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetNetworkInterfacesSinglePageAsync(final String resourceGroupName, final String virtualMachineScaleSetName) {
+    public Single<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesSinglePageAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1575,25 +1061,8 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-03-30";
-        return service.listVirtualMachineScaleSetNetworkInterfaces(resourceGroupName, virtualMachineScaleSetName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listVirtualMachineScaleSetNetworkInterfacesDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listVirtualMachineScaleSetNetworkInterfaces(resourceGroupName, virtualMachineScaleSetName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
     }
 
     /**
@@ -1603,13 +1072,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param virtualMachineScaleSetName The name of the virtual machine scale set.
      * @param virtualmachineIndex The virtual machine index.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the NetworkInterfaceInner object if successful.
      */
-    public NetworkInterfaceInner getVirtualMachineScaleSetNetworkInterface(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName) {
-        return getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName).toBlocking().single().body();
+    public NetworkInterfaceInner getVirtualMachineScaleSetNetworkInterface(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName) {
+        return getVirtualMachineScaleSetNetworkInterfaceAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName).blockingGet();
     }
 
     /**
@@ -1620,11 +1089,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param virtualmachineIndex The virtual machine index.
      * @param networkInterfaceName The name of the network interface.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName, final ServiceCallback<NetworkInterfaceInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName), serviceCallback);
+    public ServiceFuture<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName, ServiceCallback<NetworkInterfaceInner> serviceCallback) {
+        return ServiceFuture.fromBody(getVirtualMachineScaleSetNetworkInterfaceAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName), serviceCallback);
     }
 
     /**
@@ -1634,29 +1103,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param virtualMachineScaleSetName The name of the virtual machine scale set.
      * @param virtualmachineIndex The virtual machine index.
      * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName) {
-        return getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName).map(new Func1<ServiceResponse<NetworkInterfaceInner>, NetworkInterfaceInner>() {
-            @Override
-            public NetworkInterfaceInner call(ServiceResponse<NetworkInterfaceInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Get the specified network interface in a virtual machine scale set.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @param virtualmachineIndex The virtual machine index.
-     * @param networkInterfaceName The name of the network interface.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
-     */
-    public Observable<ServiceResponse<NetworkInterfaceInner>> getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName) {
+    public Single<BodyResponse<NetworkInterfaceInner>> getVirtualMachineScaleSetNetworkInterfaceWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1674,18 +1124,22 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
         }
         final String apiVersion = "2017-03-30";
         final String expand = null;
-        return service.getVirtualMachineScaleSetNetworkInterface(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<NetworkInterfaceInner>>>() {
-                @Override
-                public Observable<ServiceResponse<NetworkInterfaceInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<NetworkInterfaceInner> clientResponse = getVirtualMachineScaleSetNetworkInterfaceDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getVirtualMachineScaleSetNetworkInterface(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
+    }
+
+    /**
+     * Get the specified network interface in a virtual machine scale set.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
+     * @param virtualmachineIndex The virtual machine index.
+     * @param networkInterfaceName The name of the network interface.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName) {
+        return getVirtualMachineScaleSetNetworkInterfaceWithRestResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName)
+            .flatMapMaybe((BodyResponse<NetworkInterfaceInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -1696,13 +1150,13 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param virtualmachineIndex The virtual machine index.
      * @param networkInterfaceName The name of the network interface.
      * @param expand Expands referenced resources.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the NetworkInterfaceInner object if successful.
      */
-    public NetworkInterfaceInner getVirtualMachineScaleSetNetworkInterface(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName, String expand) {
-        return getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, expand).toBlocking().single().body();
+    public NetworkInterfaceInner getVirtualMachineScaleSetNetworkInterface(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName, String expand) {
+        return getVirtualMachineScaleSetNetworkInterfaceAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, expand).blockingGet();
     }
 
     /**
@@ -1714,11 +1168,11 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param networkInterfaceName The name of the network interface.
      * @param expand Expands referenced resources.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName, String expand, final ServiceCallback<NetworkInterfaceInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, expand), serviceCallback);
+    public ServiceFuture<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName, String expand, ServiceCallback<NetworkInterfaceInner> serviceCallback) {
+        return ServiceFuture.fromBody(getVirtualMachineScaleSetNetworkInterfaceAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, expand), serviceCallback);
     }
 
     /**
@@ -1729,30 +1183,10 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * @param virtualmachineIndex The virtual machine index.
      * @param networkInterfaceName The name of the network interface.
      * @param expand Expands referenced resources.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName, String expand) {
-        return getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, expand).map(new Func1<ServiceResponse<NetworkInterfaceInner>, NetworkInterfaceInner>() {
-            @Override
-            public NetworkInterfaceInner call(ServiceResponse<NetworkInterfaceInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Get the specified network interface in a virtual machine scale set.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
-     * @param virtualmachineIndex The virtual machine index.
-     * @param networkInterfaceName The name of the network interface.
-     * @param expand Expands referenced resources.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the NetworkInterfaceInner object
-     */
-    public Observable<ServiceResponse<NetworkInterfaceInner>> getVirtualMachineScaleSetNetworkInterfaceWithServiceResponseAsync(String resourceGroupName, String virtualMachineScaleSetName, String virtualmachineIndex, String networkInterfaceName, String expand) {
+    public Single<BodyResponse<NetworkInterfaceInner>> getVirtualMachineScaleSetNetworkInterfaceWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName, String expand) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1769,42 +1203,40 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-03-30";
-        return service.getVirtualMachineScaleSetNetworkInterface(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<NetworkInterfaceInner>>>() {
-                @Override
-                public Observable<ServiceResponse<NetworkInterfaceInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<NetworkInterfaceInner> clientResponse = getVirtualMachineScaleSetNetworkInterfaceDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getVirtualMachineScaleSetNetworkInterface(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<NetworkInterfaceInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<NetworkInterfaceInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Get the specified network interface in a virtual machine scale set.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualMachineScaleSetName The name of the virtual machine scale set.
+     * @param virtualmachineIndex The virtual machine index.
+     * @param networkInterfaceName The name of the network interface.
+     * @param expand Expands referenced resources.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<NetworkInterfaceInner> getVirtualMachineScaleSetNetworkInterfaceAsync(@NonNull String resourceGroupName, @NonNull String virtualMachineScaleSetName, @NonNull String virtualmachineIndex, @NonNull String networkInterfaceName, String expand) {
+        return getVirtualMachineScaleSetNetworkInterfaceWithRestResponseAsync(resourceGroupName, virtualMachineScaleSetName, virtualmachineIndex, networkInterfaceName, expand)
+            .flatMapMaybe((BodyResponse<NetworkInterfaceInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
      * Gets all network interfaces in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
-    public PagedList<NetworkInterfaceInner> listNext(final String nextPageLink) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+    public PagedList<NetworkInterfaceInner> listAllNext(@NonNull String nextPageLink) {
+        Page<NetworkInterfaceInner> response = listAllNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listAllNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -1813,37 +1245,18 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * Gets all network interfaces in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<List<NetworkInterfaceInner>> listNextAsync(final String nextPageLink, final ServiceFuture<List<NetworkInterfaceInner>> serviceFuture, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listNextSinglePageAsync(nextPageLink);
+    public Observable<Page<NetworkInterfaceInner>> listAllNextAsync(@NonNull String nextPageLink) {
+        return listAllNextSinglePageAsync(nextPageLink)
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network interfaces in a subscription.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listNextAsync(final String nextPageLink) {
-        return listNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
+                return Observable.just(page).concatWith(listAllNextAsync(nextPageLink1));
             });
     }
 
@@ -1851,630 +1264,87 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * Gets all network interfaces in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listNextWithServiceResponseAsync(final String nextPageLink) {
+    public Single<Page<NetworkInterfaceInner>> listAllNextSinglePageAsync(@NonNull String nextPageLink) {
+        if (nextPageLink == null) {
+            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
+        }
+        String nextUrl = String.format("%s", nextPageLink);
+        return service.listAllNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
+    }
+
+    /**
+     * Gets all network interfaces in a resource group.
+     *
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
+     */
+    public PagedList<NetworkInterfaceInner> listNext(@NonNull String nextPageLink) {
+        Page<NetworkInterfaceInner> response = listNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
+            @Override
+            public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
+                return listNextSinglePageAsync(nextPageLink).blockingGet();
+            }
+        };
+    }
+
+    /**
+     * Gets all network interfaces in a resource group.
+     *
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
+     */
+    public Observable<Page<NetworkInterfaceInner>> listNextAsync(@NonNull String nextPageLink) {
         return listNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listNextAsync(nextPageLink1));
             });
-    }
-
-    /**
-     * Gets all network interfaces in a subscription.
-     *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.listNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
     }
 
     /**
      * Gets all network interfaces in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
+     */
+    public Single<Page<NetworkInterfaceInner>> listNextSinglePageAsync(@NonNull String nextPageLink) {
+        if (nextPageLink == null) {
+            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
+        }
+        String nextUrl = String.format("%s", nextPageLink);
+        return service.listNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
+    }
+
+    /**
+     * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
+     *
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
-    public PagedList<NetworkInterfaceInner> listByResourceGroupNext(final String nextPageLink) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetVMNetworkInterfacesNext(@NonNull String nextPageLink) {
+        Page<NetworkInterfaceInner> response = listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
-    }
-
-    /**
-     * Gets all network interfaces in a resource group.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<NetworkInterfaceInner>> listByResourceGroupNextAsync(final String nextPageLink, final ServiceFuture<List<NetworkInterfaceInner>> serviceFuture, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listByResourceGroupNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listByResourceGroupNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network interfaces in a resource group.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listByResourceGroupNextAsync(final String nextPageLink) {
-        return listByResourceGroupNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network interfaces in a resource group.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listByResourceGroupNextWithServiceResponseAsync(final String nextPageLink) {
-        return listByResourceGroupNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listByResourceGroupNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all network interfaces in a resource group.
-     *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listByResourceGroupNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.listByResourceGroupNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listByResourceGroupNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listByResourceGroupNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object if successful.
-     */
-    public PagedList<EffectiveRouteInner> getEffectiveRouteTableNext(final String nextPageLink) {
-        ServiceResponse<Page<EffectiveRouteInner>> response = getEffectiveRouteTableNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<EffectiveRouteInner>(response.body()) {
-            @Override
-            public Page<EffectiveRouteInner> nextPage(String nextPageLink) {
-                return getEffectiveRouteTableNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<EffectiveRouteInner>> getEffectiveRouteTableNextAsync(final String nextPageLink, final ServiceFuture<List<EffectiveRouteInner>> serviceFuture, final ListOperationCallback<EffectiveRouteInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            getEffectiveRouteTableNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(String nextPageLink) {
-                    return getEffectiveRouteTableNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
-     */
-    public Observable<Page<EffectiveRouteInner>> getEffectiveRouteTableNextAsync(final String nextPageLink) {
-        return getEffectiveRouteTableNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Page<EffectiveRouteInner>>() {
-                @Override
-                public Page<EffectiveRouteInner> call(ServiceResponse<Page<EffectiveRouteInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> getEffectiveRouteTableNextWithServiceResponseAsync(final String nextPageLink) {
-        return getEffectiveRouteTableNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(ServiceResponse<Page<EffectiveRouteInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(getEffectiveRouteTableNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveRouteInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> getEffectiveRouteTableNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.getEffectiveRouteTableNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveRouteInner>> result = getEffectiveRouteTableNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveRouteInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<EffectiveRouteInner>> getEffectiveRouteTableNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException, InterruptedException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveRouteInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveRouteInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object if successful.
-     */
-    public PagedList<EffectiveRouteInner> beginGetEffectiveRouteTableNext(final String nextPageLink) {
-        ServiceResponse<Page<EffectiveRouteInner>> response = beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<EffectiveRouteInner>(response.body()) {
-            @Override
-            public Page<EffectiveRouteInner> nextPage(String nextPageLink) {
-                return beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<EffectiveRouteInner>> beginGetEffectiveRouteTableNextAsync(final String nextPageLink, final ServiceFuture<List<EffectiveRouteInner>> serviceFuture, final ListOperationCallback<EffectiveRouteInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(String nextPageLink) {
-                    return beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
-     */
-    public Observable<Page<EffectiveRouteInner>> beginGetEffectiveRouteTableNextAsync(final String nextPageLink) {
-        return beginGetEffectiveRouteTableNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Page<EffectiveRouteInner>>() {
-                @Override
-                public Page<EffectiveRouteInner> call(ServiceResponse<Page<EffectiveRouteInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveRouteInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> beginGetEffectiveRouteTableNextWithServiceResponseAsync(final String nextPageLink) {
-        return beginGetEffectiveRouteTableNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveRouteInner>>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(ServiceResponse<Page<EffectiveRouteInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(beginGetEffectiveRouteTableNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all route tables applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveRouteInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveRouteInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveRouteInner>>> beginGetEffectiveRouteTableNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.beginGetEffectiveRouteTableNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveRouteInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveRouteInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveRouteInner>> result = beginGetEffectiveRouteTableNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveRouteInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<EffectiveRouteInner>> beginGetEffectiveRouteTableNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveRouteInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveRouteInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object if successful.
-     */
-    public PagedList<EffectiveNetworkSecurityGroupInner> listEffectiveNetworkSecurityGroupsNext(final String nextPageLink) {
-        ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response = listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<EffectiveNetworkSecurityGroupInner>(response.body()) {
-            @Override
-            public Page<EffectiveNetworkSecurityGroupInner> nextPage(String nextPageLink) {
-                return listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<EffectiveNetworkSecurityGroupInner>> listEffectiveNetworkSecurityGroupsNextAsync(final String nextPageLink, final ServiceFuture<List<EffectiveNetworkSecurityGroupInner>> serviceFuture, final ListOperationCallback<EffectiveNetworkSecurityGroupInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(String nextPageLink) {
-                    return listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
-     */
-    public Observable<Page<EffectiveNetworkSecurityGroupInner>> listEffectiveNetworkSecurityGroupsNextAsync(final String nextPageLink) {
-        return listEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Page<EffectiveNetworkSecurityGroupInner>>() {
-                @Override
-                public Page<EffectiveNetworkSecurityGroupInner> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> listEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(final String nextPageLink) {
-        return listEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> listEffectiveNetworkSecurityGroupsNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.listEffectiveNetworkSecurityGroupsNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> result = listEffectiveNetworkSecurityGroupsNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> listEffectiveNetworkSecurityGroupsNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException, InterruptedException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveNetworkSecurityGroupInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveNetworkSecurityGroupInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object if successful.
-     */
-    public PagedList<EffectiveNetworkSecurityGroupInner> beginListEffectiveNetworkSecurityGroupsNext(final String nextPageLink) {
-        ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response = beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<EffectiveNetworkSecurityGroupInner>(response.body()) {
-            @Override
-            public Page<EffectiveNetworkSecurityGroupInner> nextPage(String nextPageLink) {
-                return beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<EffectiveNetworkSecurityGroupInner>> beginListEffectiveNetworkSecurityGroupsNextAsync(final String nextPageLink, final ServiceFuture<List<EffectiveNetworkSecurityGroupInner>> serviceFuture, final ListOperationCallback<EffectiveNetworkSecurityGroupInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(String nextPageLink) {
-                    return beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
-     */
-    public Observable<Page<EffectiveNetworkSecurityGroupInner>> beginListEffectiveNetworkSecurityGroupsNextAsync(final String nextPageLink) {
-        return beginListEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Page<EffectiveNetworkSecurityGroupInner>>() {
-                @Override
-                public Page<EffectiveNetworkSecurityGroupInner> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> beginListEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(final String nextPageLink) {
-        return beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(beginListEffectiveNetworkSecurityGroupsNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all network security groups applied to a network interface.
-     *
-    ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;EffectiveNetworkSecurityGroupInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> beginListEffectiveNetworkSecurityGroupsNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.beginListEffectiveNetworkSecurityGroupsNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> result = beginListEffectiveNetworkSecurityGroupsNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<EffectiveNetworkSecurityGroupInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<EffectiveNetworkSecurityGroupInner>> beginListEffectiveNetworkSecurityGroupsNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<EffectiveNetworkSecurityGroupInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<EffectiveNetworkSecurityGroupInner>>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
-     */
-    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetVMNetworkInterfacesNext(final String nextPageLink) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
-            @Override
-            public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -2483,109 +1353,52 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<List<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesNextAsync(final String nextPageLink, final ServiceFuture<List<NetworkInterfaceInner>> serviceFuture, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesNextAsync(final String nextPageLink) {
-        return listVirtualMachineScaleSetVMNetworkInterfacesNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetVMNetworkInterfacesNextWithServiceResponseAsync(final String nextPageLink) {
+    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesNextAsync(@NonNull String nextPageLink) {
         return listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listVirtualMachineScaleSetVMNetworkInterfacesNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listVirtualMachineScaleSetVMNetworkInterfacesNextAsync(nextPageLink1));
             });
     }
 
     /**
      * Gets information about all network interfaces in a virtual machine in a virtual machine scale set.
      *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(final String nextPageLink) {
+    public Single<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesNextSinglePageAsync(@NonNull String nextPageLink) {
         if (nextPageLink == null) {
             throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
         }
         String nextUrl = String.format("%s", nextPageLink);
-        return service.listVirtualMachineScaleSetVMNetworkInterfacesNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listVirtualMachineScaleSetVMNetworkInterfacesNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listVirtualMachineScaleSetVMNetworkInterfacesNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listVirtualMachineScaleSetVMNetworkInterfacesNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
     }
 
     /**
      * Gets all network interfaces in a virtual machine scale set.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;NetworkInterfaceInner&gt; object if successful.
      */
-    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetNetworkInterfacesNext(final String nextPageLink) {
-        ServiceResponse<Page<NetworkInterfaceInner>> response = listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<NetworkInterfaceInner>(response.body()) {
+    public PagedList<NetworkInterfaceInner> listVirtualMachineScaleSetNetworkInterfacesNext(@NonNull String nextPageLink) {
+        Page<NetworkInterfaceInner> response = listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<NetworkInterfaceInner>(response) {
             @Override
             public Page<NetworkInterfaceInner> nextPage(String nextPageLink) {
-                return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -2594,92 +1407,34 @@ public class NetworkInterfacesInner implements InnerSupportsGet<NetworkInterface
      * Gets all network interfaces in a virtual machine scale set.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object.
      */
-    public ServiceFuture<List<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesNextAsync(final String nextPageLink, final ServiceFuture<List<NetworkInterfaceInner>> serviceFuture, final ListOperationCallback<NetworkInterfaceInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(String nextPageLink) {
-                    return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all network interfaces in a virtual machine scale set.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesNextAsync(final String nextPageLink) {
-        return listVirtualMachineScaleSetNetworkInterfacesNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Page<NetworkInterfaceInner>>() {
-                @Override
-                public Page<NetworkInterfaceInner> call(ServiceResponse<Page<NetworkInterfaceInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all network interfaces in a virtual machine scale set.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;NetworkInterfaceInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetNetworkInterfacesNextWithServiceResponseAsync(final String nextPageLink) {
+    public Observable<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesNextAsync(@NonNull String nextPageLink) {
         return listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<NetworkInterfaceInner>>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(ServiceResponse<Page<NetworkInterfaceInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listVirtualMachineScaleSetNetworkInterfacesNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<NetworkInterfaceInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listVirtualMachineScaleSetNetworkInterfacesNextAsync(nextPageLink1));
             });
     }
 
     /**
      * Gets all network interfaces in a virtual machine scale set.
      *
-    ServiceResponse<PageImpl<NetworkInterfaceInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;NetworkInterfaceInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;NetworkInterfaceInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(final String nextPageLink) {
+    public Single<Page<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesNextSinglePageAsync(@NonNull String nextPageLink) {
         if (nextPageLink == null) {
             throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
         }
         String nextUrl = String.format("%s", nextPageLink);
-        return service.listVirtualMachineScaleSetNetworkInterfacesNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<NetworkInterfaceInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<NetworkInterfaceInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<NetworkInterfaceInner>> result = listVirtualMachineScaleSetNetworkInterfacesNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<NetworkInterfaceInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.listVirtualMachineScaleSetNetworkInterfacesNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<NetworkInterfaceInner>> res) -> res.body());
     }
-
-    private ServiceResponse<PageImpl<NetworkInterfaceInner>> listVirtualMachineScaleSetNetworkInterfacesNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<NetworkInterfaceInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<NetworkInterfaceInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
 }

@@ -8,10 +8,12 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.SubResource;
+import com.microsoft.azure.v2.SubResource;
+import com.microsoft.azure.v2.management.network.ResourceNavigationLink;
+import com.microsoft.azure.v2.management.network.ServiceEndpointPropertiesFormat;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
+import java.util.List;
 
 /**
  * Subnet in a virtual network resource.
@@ -28,13 +30,19 @@ public class SubnetInner extends SubResource {
      * The reference of the NetworkSecurityGroup resource.
      */
     @JsonProperty(value = "properties.networkSecurityGroup")
-    private SubResource networkSecurityGroup;
+    private NetworkSecurityGroupInner networkSecurityGroup;
 
     /**
      * The reference of the RouteTable resource.
      */
     @JsonProperty(value = "properties.routeTable")
-    private SubResource routeTable;
+    private RouteTableInner routeTable;
+
+    /**
+     * An array of service endpoints.
+     */
+    @JsonProperty(value = "properties.serviceEndpoints")
+    private List<ServiceEndpointPropertiesFormat> serviceEndpoints;
 
     /**
      * Gets an array of references to the network interface IP configurations
@@ -47,7 +55,7 @@ public class SubnetInner extends SubResource {
      * Gets an array of references to the external resources using subnet.
      */
     @JsonProperty(value = "properties.resourceNavigationLinks")
-    private List<ResourceNavigationLinkInner> resourceNavigationLinks;
+    private List<ResourceNavigationLink> resourceNavigationLinks;
 
     /**
      * The provisioning state of the resource.
@@ -71,7 +79,7 @@ public class SubnetInner extends SubResource {
     /**
      * Get the addressPrefix value.
      *
-     * @return the addressPrefix value
+     * @return the addressPrefix value.
      */
     public String addressPrefix() {
         return this.addressPrefix;
@@ -80,7 +88,7 @@ public class SubnetInner extends SubResource {
     /**
      * Set the addressPrefix value.
      *
-     * @param addressPrefix the addressPrefix value to set
+     * @param addressPrefix the addressPrefix value to set.
      * @return the SubnetInner object itself.
      */
     public SubnetInner withAddressPrefix(String addressPrefix) {
@@ -91,19 +99,19 @@ public class SubnetInner extends SubResource {
     /**
      * Get the networkSecurityGroup value.
      *
-     * @return the networkSecurityGroup value
+     * @return the networkSecurityGroup value.
      */
-    public SubResource networkSecurityGroup() {
+    public NetworkSecurityGroupInner networkSecurityGroup() {
         return this.networkSecurityGroup;
     }
 
     /**
      * Set the networkSecurityGroup value.
      *
-     * @param networkSecurityGroup the networkSecurityGroup value to set
+     * @param networkSecurityGroup the networkSecurityGroup value to set.
      * @return the SubnetInner object itself.
      */
-    public SubnetInner withNetworkSecurityGroup(SubResource networkSecurityGroup) {
+    public SubnetInner withNetworkSecurityGroup(NetworkSecurityGroupInner networkSecurityGroup) {
         this.networkSecurityGroup = networkSecurityGroup;
         return this;
     }
@@ -111,27 +119,47 @@ public class SubnetInner extends SubResource {
     /**
      * Get the routeTable value.
      *
-     * @return the routeTable value
+     * @return the routeTable value.
      */
-    public SubResource routeTable() {
+    public RouteTableInner routeTable() {
         return this.routeTable;
     }
 
     /**
      * Set the routeTable value.
      *
-     * @param routeTable the routeTable value to set
+     * @param routeTable the routeTable value to set.
      * @return the SubnetInner object itself.
      */
-    public SubResource withRouteTable(SubResource routeTable) {
+    public SubnetInner withRouteTable(RouteTableInner routeTable) {
         this.routeTable = routeTable;
+        return this;
+    }
+
+    /**
+     * Get the serviceEndpoints value.
+     *
+     * @return the serviceEndpoints value.
+     */
+    public List<ServiceEndpointPropertiesFormat> serviceEndpoints() {
+        return this.serviceEndpoints;
+    }
+
+    /**
+     * Set the serviceEndpoints value.
+     *
+     * @param serviceEndpoints the serviceEndpoints value to set.
+     * @return the SubnetInner object itself.
+     */
+    public SubnetInner withServiceEndpoints(List<ServiceEndpointPropertiesFormat> serviceEndpoints) {
+        this.serviceEndpoints = serviceEndpoints;
         return this;
     }
 
     /**
      * Get the ipConfigurations value.
      *
-     * @return the ipConfigurations value
+     * @return the ipConfigurations value.
      */
     public List<IPConfigurationInner> ipConfigurations() {
         return this.ipConfigurations;
@@ -140,19 +168,19 @@ public class SubnetInner extends SubResource {
     /**
      * Get the resourceNavigationLinks value.
      *
-     * @return the resourceNavigationLinks value
+     * @return the resourceNavigationLinks value.
      */
-    public List<ResourceNavigationLinkInner> resourceNavigationLinks() {
+    public List<ResourceNavigationLink> resourceNavigationLinks() {
         return this.resourceNavigationLinks;
     }
 
     /**
      * Set the resourceNavigationLinks value.
      *
-     * @param resourceNavigationLinks the resourceNavigationLinks value to set
+     * @param resourceNavigationLinks the resourceNavigationLinks value to set.
      * @return the SubnetInner object itself.
      */
-    public SubnetInner withResourceNavigationLinks(List<ResourceNavigationLinkInner> resourceNavigationLinks) {
+    public SubnetInner withResourceNavigationLinks(List<ResourceNavigationLink> resourceNavigationLinks) {
         this.resourceNavigationLinks = resourceNavigationLinks;
         return this;
     }
@@ -160,7 +188,7 @@ public class SubnetInner extends SubResource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -169,7 +197,7 @@ public class SubnetInner extends SubResource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the SubnetInner object itself.
      */
     public SubnetInner withProvisioningState(String provisioningState) {
@@ -180,7 +208,7 @@ public class SubnetInner extends SubResource {
     /**
      * Get the name value.
      *
-     * @return the name value
+     * @return the name value.
      */
     public String name() {
         return this.name;
@@ -189,7 +217,7 @@ public class SubnetInner extends SubResource {
     /**
      * Set the name value.
      *
-     * @param name the name value to set
+     * @param name the name value to set.
      * @return the SubnetInner object itself.
      */
     public SubnetInner withName(String name) {
@@ -200,7 +228,7 @@ public class SubnetInner extends SubResource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -209,12 +237,11 @@ public class SubnetInner extends SubResource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the SubnetInner object itself.
      */
     public SubnetInner withEtag(String etag) {
         this.etag = etag;
         return this;
     }
-
 }

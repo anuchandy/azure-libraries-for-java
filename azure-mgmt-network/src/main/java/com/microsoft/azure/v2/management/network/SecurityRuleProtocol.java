@@ -8,55 +8,44 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for SecurityRuleProtocol.
  */
-public final class SecurityRuleProtocol {
-    /** Static value Tcp for SecurityRuleProtocol. */
-    public static final SecurityRuleProtocol TCP = new SecurityRuleProtocol("Tcp");
-
-    /** Static value Udp for SecurityRuleProtocol. */
-    public static final SecurityRuleProtocol UDP = new SecurityRuleProtocol("Udp");
-
-    /** Static value * for SecurityRuleProtocol. */
-    public static final SecurityRuleProtocol ASTERISK = new SecurityRuleProtocol("*");
-
-    private String value;
+public final class SecurityRuleProtocol extends ExpandableStringEnum<SecurityRuleProtocol> {
+    /**
+     * Static value Tcp for SecurityRuleProtocol.
+     */
+    public static final SecurityRuleProtocol TCP = fromString("Tcp");
 
     /**
-     * Creates a custom value for SecurityRuleProtocol.
-     * @param value the custom value
+     * Static value Udp for SecurityRuleProtocol.
      */
-    public SecurityRuleProtocol(String value) {
-        this.value = value;
+    public static final SecurityRuleProtocol UDP = fromString("Udp");
+
+    /**
+     * Static value * for SecurityRuleProtocol.
+     */
+    public static final SecurityRuleProtocol * = fromString("*");
+
+    /**
+     * Creates or finds a SecurityRuleProtocol from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding SecurityRuleProtocol.
+     */
+    @JsonCreator
+    public static SecurityRuleProtocol fromString(String name) {
+        return fromString(name, SecurityRuleProtocol.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof SecurityRuleProtocol)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        SecurityRuleProtocol rhs = (SecurityRuleProtocol) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known SecurityRuleProtocol values.
+     */
+    public static Collection<SecurityRuleProtocol> values() {
+        return values(SecurityRuleProtocol.class);
     }
 }

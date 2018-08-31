@@ -8,10 +8,10 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.SubResource;
-import com.microsoft.azure.v2.management.network.TransportProtocol;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
+import com.microsoft.azure.v2.SubResource;
+import com.microsoft.azure.v2.management.network.TransportProtocol;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
 
 /**
  * Inbound NAT rule of the load balancer.
@@ -40,7 +40,7 @@ public class InboundNatRuleInner extends SubResource {
     private TransportProtocol protocol;
 
     /**
-     * The port for the external endpoint. Port numbers for each Rule must be
+     * The port for the external endpoint. Port numbers for each rule must be
      * unique within the Load Balancer. Acceptable values range from 1 to
      * 65534.
      */
@@ -94,7 +94,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the frontendIPConfiguration value.
      *
-     * @return the frontendIPConfiguration value
+     * @return the frontendIPConfiguration value.
      */
     public SubResource frontendIPConfiguration() {
         return this.frontendIPConfiguration;
@@ -103,7 +103,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the frontendIPConfiguration value.
      *
-     * @param frontendIPConfiguration the frontendIPConfiguration value to set
+     * @param frontendIPConfiguration the frontendIPConfiguration value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withFrontendIPConfiguration(SubResource frontendIPConfiguration) {
@@ -114,7 +114,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the backendIPConfiguration value.
      *
-     * @return the backendIPConfiguration value
+     * @return the backendIPConfiguration value.
      */
     public NetworkInterfaceIPConfigurationInner backendIPConfiguration() {
         return this.backendIPConfiguration;
@@ -123,7 +123,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the protocol value.
      *
-     * @return the protocol value
+     * @return the protocol value.
      */
     public TransportProtocol protocol() {
         return this.protocol;
@@ -132,7 +132,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the protocol value.
      *
-     * @param protocol the protocol value to set
+     * @param protocol the protocol value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withProtocol(TransportProtocol protocol) {
@@ -143,7 +143,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the frontendPort value.
      *
-     * @return the frontendPort value
+     * @return the frontendPort value.
      */
     public Integer frontendPort() {
         return this.frontendPort;
@@ -152,7 +152,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the frontendPort value.
      *
-     * @param frontendPort the frontendPort value to set
+     * @param frontendPort the frontendPort value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withFrontendPort(Integer frontendPort) {
@@ -163,7 +163,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the backendPort value.
      *
-     * @return the backendPort value
+     * @return the backendPort value.
      */
     public Integer backendPort() {
         return this.backendPort;
@@ -172,7 +172,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the backendPort value.
      *
-     * @param backendPort the backendPort value to set
+     * @param backendPort the backendPort value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withBackendPort(Integer backendPort) {
@@ -183,7 +183,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the idleTimeoutInMinutes value.
      *
-     * @return the idleTimeoutInMinutes value
+     * @return the idleTimeoutInMinutes value.
      */
     public Integer idleTimeoutInMinutes() {
         return this.idleTimeoutInMinutes;
@@ -192,7 +192,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the idleTimeoutInMinutes value.
      *
-     * @param idleTimeoutInMinutes the idleTimeoutInMinutes value to set
+     * @param idleTimeoutInMinutes the idleTimeoutInMinutes value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withIdleTimeoutInMinutes(Integer idleTimeoutInMinutes) {
@@ -203,7 +203,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the enableFloatingIP value.
      *
-     * @return the enableFloatingIP value
+     * @return the enableFloatingIP value.
      */
     public Boolean enableFloatingIP() {
         return this.enableFloatingIP;
@@ -212,7 +212,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the enableFloatingIP value.
      *
-     * @param enableFloatingIP the enableFloatingIP value to set
+     * @param enableFloatingIP the enableFloatingIP value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withEnableFloatingIP(Boolean enableFloatingIP) {
@@ -223,7 +223,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -232,7 +232,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withProvisioningState(String provisioningState) {
@@ -243,7 +243,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the name value.
      *
-     * @return the name value
+     * @return the name value.
      */
     public String name() {
         return this.name;
@@ -252,7 +252,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the name value.
      *
-     * @param name the name value to set
+     * @param name the name value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withName(String name) {
@@ -263,7 +263,7 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -272,12 +272,11 @@ public class InboundNatRuleInner extends SubResource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the InboundNatRuleInner object itself.
      */
     public InboundNatRuleInner withEtag(String etag) {
         this.etag = etag;
         return this;
     }
-
 }

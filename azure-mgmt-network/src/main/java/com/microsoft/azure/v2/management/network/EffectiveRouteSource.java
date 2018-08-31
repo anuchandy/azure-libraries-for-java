@@ -8,58 +8,49 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for EffectiveRouteSource.
  */
-public final class EffectiveRouteSource {
-    /** Static value Unknown for EffectiveRouteSource. */
-    public static final EffectiveRouteSource UNKNOWN = new EffectiveRouteSource("Unknown");
-
-    /** Static value User for EffectiveRouteSource. */
-    public static final EffectiveRouteSource USER = new EffectiveRouteSource("User");
-
-    /** Static value VirtualNetworkGateway for EffectiveRouteSource. */
-    public static final EffectiveRouteSource VIRTUAL_NETWORK_GATEWAY = new EffectiveRouteSource("VirtualNetworkGateway");
-
-    /** Static value Default for EffectiveRouteSource. */
-    public static final EffectiveRouteSource DEFAULT = new EffectiveRouteSource("Default");
-
-    private String value;
+public final class EffectiveRouteSource extends ExpandableStringEnum<EffectiveRouteSource> {
+    /**
+     * Static value Unknown for EffectiveRouteSource.
+     */
+    public static final EffectiveRouteSource UNKNOWN = fromString("Unknown");
 
     /**
-     * Creates a custom value for EffectiveRouteSource.
-     * @param value the custom value
+     * Static value User for EffectiveRouteSource.
      */
-    public EffectiveRouteSource(String value) {
-        this.value = value;
+    public static final EffectiveRouteSource USER = fromString("User");
+
+    /**
+     * Static value VirtualNetworkGateway for EffectiveRouteSource.
+     */
+    public static final EffectiveRouteSource VIRTUAL_NETWORK_GATEWAY = fromString("VirtualNetworkGateway");
+
+    /**
+     * Static value Default for EffectiveRouteSource.
+     */
+    public static final EffectiveRouteSource DEFAULT = fromString("Default");
+
+    /**
+     * Creates or finds a EffectiveRouteSource from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding EffectiveRouteSource.
+     */
+    @JsonCreator
+    public static EffectiveRouteSource fromString(String name) {
+        return fromString(name, EffectiveRouteSource.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof EffectiveRouteSource)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        EffectiveRouteSource rhs = (EffectiveRouteSource) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known EffectiveRouteSource values.
+     */
+    public static Collection<EffectiveRouteSource> values() {
+        return values(EffectiveRouteSource.class);
     }
 }

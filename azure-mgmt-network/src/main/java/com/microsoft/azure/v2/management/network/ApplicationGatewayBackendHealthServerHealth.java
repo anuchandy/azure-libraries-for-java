@@ -8,61 +8,54 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for ApplicationGatewayBackendHealthServerHealth.
  */
-public final class ApplicationGatewayBackendHealthServerHealth {
-    /** Static value Unknown for ApplicationGatewayBackendHealthServerHealth. */
-    public static final ApplicationGatewayBackendHealthServerHealth UNKNOWN = new ApplicationGatewayBackendHealthServerHealth("Unknown");
-
-    /** Static value Up for ApplicationGatewayBackendHealthServerHealth. */
-    public static final ApplicationGatewayBackendHealthServerHealth UP = new ApplicationGatewayBackendHealthServerHealth("Up");
-
-    /** Static value Down for ApplicationGatewayBackendHealthServerHealth. */
-    public static final ApplicationGatewayBackendHealthServerHealth DOWN = new ApplicationGatewayBackendHealthServerHealth("Down");
-
-    /** Static value Partial for ApplicationGatewayBackendHealthServerHealth. */
-    public static final ApplicationGatewayBackendHealthServerHealth PARTIAL = new ApplicationGatewayBackendHealthServerHealth("Partial");
-
-    /** Static value Draining for ApplicationGatewayBackendHealthServerHealth. */
-    public static final ApplicationGatewayBackendHealthServerHealth DRAINING = new ApplicationGatewayBackendHealthServerHealth("Draining");
-
-    private String value;
+public final class ApplicationGatewayBackendHealthServerHealth extends ExpandableStringEnum<ApplicationGatewayBackendHealthServerHealth> {
+    /**
+     * Static value Unknown for ApplicationGatewayBackendHealthServerHealth.
+     */
+    public static final ApplicationGatewayBackendHealthServerHealth UNKNOWN = fromString("Unknown");
 
     /**
-     * Creates a custom value for ApplicationGatewayBackendHealthServerHealth.
-     * @param value the custom value
+     * Static value Up for ApplicationGatewayBackendHealthServerHealth.
      */
-    public ApplicationGatewayBackendHealthServerHealth(String value) {
-        this.value = value;
+    public static final ApplicationGatewayBackendHealthServerHealth UP = fromString("Up");
+
+    /**
+     * Static value Down for ApplicationGatewayBackendHealthServerHealth.
+     */
+    public static final ApplicationGatewayBackendHealthServerHealth DOWN = fromString("Down");
+
+    /**
+     * Static value Partial for ApplicationGatewayBackendHealthServerHealth.
+     */
+    public static final ApplicationGatewayBackendHealthServerHealth PARTIAL = fromString("Partial");
+
+    /**
+     * Static value Draining for ApplicationGatewayBackendHealthServerHealth.
+     */
+    public static final ApplicationGatewayBackendHealthServerHealth DRAINING = fromString("Draining");
+
+    /**
+     * Creates or finds a ApplicationGatewayBackendHealthServerHealth from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding ApplicationGatewayBackendHealthServerHealth.
+     */
+    @JsonCreator
+    public static ApplicationGatewayBackendHealthServerHealth fromString(String name) {
+        return fromString(name, ApplicationGatewayBackendHealthServerHealth.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ApplicationGatewayBackendHealthServerHealth)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        ApplicationGatewayBackendHealthServerHealth rhs = (ApplicationGatewayBackendHealthServerHealth) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known ApplicationGatewayBackendHealthServerHealth values.
+     */
+    public static Collection<ApplicationGatewayBackendHealthServerHealth> values() {
+        return values(ApplicationGatewayBackendHealthServerHealth.class);
     }
 }

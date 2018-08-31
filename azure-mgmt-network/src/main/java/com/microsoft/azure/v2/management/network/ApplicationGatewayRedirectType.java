@@ -8,58 +8,49 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for ApplicationGatewayRedirectType.
  */
-public final class ApplicationGatewayRedirectType {
-    /** Static value Permanent for ApplicationGatewayRedirectType. */
-    public static final ApplicationGatewayRedirectType PERMANENT = new ApplicationGatewayRedirectType("Permanent");
-
-    /** Static value Found for ApplicationGatewayRedirectType. */
-    public static final ApplicationGatewayRedirectType FOUND = new ApplicationGatewayRedirectType("Found");
-
-    /** Static value SeeOther for ApplicationGatewayRedirectType. */
-    public static final ApplicationGatewayRedirectType SEE_OTHER = new ApplicationGatewayRedirectType("SeeOther");
-
-    /** Static value Temporary for ApplicationGatewayRedirectType. */
-    public static final ApplicationGatewayRedirectType TEMPORARY = new ApplicationGatewayRedirectType("Temporary");
-
-    private String value;
+public final class ApplicationGatewayRedirectType extends ExpandableStringEnum<ApplicationGatewayRedirectType> {
+    /**
+     * Static value Permanent for ApplicationGatewayRedirectType.
+     */
+    public static final ApplicationGatewayRedirectType PERMANENT = fromString("Permanent");
 
     /**
-     * Creates a custom value for ApplicationGatewayRedirectType.
-     * @param value the custom value
+     * Static value Found for ApplicationGatewayRedirectType.
      */
-    public ApplicationGatewayRedirectType(String value) {
-        this.value = value;
+    public static final ApplicationGatewayRedirectType FOUND = fromString("Found");
+
+    /**
+     * Static value SeeOther for ApplicationGatewayRedirectType.
+     */
+    public static final ApplicationGatewayRedirectType SEE_OTHER = fromString("SeeOther");
+
+    /**
+     * Static value Temporary for ApplicationGatewayRedirectType.
+     */
+    public static final ApplicationGatewayRedirectType TEMPORARY = fromString("Temporary");
+
+    /**
+     * Creates or finds a ApplicationGatewayRedirectType from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding ApplicationGatewayRedirectType.
+     */
+    @JsonCreator
+    public static ApplicationGatewayRedirectType fromString(String name) {
+        return fromString(name, ApplicationGatewayRedirectType.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ApplicationGatewayRedirectType)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        ApplicationGatewayRedirectType rhs = (ApplicationGatewayRedirectType) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known ApplicationGatewayRedirectType values.
+     */
+    public static Collection<ApplicationGatewayRedirectType> values() {
+        return values(ApplicationGatewayRedirectType.class);
     }
 }

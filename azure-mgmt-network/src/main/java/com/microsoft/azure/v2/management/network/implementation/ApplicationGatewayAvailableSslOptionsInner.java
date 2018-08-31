@@ -8,19 +8,20 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import java.util.List;
-import com.microsoft.azure.SubResource;
-import com.microsoft.azure.v2.management.network.ApplicationGatewaySslPolicyName;
-import com.microsoft.azure.v2.management.network.ApplicationGatewaySslCipherSuite;
-import com.microsoft.azure.v2.management.network.ApplicationGatewaySslProtocol;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
+import com.microsoft.azure.v2.Resource;
+import com.microsoft.azure.v2.SubResource;
+import com.microsoft.azure.v2.management.network.ApplicationGatewaySslCipherSuite;
+import com.microsoft.azure.v2.management.network.ApplicationGatewaySslPolicyName;
+import com.microsoft.azure.v2.management.network.ApplicationGatewaySslProtocol;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
+import java.util.List;
 
 /**
  * Response for ApplicationGatewayAvailableSslOptions API service call.
  */
 @JsonFlatten
+@SkipParentValidation
 public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * List of available Ssl predefined policy.
@@ -49,9 +50,15 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     private List<ApplicationGatewaySslProtocol> availableProtocols;
 
     /**
+     * Resource ID.
+     */
+    @JsonProperty(value = "id")
+    private String id;
+
+    /**
      * Get the predefinedPolicies value.
      *
-     * @return the predefinedPolicies value
+     * @return the predefinedPolicies value.
      */
     public List<SubResource> predefinedPolicies() {
         return this.predefinedPolicies;
@@ -60,7 +67,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Set the predefinedPolicies value.
      *
-     * @param predefinedPolicies the predefinedPolicies value to set
+     * @param predefinedPolicies the predefinedPolicies value to set.
      * @return the ApplicationGatewayAvailableSslOptionsInner object itself.
      */
     public ApplicationGatewayAvailableSslOptionsInner withPredefinedPolicies(List<SubResource> predefinedPolicies) {
@@ -71,7 +78,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Get the defaultPolicy value.
      *
-     * @return the defaultPolicy value
+     * @return the defaultPolicy value.
      */
     public ApplicationGatewaySslPolicyName defaultPolicy() {
         return this.defaultPolicy;
@@ -80,7 +87,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Set the defaultPolicy value.
      *
-     * @param defaultPolicy the defaultPolicy value to set
+     * @param defaultPolicy the defaultPolicy value to set.
      * @return the ApplicationGatewayAvailableSslOptionsInner object itself.
      */
     public ApplicationGatewayAvailableSslOptionsInner withDefaultPolicy(ApplicationGatewaySslPolicyName defaultPolicy) {
@@ -91,7 +98,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Get the availableCipherSuites value.
      *
-     * @return the availableCipherSuites value
+     * @return the availableCipherSuites value.
      */
     public List<ApplicationGatewaySslCipherSuite> availableCipherSuites() {
         return this.availableCipherSuites;
@@ -100,7 +107,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Set the availableCipherSuites value.
      *
-     * @param availableCipherSuites the availableCipherSuites value to set
+     * @param availableCipherSuites the availableCipherSuites value to set.
      * @return the ApplicationGatewayAvailableSslOptionsInner object itself.
      */
     public ApplicationGatewayAvailableSslOptionsInner withAvailableCipherSuites(List<ApplicationGatewaySslCipherSuite> availableCipherSuites) {
@@ -111,7 +118,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Get the availableProtocols value.
      *
-     * @return the availableProtocols value
+     * @return the availableProtocols value.
      */
     public List<ApplicationGatewaySslProtocol> availableProtocols() {
         return this.availableProtocols;
@@ -120,7 +127,7 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
     /**
      * Set the availableProtocols value.
      *
-     * @param availableProtocols the availableProtocols value to set
+     * @param availableProtocols the availableProtocols value to set.
      * @return the ApplicationGatewayAvailableSslOptionsInner object itself.
      */
     public ApplicationGatewayAvailableSslOptionsInner withAvailableProtocols(List<ApplicationGatewaySslProtocol> availableProtocols) {
@@ -128,4 +135,23 @@ public class ApplicationGatewayAvailableSslOptionsInner extends Resource {
         return this;
     }
 
+    /**
+     * Get the id value.
+     *
+     * @return the id value.
+     */
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * Set the id value.
+     *
+     * @param id the id value to set.
+     * @return the ApplicationGatewayAvailableSslOptionsInner object itself.
+     */
+    public ApplicationGatewayAvailableSslOptionsInner withId(String id) {
+        this.id = id;
+        return this;
+    }
 }

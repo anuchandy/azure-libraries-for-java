@@ -8,55 +8,44 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for PcProtocol.
  */
-public final class PcProtocol {
-    /** Static value TCP for PcProtocol. */
-    public static final PcProtocol TCP = new PcProtocol("TCP");
-
-    /** Static value UDP for PcProtocol. */
-    public static final PcProtocol UDP = new PcProtocol("UDP");
-
-    /** Static value Any for PcProtocol. */
-    public static final PcProtocol ANY = new PcProtocol("Any");
-
-    private String value;
+public final class PcProtocol extends ExpandableStringEnum<PcProtocol> {
+    /**
+     * Static value TCP for PcProtocol.
+     */
+    public static final PcProtocol TCP = fromString("TCP");
 
     /**
-     * Creates a custom value for PcProtocol.
-     * @param value the custom value
+     * Static value UDP for PcProtocol.
      */
-    public PcProtocol(String value) {
-        this.value = value;
+    public static final PcProtocol UDP = fromString("UDP");
+
+    /**
+     * Static value Any for PcProtocol.
+     */
+    public static final PcProtocol ANY = fromString("Any");
+
+    /**
+     * Creates or finds a PcProtocol from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding PcProtocol.
+     */
+    @JsonCreator
+    public static PcProtocol fromString(String name) {
+        return fromString(name, PcProtocol.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof PcProtocol)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        PcProtocol rhs = (PcProtocol) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known PcProtocol values.
+     */
+    public static Collection<PcProtocol> values() {
+        return values(PcProtocol.class);
     }
 }

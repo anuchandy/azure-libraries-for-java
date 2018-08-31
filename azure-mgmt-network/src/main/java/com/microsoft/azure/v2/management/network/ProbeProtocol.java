@@ -8,52 +8,39 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for ProbeProtocol.
  */
-public final class ProbeProtocol {
-    /** Static value Http for ProbeProtocol. */
-    public static final ProbeProtocol HTTP = new ProbeProtocol("Http");
-
-    /** Static value Tcp for ProbeProtocol. */
-    public static final ProbeProtocol TCP = new ProbeProtocol("Tcp");
-
-    private String value;
+public final class ProbeProtocol extends ExpandableStringEnum<ProbeProtocol> {
+    /**
+     * Static value Http for ProbeProtocol.
+     */
+    public static final ProbeProtocol HTTP = fromString("Http");
 
     /**
-     * Creates a custom value for ProbeProtocol.
-     * @param value the custom value
+     * Static value Tcp for ProbeProtocol.
      */
-    public ProbeProtocol(String value) {
-        this.value = value;
+    public static final ProbeProtocol TCP = fromString("Tcp");
+
+    /**
+     * Creates or finds a ProbeProtocol from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding ProbeProtocol.
+     */
+    @JsonCreator
+    public static ProbeProtocol fromString(String name) {
+        return fromString(name, ProbeProtocol.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ProbeProtocol)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        ProbeProtocol rhs = (ProbeProtocol) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known ProbeProtocol values.
+     */
+    public static Collection<ProbeProtocol> values() {
+        return values(ProbeProtocol.class);
     }
 }

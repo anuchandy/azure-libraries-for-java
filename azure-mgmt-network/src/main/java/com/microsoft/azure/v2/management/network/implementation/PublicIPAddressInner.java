@@ -8,19 +8,20 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.v2.management.network.PublicIPAddressSku;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.microsoft.azure.v2.Resource;
 import com.microsoft.azure.v2.management.network.IPAllocationMethod;
 import com.microsoft.azure.v2.management.network.IPVersion;
 import com.microsoft.azure.v2.management.network.PublicIPAddressDnsSettings;
+import com.microsoft.azure.v2.management.network.PublicIPAddressSku;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
 
 /**
  * Public IP address resource.
  */
 @JsonFlatten
+@SkipParentValidation
 public class PublicIPAddressInner extends Resource {
     /**
      * The public IP address SKU.
@@ -93,9 +94,15 @@ public class PublicIPAddressInner extends Resource {
     private List<String> zones;
 
     /**
+     * Resource ID.
+     */
+    @JsonProperty(value = "id")
+    private String id;
+
+    /**
      * Get the sku value.
      *
-     * @return the sku value
+     * @return the sku value.
      */
     public PublicIPAddressSku sku() {
         return this.sku;
@@ -104,7 +111,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the sku value.
      *
-     * @param sku the sku value to set
+     * @param sku the sku value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withSku(PublicIPAddressSku sku) {
@@ -115,7 +122,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the publicIPAllocationMethod value.
      *
-     * @return the publicIPAllocationMethod value
+     * @return the publicIPAllocationMethod value.
      */
     public IPAllocationMethod publicIPAllocationMethod() {
         return this.publicIPAllocationMethod;
@@ -124,7 +131,8 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the publicIPAllocationMethod value.
      *
-     * @param publicIPAllocationMethod the publicIPAllocationMethod value to set
+     * @param publicIPAllocationMethod the publicIPAllocationMethod value to
+     * set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withPublicIPAllocationMethod(IPAllocationMethod publicIPAllocationMethod) {
@@ -135,7 +143,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the publicIPAddressVersion value.
      *
-     * @return the publicIPAddressVersion value
+     * @return the publicIPAddressVersion value.
      */
     public IPVersion publicIPAddressVersion() {
         return this.publicIPAddressVersion;
@@ -144,7 +152,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the publicIPAddressVersion value.
      *
-     * @param publicIPAddressVersion the publicIPAddressVersion value to set
+     * @param publicIPAddressVersion the publicIPAddressVersion value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withPublicIPAddressVersion(IPVersion publicIPAddressVersion) {
@@ -155,7 +163,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the ipConfiguration value.
      *
-     * @return the ipConfiguration value
+     * @return the ipConfiguration value.
      */
     public IPConfigurationInner ipConfiguration() {
         return this.ipConfiguration;
@@ -164,7 +172,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the dnsSettings value.
      *
-     * @return the dnsSettings value
+     * @return the dnsSettings value.
      */
     public PublicIPAddressDnsSettings dnsSettings() {
         return this.dnsSettings;
@@ -173,7 +181,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the dnsSettings value.
      *
-     * @param dnsSettings the dnsSettings value to set
+     * @param dnsSettings the dnsSettings value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withDnsSettings(PublicIPAddressDnsSettings dnsSettings) {
@@ -184,7 +192,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the ipAddress value.
      *
-     * @return the ipAddress value
+     * @return the ipAddress value.
      */
     public String ipAddress() {
         return this.ipAddress;
@@ -193,7 +201,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the ipAddress value.
      *
-     * @param ipAddress the ipAddress value to set
+     * @param ipAddress the ipAddress value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withIpAddress(String ipAddress) {
@@ -204,7 +212,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the idleTimeoutInMinutes value.
      *
-     * @return the idleTimeoutInMinutes value
+     * @return the idleTimeoutInMinutes value.
      */
     public Integer idleTimeoutInMinutes() {
         return this.idleTimeoutInMinutes;
@@ -213,7 +221,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the idleTimeoutInMinutes value.
      *
-     * @param idleTimeoutInMinutes the idleTimeoutInMinutes value to set
+     * @param idleTimeoutInMinutes the idleTimeoutInMinutes value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withIdleTimeoutInMinutes(Integer idleTimeoutInMinutes) {
@@ -224,7 +232,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the resourceGuid value.
      *
-     * @return the resourceGuid value
+     * @return the resourceGuid value.
      */
     public String resourceGuid() {
         return this.resourceGuid;
@@ -233,7 +241,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the resourceGuid value.
      *
-     * @param resourceGuid the resourceGuid value to set
+     * @param resourceGuid the resourceGuid value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withResourceGuid(String resourceGuid) {
@@ -244,7 +252,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -253,7 +261,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the provisioningState value.
      *
-     * @param provisioningState the provisioningState value to set
+     * @param provisioningState the provisioningState value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withProvisioningState(String provisioningState) {
@@ -264,7 +272,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -273,7 +281,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the etag value.
      *
-     * @param etag the etag value to set
+     * @param etag the etag value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withEtag(String etag) {
@@ -284,7 +292,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Get the zones value.
      *
-     * @return the zones value
+     * @return the zones value.
      */
     public List<String> zones() {
         return this.zones;
@@ -293,7 +301,7 @@ public class PublicIPAddressInner extends Resource {
     /**
      * Set the zones value.
      *
-     * @param zones the zones value to set
+     * @param zones the zones value to set.
      * @return the PublicIPAddressInner object itself.
      */
     public PublicIPAddressInner withZones(List<String> zones) {
@@ -301,4 +309,23 @@ public class PublicIPAddressInner extends Resource {
         return this;
     }
 
+    /**
+     * Get the id value.
+     *
+     * @return the id value.
+     */
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * Set the id value.
+     *
+     * @param id the id value to set.
+     * @return the PublicIPAddressInner object itself.
+     */
+    public PublicIPAddressInner withId(String id) {
+        this.id = id;
+        return this;
+    }
 }

@@ -8,143 +8,199 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsGet;
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsDelete;
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsListing;
-import retrofit2.Retrofit;
-import com.google.common.reflect.TypeToken;
-import com.microsoft.azure.AzureServiceFuture;
-import com.microsoft.azure.CloudException;
-import com.microsoft.azure.ListOperationCallback;
-import com.microsoft.azure.Page;
-import com.microsoft.azure.PagedList;
-import com.microsoft.rest.ServiceCallback;
-import com.microsoft.rest.ServiceFuture;
-import com.microsoft.rest.ServiceResponse;
-import com.microsoft.rest.Validator;
-import java.io.IOException;
-import java.util.List;
-import okhttp3.ResponseBody;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.HTTP;
-import retrofit2.http.Path;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Query;
-import retrofit2.http.Url;
-import retrofit2.Response;
-import rx.functions.Func1;
-import rx.Observable;
+import com.microsoft.azure.v2.AzureProxy;
+import com.microsoft.azure.v2.CloudException;
+import com.microsoft.azure.v2.OperationStatus;
+import com.microsoft.azure.v2.Page;
+import com.microsoft.azure.v2.PagedList;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsDelete;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsGet;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsListing;
+import com.microsoft.azure.v2.util.ServiceFutureUtil;
+import com.microsoft.rest.v2.BodyResponse;
+import com.microsoft.rest.v2.OperationDescription;
+import com.microsoft.rest.v2.ServiceCallback;
+import com.microsoft.rest.v2.ServiceFuture;
+import com.microsoft.rest.v2.Validator;
+import com.microsoft.rest.v2.VoidResponse;
+import com.microsoft.rest.v2.annotations.BodyParam;
+import com.microsoft.rest.v2.annotations.DELETE;
+import com.microsoft.rest.v2.annotations.ExpectedResponses;
+import com.microsoft.rest.v2.annotations.GET;
+import com.microsoft.rest.v2.annotations.HeaderParam;
+import com.microsoft.rest.v2.annotations.Host;
+import com.microsoft.rest.v2.annotations.PathParam;
+import com.microsoft.rest.v2.annotations.POST;
+import com.microsoft.rest.v2.annotations.PUT;
+import com.microsoft.rest.v2.annotations.QueryParam;
+import com.microsoft.rest.v2.annotations.ResumeOperation;
+import com.microsoft.rest.v2.annotations.UnexpectedResponseExceptionType;
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
 
 /**
- * An instance of this class provides access to all the operations defined
- * in ApplicationGateways.
+ * An instance of this class provides access to all the operations defined in
+ * ApplicationGateways.
  */
-public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGatewayInner>, InnerSupportsDelete<Void>, InnerSupportsListing<ApplicationGatewayInner> {
-    /** The Retrofit service to perform REST calls. */
+public final class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGatewayInner>, InnerSupportsDelete<Void>, InnerSupportsListing<ApplicationGatewayInner> {
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private ApplicationGatewaysService service;
-    /** The service client containing this operation class. */
+
+    /**
+     * The service client containing this operation class.
+     */
     private NetworkManagementClientImpl client;
 
     /**
      * Initializes an instance of ApplicationGatewaysInner.
      *
-     * @param retrofit the Retrofit instance built from a Retrofit Builder.
      * @param client the instance of the service client containing this operation class.
      */
-    public ApplicationGatewaysInner(Retrofit retrofit, NetworkManagementClientImpl client) {
-        this.service = retrofit.create(ApplicationGatewaysService.class);
+    public ApplicationGatewaysInner(NetworkManagementClientImpl client) {
+        this.service = AzureProxy.create(ApplicationGatewaysService.class, client);
         this.client = client;
     }
 
     /**
      * The interface defining all the services for ApplicationGateways to be
-     * used by Retrofit to perform actually REST calls.
+     * used by the proxy service to perform REST calls.
      */
-    interface ApplicationGatewaysService {
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways delete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> delete(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+    @Host("https://management.azure.com")
+    private interface ApplicationGatewaysService {
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<Void>> beginDelete(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways beginDelete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> beginDelete(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<VoidResponse> delete(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways getByResourceGroup" })
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<Void>> resumeDelete(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
-        Observable<Response<ResponseBody>> getByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<ApplicationGatewayInner>> getByResourceGroup(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways createOrUpdate" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
-        Observable<Response<ResponseBody>> createOrUpdate(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Body ApplicationGatewayInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<ApplicationGatewayInner>> beginCreateOrUpdate(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") ApplicationGatewayInner parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways beginCreateOrUpdate" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
-        Observable<Response<ResponseBody>> beginCreateOrUpdate(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Body ApplicationGatewayInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<ApplicationGatewayInner>> createOrUpdate(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") ApplicationGatewayInner parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listByResourceGroup" })
+        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}")
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<ApplicationGatewayInner>> resumeCreateOrUpdate(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways")
-        Observable<Response<ResponseBody>> listByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<ApplicationGatewayInner>>> listByResourceGroup(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways list" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways")
-        Observable<Response<ResponseBody>> list(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<ApplicationGatewayInner>>> List(@PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways start" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/start")
-        Observable<Response<ResponseBody>> start(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<Void>> beginStart(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways beginStart" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/start")
-        Observable<Response<ResponseBody>> beginStart(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<VoidResponse> start(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways stop" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/start")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<Void>> resumeStart(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/stop")
-        Observable<Response<ResponseBody>> stop(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<Void>> beginStop(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways beginStop" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/stop")
-        Observable<Response<ResponseBody>> beginStop(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<VoidResponse> stop(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways backendHealth" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/stop")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<Void>> resumeStop(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/backendhealth")
-        Observable<Response<ResponseBody>> backendHealth(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Query("$expand") String expand, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<ApplicationGatewayBackendHealthInner>> beginBackendHealth(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @QueryParam("$expand") String expand, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways beginBackendHealth" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/backendhealth")
-        Observable<Response<ResponseBody>> beginBackendHealth(@Path("resourceGroupName") String resourceGroupName, @Path("applicationGatewayName") String applicationGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Query("$expand") String expand, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<ApplicationGatewayBackendHealthInner>> backendHealth(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("applicationGatewayName") String applicationGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @QueryParam("$expand") String expand, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listAvailableWafRuleSets" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/applicationGateways/{applicationGatewayName}/backendhealth")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<ApplicationGatewayBackendHealthInner>> resumeBackendHealth(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableWafRuleSets")
-        Observable<Response<ResponseBody>> listAvailableWafRuleSets(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<ApplicationGatewayAvailableWafRuleSetsResultInner>> listAvailableWafRuleSets(@PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listAvailableSslOptions" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default")
-        Observable<Response<ResponseBody>> listAvailableSslOptions(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<ApplicationGatewayAvailableSslOptionsInner>> listAvailableSslOptions(@PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listAvailableSslPredefinedPolicies" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default/predefinedPolicies")
-        Observable<Response<ResponseBody>> listAvailableSslPredefinedPolicies(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>>> listAvailableSslPredefinedPolicies(@PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways getSslPredefinedPolicy" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGatewayAvailableSslOptions/default/predefinedPolicies/{predefinedPolicyName}")
-        Observable<Response<ResponseBody>> getSslPredefinedPolicy(@Path("subscriptionId") String subscriptionId, @Path("predefinedPolicyName") String predefinedPolicyName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<ApplicationGatewaySslPredefinedPolicyInner>> getSslPredefinedPolicy(@PathParam("subscriptionId") String subscriptionId, @PathParam("predefinedPolicyName") String predefinedPolicyName, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listByResourceGroupNext" })
-        @GET
-        Observable<Response<ResponseBody>> listByResourceGroupNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<ApplicationGatewayInner>>> listNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listNext" })
-        @GET
-        Observable<Response<ResponseBody>> listNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<ApplicationGatewayInner>>> listAllNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.ApplicationGateways listAvailableSslPredefinedPoliciesNext" })
-        @GET
-        Observable<Response<ResponseBody>> listAvailableSslPredefinedPoliciesNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>>> listAvailableSslPredefinedPoliciesNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
     }
 
     /**
@@ -152,12 +208,12 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void delete(String resourceGroupName, String applicationGatewayName) {
-        deleteWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().last().body();
+    public void beginDelete(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        beginDeleteAsync(resourceGroupName, applicationGatewayName).blockingLast();
     }
 
     /**
@@ -166,11 +222,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;Void&gt; object.
      */
-    public ServiceFuture<Void> deleteAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(deleteWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<Void> beginDeleteAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginDeleteAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -178,27 +234,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Void> deleteAsync(String resourceGroupName, String applicationGatewayName) {
-        return deleteWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Observable<OperationStatus<Void>> beginDeleteAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -209,8 +248,7 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.delete(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<Void>() { }.getType());
+        return service.beginDelete(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -218,12 +256,12 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void beginDelete(String resourceGroupName, String applicationGatewayName) {
-        beginDeleteWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().single().body();
+    public void delete(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        deleteAsync(resourceGroupName, applicationGatewayName).blockingGet();
     }
 
     /**
@@ -232,11 +270,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<Void> beginDeleteAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(beginDeleteWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<Void> deleteAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFuture.fromBody(deleteAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -244,27 +282,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Void> beginDeleteAsync(String resourceGroupName, String applicationGatewayName) {
-        return beginDeleteWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<ServiceResponse<Void>> beginDeleteWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Single<VoidResponse> deleteWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -275,27 +296,34 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginDelete(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
-                @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<Void> clientResponse = beginDeleteDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.delete(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<Void> beginDeleteDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .register(204, new TypeToken<Void>() { }.getType())
-                .register(200, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Deletes the specified application gateway.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<Void> deleteAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return deleteWithRestResponseAsync(resourceGroupName, applicationGatewayName)
+            .flatMapMaybe((VoidResponse res) -> Maybe.empty());
+    }
+
+    /**
+     * Deletes the specified application gateway. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<Void>> resumeDelete(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeDelete(operationDescription);
     }
 
     /**
@@ -303,13 +331,13 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayInner object if successful.
      */
-    public ApplicationGatewayInner getByResourceGroup(String resourceGroupName, String applicationGatewayName) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().single().body();
+    public ApplicationGatewayInner getByResourceGroup(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return getByResourceGroupAsync(resourceGroupName, applicationGatewayName).blockingGet();
     }
 
     /**
@@ -318,11 +346,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewayInner> getByResourceGroupAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<ApplicationGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getByResourceGroupWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<ApplicationGatewayInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<ApplicationGatewayInner> serviceCallback) {
+        return ServiceFuture.fromBody(getByResourceGroupAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -330,27 +358,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewayInner> getByResourceGroupAsync(String resourceGroupName, String applicationGatewayName) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<ApplicationGatewayInner>, ApplicationGatewayInner>() {
-            @Override
-            public ApplicationGatewayInner call(ServiceResponse<ApplicationGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewayInner>> getByResourceGroupWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Single<BodyResponse<ApplicationGatewayInner>> getByResourceGroupWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -361,25 +372,20 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.getByResourceGroup(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewayInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewayInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewayInner> clientResponse = getByResourceGroupDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getByResourceGroup(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<ApplicationGatewayInner> getByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<ApplicationGatewayInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<ApplicationGatewayInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets the specified application gateway.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewayInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return getByResourceGroupWithRestResponseAsync(resourceGroupName, applicationGatewayName)
+            .flatMapMaybe((BodyResponse<ApplicationGatewayInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -388,13 +394,13 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param parameters Parameters supplied to the create or update application gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayInner object if successful.
      */
-    public ApplicationGatewayInner createOrUpdate(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters) {
-        return createOrUpdateWithServiceResponseAsync(resourceGroupName, applicationGatewayName, parameters).toBlocking().last().body();
+    public ApplicationGatewayInner beginCreateOrUpdate(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters) {
+        return beginCreateOrUpdateAsync(resourceGroupName, applicationGatewayName, parameters).blockingLast().result();
     }
 
     /**
@@ -404,11 +410,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param applicationGatewayName The name of the application gateway.
      * @param parameters Parameters supplied to the create or update application gateway operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;ApplicationGatewayInner&gt; object.
      */
-    public ServiceFuture<ApplicationGatewayInner> createOrUpdateAsync(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters, final ServiceCallback<ApplicationGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(createOrUpdateWithServiceResponseAsync(resourceGroupName, applicationGatewayName, parameters), serviceCallback);
+    public ServiceFuture<ApplicationGatewayInner> beginCreateOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters, ServiceCallback<ApplicationGatewayInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginCreateOrUpdateAsync(resourceGroupName, applicationGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -417,28 +423,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param parameters Parameters supplied to the create or update application gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<ApplicationGatewayInner> createOrUpdateAsync(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters) {
-        return createOrUpdateWithServiceResponseAsync(resourceGroupName, applicationGatewayName, parameters).map(new Func1<ServiceResponse<ApplicationGatewayInner>, ApplicationGatewayInner>() {
-            @Override
-            public ApplicationGatewayInner call(ServiceResponse<ApplicationGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Creates or updates the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @param parameters Parameters supplied to the create or update application gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<ApplicationGatewayInner>> createOrUpdateWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters) {
+    public Observable<OperationStatus<ApplicationGatewayInner>> beginCreateOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -453,8 +441,7 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.createOrUpdate(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPutOrPatchResultAsync(observable, new TypeToken<ApplicationGatewayInner>() { }.getType());
+        return service.beginCreateOrUpdate(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -463,13 +450,13 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param parameters Parameters supplied to the create or update application gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayInner object if successful.
      */
-    public ApplicationGatewayInner beginCreateOrUpdate(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters) {
-        return beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, applicationGatewayName, parameters).toBlocking().single().body();
+    public ApplicationGatewayInner createOrUpdate(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters) {
+        return createOrUpdateAsync(resourceGroupName, applicationGatewayName, parameters).blockingGet();
     }
 
     /**
@@ -479,11 +466,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param applicationGatewayName The name of the application gateway.
      * @param parameters Parameters supplied to the create or update application gateway operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewayInner> beginCreateOrUpdateAsync(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters, final ServiceCallback<ApplicationGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, applicationGatewayName, parameters), serviceCallback);
+    public ServiceFuture<ApplicationGatewayInner> createOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters, ServiceCallback<ApplicationGatewayInner> serviceCallback) {
+        return ServiceFuture.fromBody(createOrUpdateAsync(resourceGroupName, applicationGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -492,28 +479,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param parameters Parameters supplied to the create or update application gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewayInner> beginCreateOrUpdateAsync(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters) {
-        return beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, applicationGatewayName, parameters).map(new Func1<ServiceResponse<ApplicationGatewayInner>, ApplicationGatewayInner>() {
-            @Override
-            public ApplicationGatewayInner call(ServiceResponse<ApplicationGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Creates or updates the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @param parameters Parameters supplied to the create or update application gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewayInner>> beginCreateOrUpdateWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName, ApplicationGatewayInner parameters) {
+    public Single<BodyResponse<ApplicationGatewayInner>> createOrUpdateWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -528,43 +497,52 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        return service.beginCreateOrUpdate(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewayInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewayInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewayInner> clientResponse = beginCreateOrUpdateDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.createOrUpdate(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<ApplicationGatewayInner> beginCreateOrUpdateDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<ApplicationGatewayInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(201, new TypeToken<ApplicationGatewayInner>() { }.getType())
-                .register(200, new TypeToken<ApplicationGatewayInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Creates or updates the specified application gateway.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @param parameters Parameters supplied to the create or update application gateway operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewayInner> createOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, @NonNull ApplicationGatewayInner parameters) {
+        return createOrUpdateWithRestResponseAsync(resourceGroupName, applicationGatewayName, parameters)
+            .flatMapMaybe((BodyResponse<ApplicationGatewayInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Creates or updates the specified application gateway. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<ApplicationGatewayInner>> resumeCreateOrUpdate(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeCreateOrUpdate(operationDescription);
     }
 
     /**
      * Lists all application gateways in a resource group.
      *
      * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;ApplicationGatewayInner&gt; object if successful.
      */
-    public PagedList<ApplicationGatewayInner> listByResourceGroup(final String resourceGroupName) {
-        ServiceResponse<Page<ApplicationGatewayInner>> response = listByResourceGroupSinglePageAsync(resourceGroupName).toBlocking().single();
-        return new PagedList<ApplicationGatewayInner>(response.body()) {
+    public PagedList<ApplicationGatewayInner> listByResourceGroup(@NonNull String resourceGroupName) {
+        Page<ApplicationGatewayInner> response = listByResourceGroupSinglePageAsync(resourceGroupName).blockingGet();
+        return new PagedList<ApplicationGatewayInner>(response) {
             @Override
             public Page<ApplicationGatewayInner> nextPage(String nextPageLink) {
-                return listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -573,68 +551,29 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * Lists all application gateways in a resource group.
      *
      * @param resourceGroupName The name of the resource group.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object.
      */
-    public ServiceFuture<List<ApplicationGatewayInner>> listByResourceGroupAsync(final String resourceGroupName, final ListOperationCallback<ApplicationGatewayInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listByResourceGroupSinglePageAsync(resourceGroupName),
-            new Func1<String, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(String nextPageLink) {
-                    return listByResourceGroupNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Lists all application gateways in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<Page<ApplicationGatewayInner>> listByResourceGroupAsync(final String resourceGroupName) {
-        return listByResourceGroupWithServiceResponseAsync(resourceGroupName)
-            .map(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Page<ApplicationGatewayInner>>() {
-                @Override
-                public Page<ApplicationGatewayInner> call(ServiceResponse<Page<ApplicationGatewayInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Lists all application gateways in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listByResourceGroupWithServiceResponseAsync(final String resourceGroupName) {
+    public Observable<Page<ApplicationGatewayInner>> listByResourceGroupAsync(@NonNull String resourceGroupName) {
         return listByResourceGroupSinglePageAsync(resourceGroupName)
-            .concatMap(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(ServiceResponse<Page<ApplicationGatewayInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listByResourceGroupNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<ApplicationGatewayInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listNextAsync(nextPageLink));
             });
     }
 
     /**
      * Lists all application gateways in a resource group.
      *
-    ServiceResponse<PageImpl<ApplicationGatewayInner>> * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;ApplicationGatewayInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param resourceGroupName The name of the resource group.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;ApplicationGatewayInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listByResourceGroupSinglePageAsync(final String resourceGroupName) {
+    public Single<Page<ApplicationGatewayInner>> listByResourceGroupSinglePageAsync(@NonNull String resourceGroupName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -642,41 +581,23 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listByResourceGroup(resourceGroupName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<ApplicationGatewayInner>> result = listByResourceGroupDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<ApplicationGatewayInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<ApplicationGatewayInner>> listByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<ApplicationGatewayInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<ApplicationGatewayInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listByResourceGroup(resourceGroupName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<ApplicationGatewayInner>> res) -> res.body());
     }
 
     /**
      * Gets all the application gateways in a subscription.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;ApplicationGatewayInner&gt; object if successful.
      */
-    public PagedList<ApplicationGatewayInner> list() {
-        ServiceResponse<Page<ApplicationGatewayInner>> response = listSinglePageAsync().toBlocking().single();
-        return new PagedList<ApplicationGatewayInner>(response.body()) {
+    public PagedList<ApplicationGatewayInner> List() {
+        Page<ApplicationGatewayInner> response = ListSinglePageAsync().blockingGet();
+        return new PagedList<ApplicationGatewayInner>(response) {
             @Override
             public Page<ApplicationGatewayInner> nextPage(String nextPageLink) {
-                return listNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listAllNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -684,88 +605,32 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
     /**
      * Gets all the application gateways in a subscription.
      *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object.
      */
-    public ServiceFuture<List<ApplicationGatewayInner>> listAsync(final ListOperationCallback<ApplicationGatewayInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listSinglePageAsync(),
-            new Func1<String, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(String nextPageLink) {
-                    return listNextSinglePageAsync(nextPageLink);
+    public Observable<Page<ApplicationGatewayInner>> ListAsync() {
+        return ListSinglePageAsync()
+            .toObservable()
+            .concatMap((Page<ApplicationGatewayInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<Page<ApplicationGatewayInner>> listAsync() {
-        return listWithServiceResponseAsync()
-            .map(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Page<ApplicationGatewayInner>>() {
-                @Override
-                public Page<ApplicationGatewayInner> call(ServiceResponse<Page<ApplicationGatewayInner>> response) {
-                    return response.body();
-                }
+                return Observable.just(page).concatWith(listAllNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets all the application gateways in a subscription.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
+     * @return the Single&lt;Page&lt;ApplicationGatewayInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listWithServiceResponseAsync() {
-        return listSinglePageAsync()
-            .concatMap(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(ServiceResponse<Page<ApplicationGatewayInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;ApplicationGatewayInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listSinglePageAsync() {
+    public Single<Page<ApplicationGatewayInner>> ListSinglePageAsync() {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.list(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<ApplicationGatewayInner>> result = listDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<ApplicationGatewayInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<ApplicationGatewayInner>> listDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<ApplicationGatewayInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<ApplicationGatewayInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.List(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<ApplicationGatewayInner>> res) -> res.body());
     }
 
     /**
@@ -773,12 +638,12 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void start(String resourceGroupName, String applicationGatewayName) {
-        startWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().last().body();
+    public void beginStart(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        beginStartAsync(resourceGroupName, applicationGatewayName).blockingLast();
     }
 
     /**
@@ -787,11 +652,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;Void&gt; object.
      */
-    public ServiceFuture<Void> startAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(startWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<Void> beginStartAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginStartAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -799,27 +664,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Void> startAsync(String resourceGroupName, String applicationGatewayName) {
-        return startWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Starts the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<Void>> startWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Observable<OperationStatus<Void>> beginStartAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -830,8 +678,7 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.start(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<Void>() { }.getType());
+        return service.beginStart(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -839,12 +686,12 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void beginStart(String resourceGroupName, String applicationGatewayName) {
-        beginStartWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().single().body();
+    public void start(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        startAsync(resourceGroupName, applicationGatewayName).blockingAwait();
     }
 
     /**
@@ -853,11 +700,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<Void> beginStartAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(beginStartWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<Void> startAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFuture.fromBody(startAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -865,27 +712,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Void> beginStartAsync(String resourceGroupName, String applicationGatewayName) {
-        return beginStartWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Starts the specified application gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<ServiceResponse<Void>> beginStartWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Single<VoidResponse> startWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -896,26 +726,34 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginStart(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
-                @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<Void> clientResponse = beginStartDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.start(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<Void> beginStartDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<Void>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Starts the specified application gateway.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Completable startAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return startWithRestResponseAsync(resourceGroupName, applicationGatewayName)
+            .toCompletable();
+    }
+
+    /**
+     * Starts the specified application gateway. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<Void>> resumeStart(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeStart(operationDescription);
     }
 
     /**
@@ -923,12 +761,12 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void stop(String resourceGroupName, String applicationGatewayName) {
-        stopWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().last().body();
+    public void beginStop(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        beginStopAsync(resourceGroupName, applicationGatewayName).blockingLast();
     }
 
     /**
@@ -937,11 +775,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;Void&gt; object.
      */
-    public ServiceFuture<Void> stopAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(stopWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<Void> beginStopAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginStopAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -949,27 +787,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Void> stopAsync(String resourceGroupName, String applicationGatewayName) {
-        return stopWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Stops the specified application gateway in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<Void>> stopWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Observable<OperationStatus<Void>> beginStopAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -980,8 +801,7 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.stop(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<Void>() { }.getType());
+        return service.beginStop(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -989,12 +809,12 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void beginStop(String resourceGroupName, String applicationGatewayName) {
-        beginStopWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().single().body();
+    public void stop(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        stopAsync(resourceGroupName, applicationGatewayName).blockingAwait();
     }
 
     /**
@@ -1003,11 +823,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<Void> beginStopAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(beginStopWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<Void> stopAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFuture.fromBody(stopAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -1015,27 +835,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Void> beginStopAsync(String resourceGroupName, String applicationGatewayName) {
-        return beginStopWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Stops the specified application gateway in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<ServiceResponse<Void>> beginStopWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Single<VoidResponse> stopWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1046,26 +849,34 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginStop(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
-                @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<Void> clientResponse = beginStopDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.stop(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<Void> beginStopDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<Void>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Stops the specified application gateway in a resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Completable stopAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return stopWithRestResponseAsync(resourceGroupName, applicationGatewayName)
+            .toCompletable();
+    }
+
+    /**
+     * Stops the specified application gateway in a resource group. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<Void>> resumeStop(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeStop(operationDescription);
     }
 
     /**
@@ -1073,13 +884,13 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayBackendHealthInner object if successful.
      */
-    public ApplicationGatewayBackendHealthInner backendHealth(String resourceGroupName, String applicationGatewayName) {
-        return backendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().last().body();
+    public ApplicationGatewayBackendHealthInner beginBackendHealth(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return beginBackendHealthAsync(resourceGroupName, applicationGatewayName).blockingLast().result();
     }
 
     /**
@@ -1088,11 +899,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;ApplicationGatewayBackendHealthInner&gt; object.
      */
-    public ServiceFuture<ApplicationGatewayBackendHealthInner> backendHealthAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
-        return ServiceFuture.fromResponse(backendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<ApplicationGatewayBackendHealthInner> beginBackendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginBackendHealthAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -1100,27 +911,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<ApplicationGatewayBackendHealthInner> backendHealthAsync(String resourceGroupName, String applicationGatewayName) {
-        return backendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<ApplicationGatewayBackendHealthInner>, ApplicationGatewayBackendHealthInner>() {
-            @Override
-            public ApplicationGatewayBackendHealthInner call(ServiceResponse<ApplicationGatewayBackendHealthInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the backend health of the specified application gateway in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>> backendHealthWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Observable<OperationStatus<ApplicationGatewayBackendHealthInner>> beginBackendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1132,22 +926,22 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
         }
         final String apiVersion = "2017-08-01";
         final String expand = null;
-        Observable<Response<ResponseBody>> observable = service.backendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<ApplicationGatewayBackendHealthInner>() { }.getType());
+        return service.beginBackendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
     }
+
     /**
      * Gets the backend health of the specified application gateway in a resource group.
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayBackendHealthInner object if successful.
      */
-    public ApplicationGatewayBackendHealthInner backendHealth(String resourceGroupName, String applicationGatewayName, String expand) {
-        return backendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName, expand).toBlocking().last().body();
+    public ApplicationGatewayBackendHealthInner beginBackendHealth(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand) {
+        return beginBackendHealthAsync(resourceGroupName, applicationGatewayName, expand).blockingLast().result();
     }
 
     /**
@@ -1157,11 +951,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param applicationGatewayName The name of the application gateway.
      * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;ApplicationGatewayBackendHealthInner&gt; object.
      */
-    public ServiceFuture<ApplicationGatewayBackendHealthInner> backendHealthAsync(String resourceGroupName, String applicationGatewayName, String expand, final ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
-        return ServiceFuture.fromResponse(backendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName, expand), serviceCallback);
+    public ServiceFuture<ApplicationGatewayBackendHealthInner> beginBackendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand, ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginBackendHealthAsync(resourceGroupName, applicationGatewayName, expand), serviceCallback);
     }
 
     /**
@@ -1170,28 +964,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<ApplicationGatewayBackendHealthInner> backendHealthAsync(String resourceGroupName, String applicationGatewayName, String expand) {
-        return backendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName, expand).map(new Func1<ServiceResponse<ApplicationGatewayBackendHealthInner>, ApplicationGatewayBackendHealthInner>() {
-            @Override
-            public ApplicationGatewayBackendHealthInner call(ServiceResponse<ApplicationGatewayBackendHealthInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the backend health of the specified application gateway in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>> backendHealthWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName, String expand) {
+    public Observable<OperationStatus<ApplicationGatewayBackendHealthInner>> beginBackendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1202,8 +978,7 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.backendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<ApplicationGatewayBackendHealthInner>() { }.getType());
+        return service.beginBackendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
     }
 
     /**
@@ -1211,13 +986,13 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayBackendHealthInner object if successful.
      */
-    public ApplicationGatewayBackendHealthInner beginBackendHealth(String resourceGroupName, String applicationGatewayName) {
-        return beginBackendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName).toBlocking().single().body();
+    public ApplicationGatewayBackendHealthInner backendHealth(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return backendHealthAsync(resourceGroupName, applicationGatewayName).blockingGet();
     }
 
     /**
@@ -1226,11 +1001,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewayBackendHealthInner> beginBackendHealthAsync(String resourceGroupName, String applicationGatewayName, final ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginBackendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName), serviceCallback);
+    public ServiceFuture<ApplicationGatewayBackendHealthInner> backendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
+        return ServiceFuture.fromBody(backendHealthAsync(resourceGroupName, applicationGatewayName), serviceCallback);
     }
 
     /**
@@ -1238,27 +1013,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayBackendHealthInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewayBackendHealthInner> beginBackendHealthAsync(String resourceGroupName, String applicationGatewayName) {
-        return beginBackendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName).map(new Func1<ServiceResponse<ApplicationGatewayBackendHealthInner>, ApplicationGatewayBackendHealthInner>() {
-            @Override
-            public ApplicationGatewayBackendHealthInner call(ServiceResponse<ApplicationGatewayBackendHealthInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the backend health of the specified application gateway in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayBackendHealthInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>> beginBackendHealthWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName) {
+    public Single<BodyResponse<ApplicationGatewayBackendHealthInner>> backendHealthWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1270,18 +1028,20 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
         }
         final String apiVersion = "2017-08-01";
         final String expand = null;
-        return service.beginBackendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewayBackendHealthInner> clientResponse = beginBackendHealthDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.backendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
+    }
+
+    /**
+     * Gets the backend health of the specified application gateway in a resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewayBackendHealthInner> backendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName) {
+        return backendHealthWithRestResponseAsync(resourceGroupName, applicationGatewayName)
+            .flatMapMaybe((BodyResponse<ApplicationGatewayBackendHealthInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -1290,13 +1050,13 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayBackendHealthInner object if successful.
      */
-    public ApplicationGatewayBackendHealthInner beginBackendHealth(String resourceGroupName, String applicationGatewayName, String expand) {
-        return beginBackendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName, expand).toBlocking().single().body();
+    public ApplicationGatewayBackendHealthInner backendHealth(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand) {
+        return backendHealthAsync(resourceGroupName, applicationGatewayName, expand).blockingGet();
     }
 
     /**
@@ -1306,11 +1066,11 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param applicationGatewayName The name of the application gateway.
      * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewayBackendHealthInner> beginBackendHealthAsync(String resourceGroupName, String applicationGatewayName, String expand, final ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginBackendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName, expand), serviceCallback);
+    public ServiceFuture<ApplicationGatewayBackendHealthInner> backendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand, ServiceCallback<ApplicationGatewayBackendHealthInner> serviceCallback) {
+        return ServiceFuture.fromBody(backendHealthAsync(resourceGroupName, applicationGatewayName, expand), serviceCallback);
     }
 
     /**
@@ -1319,28 +1079,10 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * @param resourceGroupName The name of the resource group.
      * @param applicationGatewayName The name of the application gateway.
      * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayBackendHealthInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewayBackendHealthInner> beginBackendHealthAsync(String resourceGroupName, String applicationGatewayName, String expand) {
-        return beginBackendHealthWithServiceResponseAsync(resourceGroupName, applicationGatewayName, expand).map(new Func1<ServiceResponse<ApplicationGatewayBackendHealthInner>, ApplicationGatewayBackendHealthInner>() {
-            @Override
-            public ApplicationGatewayBackendHealthInner call(ServiceResponse<ApplicationGatewayBackendHealthInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the backend health of the specified application gateway in a resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param applicationGatewayName The name of the application gateway.
-     * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayBackendHealthInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>> beginBackendHealthWithServiceResponseAsync(String resourceGroupName, String applicationGatewayName, String expand) {
+    public Single<BodyResponse<ApplicationGatewayBackendHealthInner>> backendHealthWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1351,182 +1093,140 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginBackendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewayBackendHealthInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewayBackendHealthInner> clientResponse = beginBackendHealthDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.backendHealth(resourceGroupName, applicationGatewayName, this.client.subscriptionId(), apiVersion, expand, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<ApplicationGatewayBackendHealthInner> beginBackendHealthDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<ApplicationGatewayBackendHealthInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<ApplicationGatewayBackendHealthInner>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets the backend health of the specified application gateway in a resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param applicationGatewayName The name of the application gateway.
+     * @param expand Expands BackendAddressPool and BackendHttpSettings referenced in backend health.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewayBackendHealthInner> backendHealthAsync(@NonNull String resourceGroupName, @NonNull String applicationGatewayName, String expand) {
+        return backendHealthWithRestResponseAsync(resourceGroupName, applicationGatewayName, expand)
+            .flatMapMaybe((BodyResponse<ApplicationGatewayBackendHealthInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Gets the backend health of the specified application gateway in a resource group. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<ApplicationGatewayBackendHealthInner>> resumeBackendHealth(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeBackendHealth(operationDescription);
     }
 
     /**
      * Lists all available web application firewall rule sets.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayAvailableWafRuleSetsResultInner object if successful.
      */
     public ApplicationGatewayAvailableWafRuleSetsResultInner listAvailableWafRuleSets() {
-        return listAvailableWafRuleSetsWithServiceResponseAsync().toBlocking().single().body();
+        return listAvailableWafRuleSetsAsync().blockingGet();
     }
 
     /**
      * Lists all available web application firewall rule sets.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewayAvailableWafRuleSetsResultInner> listAvailableWafRuleSetsAsync(final ServiceCallback<ApplicationGatewayAvailableWafRuleSetsResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(listAvailableWafRuleSetsWithServiceResponseAsync(), serviceCallback);
+    public ServiceFuture<ApplicationGatewayAvailableWafRuleSetsResultInner> listAvailableWafRuleSetsAsync(ServiceCallback<ApplicationGatewayAvailableWafRuleSetsResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(listAvailableWafRuleSetsAsync(), serviceCallback);
     }
 
     /**
      * Lists all available web application firewall rule sets.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayAvailableWafRuleSetsResultInner object
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewayAvailableWafRuleSetsResultInner> listAvailableWafRuleSetsAsync() {
-        return listAvailableWafRuleSetsWithServiceResponseAsync().map(new Func1<ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner>, ApplicationGatewayAvailableWafRuleSetsResultInner>() {
-            @Override
-            public ApplicationGatewayAvailableWafRuleSetsResultInner call(ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Lists all available web application firewall rule sets.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayAvailableWafRuleSetsResultInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner>> listAvailableWafRuleSetsWithServiceResponseAsync() {
+    public Single<BodyResponse<ApplicationGatewayAvailableWafRuleSetsResultInner>> listAvailableWafRuleSetsWithRestResponseAsync() {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listAvailableWafRuleSets(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner> clientResponse = listAvailableWafRuleSetsDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.listAvailableWafRuleSets(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<ApplicationGatewayAvailableWafRuleSetsResultInner> listAvailableWafRuleSetsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<ApplicationGatewayAvailableWafRuleSetsResultInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<ApplicationGatewayAvailableWafRuleSetsResultInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Lists all available web application firewall rule sets.
+     *
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewayAvailableWafRuleSetsResultInner> listAvailableWafRuleSetsAsync() {
+        return listAvailableWafRuleSetsWithRestResponseAsync()
+            .flatMapMaybe((BodyResponse<ApplicationGatewayAvailableWafRuleSetsResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
      * Lists available Ssl options for configuring Ssl policy.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewayAvailableSslOptionsInner object if successful.
      */
     public ApplicationGatewayAvailableSslOptionsInner listAvailableSslOptions() {
-        return listAvailableSslOptionsWithServiceResponseAsync().toBlocking().single().body();
+        return listAvailableSslOptionsAsync().blockingGet();
     }
 
     /**
      * Lists available Ssl options for configuring Ssl policy.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewayAvailableSslOptionsInner> listAvailableSslOptionsAsync(final ServiceCallback<ApplicationGatewayAvailableSslOptionsInner> serviceCallback) {
-        return ServiceFuture.fromResponse(listAvailableSslOptionsWithServiceResponseAsync(), serviceCallback);
+    public ServiceFuture<ApplicationGatewayAvailableSslOptionsInner> listAvailableSslOptionsAsync(ServiceCallback<ApplicationGatewayAvailableSslOptionsInner> serviceCallback) {
+        return ServiceFuture.fromBody(listAvailableSslOptionsAsync(), serviceCallback);
     }
 
     /**
      * Lists available Ssl options for configuring Ssl policy.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayAvailableSslOptionsInner object
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewayAvailableSslOptionsInner> listAvailableSslOptionsAsync() {
-        return listAvailableSslOptionsWithServiceResponseAsync().map(new Func1<ServiceResponse<ApplicationGatewayAvailableSslOptionsInner>, ApplicationGatewayAvailableSslOptionsInner>() {
-            @Override
-            public ApplicationGatewayAvailableSslOptionsInner call(ServiceResponse<ApplicationGatewayAvailableSslOptionsInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Lists available Ssl options for configuring Ssl policy.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewayAvailableSslOptionsInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewayAvailableSslOptionsInner>> listAvailableSslOptionsWithServiceResponseAsync() {
+    public Single<BodyResponse<ApplicationGatewayAvailableSslOptionsInner>> listAvailableSslOptionsWithRestResponseAsync() {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listAvailableSslOptions(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewayAvailableSslOptionsInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewayAvailableSslOptionsInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewayAvailableSslOptionsInner> clientResponse = listAvailableSslOptionsDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.listAvailableSslOptions(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<ApplicationGatewayAvailableSslOptionsInner> listAvailableSslOptionsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<ApplicationGatewayAvailableSslOptionsInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<ApplicationGatewayAvailableSslOptionsInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Lists available Ssl options for configuring Ssl policy.
+     *
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewayAvailableSslOptionsInner> listAvailableSslOptionsAsync() {
+        return listAvailableSslOptionsWithRestResponseAsync()
+            .flatMapMaybe((BodyResponse<ApplicationGatewayAvailableSslOptionsInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
      * Lists all SSL predefined policies for configuring Ssl policy.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object if successful.
      */
     public PagedList<ApplicationGatewaySslPredefinedPolicyInner> listAvailableSslPredefinedPolicies() {
-        ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>> response = listAvailableSslPredefinedPoliciesSinglePageAsync().toBlocking().single();
-        return new PagedList<ApplicationGatewaySslPredefinedPolicyInner>(response.body()) {
+        Page<ApplicationGatewaySslPredefinedPolicyInner> response = listAvailableSslPredefinedPoliciesSinglePageAsync().blockingGet();
+        return new PagedList<ApplicationGatewaySslPredefinedPolicyInner>(response) {
             @Override
             public Page<ApplicationGatewaySslPredefinedPolicyInner> nextPage(String nextPageLink) {
-                return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -1534,101 +1234,45 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
     /**
      * Lists all SSL predefined policies for configuring Ssl policy.
      *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesAsync(final ListOperationCallback<ApplicationGatewaySslPredefinedPolicyInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listAvailableSslPredefinedPoliciesSinglePageAsync(),
-            new Func1<String, Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> call(String nextPageLink) {
-                    return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Lists all SSL predefined policies for configuring Ssl policy.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object
+     * @return the observable to the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object.
      */
     public Observable<Page<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesAsync() {
-        return listAvailableSslPredefinedPoliciesWithServiceResponseAsync()
-            .map(new Func1<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>, Page<ApplicationGatewaySslPredefinedPolicyInner>>() {
-                @Override
-                public Page<ApplicationGatewaySslPredefinedPolicyInner> call(ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Lists all SSL predefined policies for configuring Ssl policy.
-     *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> listAvailableSslPredefinedPoliciesWithServiceResponseAsync() {
         return listAvailableSslPredefinedPoliciesSinglePageAsync()
-            .concatMap(new Func1<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>, Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> call(ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listAvailableSslPredefinedPoliciesNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<ApplicationGatewaySslPredefinedPolicyInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listAvailableSslPredefinedPoliciesNextAsync(nextPageLink));
             });
     }
 
     /**
      * Lists all SSL predefined policies for configuring Ssl policy.
      *
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @return the Single&lt;Page&lt;ApplicationGatewaySslPredefinedPolicyInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> listAvailableSslPredefinedPoliciesSinglePageAsync() {
+    public Single<Page<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesSinglePageAsync() {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listAvailableSslPredefinedPolicies(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> result = listAvailableSslPredefinedPoliciesDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listAvailableSslPredefinedPolicies(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> res) -> res.body());
     }
 
     /**
      * Gets Ssl predefined policy with the specified policy name.
      *
      * @param predefinedPolicyName Name of Ssl predefined policy.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the ApplicationGatewaySslPredefinedPolicyInner object if successful.
      */
-    public ApplicationGatewaySslPredefinedPolicyInner getSslPredefinedPolicy(String predefinedPolicyName) {
-        return getSslPredefinedPolicyWithServiceResponseAsync(predefinedPolicyName).toBlocking().single().body();
+    public ApplicationGatewaySslPredefinedPolicyInner getSslPredefinedPolicy(@NonNull String predefinedPolicyName) {
+        return getSslPredefinedPolicyAsync(predefinedPolicyName).blockingGet();
     }
 
     /**
@@ -1636,37 +1280,21 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      *
      * @param predefinedPolicyName Name of Ssl predefined policy.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<ApplicationGatewaySslPredefinedPolicyInner> getSslPredefinedPolicyAsync(String predefinedPolicyName, final ServiceCallback<ApplicationGatewaySslPredefinedPolicyInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getSslPredefinedPolicyWithServiceResponseAsync(predefinedPolicyName), serviceCallback);
+    public ServiceFuture<ApplicationGatewaySslPredefinedPolicyInner> getSslPredefinedPolicyAsync(@NonNull String predefinedPolicyName, ServiceCallback<ApplicationGatewaySslPredefinedPolicyInner> serviceCallback) {
+        return ServiceFuture.fromBody(getSslPredefinedPolicyAsync(predefinedPolicyName), serviceCallback);
     }
 
     /**
      * Gets Ssl predefined policy with the specified policy name.
      *
      * @param predefinedPolicyName Name of Ssl predefined policy.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewaySslPredefinedPolicyInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ApplicationGatewaySslPredefinedPolicyInner> getSslPredefinedPolicyAsync(String predefinedPolicyName) {
-        return getSslPredefinedPolicyWithServiceResponseAsync(predefinedPolicyName).map(new Func1<ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner>, ApplicationGatewaySslPredefinedPolicyInner>() {
-            @Override
-            public ApplicationGatewaySslPredefinedPolicyInner call(ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets Ssl predefined policy with the specified policy name.
-     *
-     * @param predefinedPolicyName Name of Ssl predefined policy.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the ApplicationGatewaySslPredefinedPolicyInner object
-     */
-    public Observable<ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner>> getSslPredefinedPolicyWithServiceResponseAsync(String predefinedPolicyName) {
+    public Single<BodyResponse<ApplicationGatewaySslPredefinedPolicyInner>> getSslPredefinedPolicyWithRestResponseAsync(@NonNull String predefinedPolicyName) {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
@@ -1674,42 +1302,36 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
             throw new IllegalArgumentException("Parameter predefinedPolicyName is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.getSslPredefinedPolicy(this.client.subscriptionId(), predefinedPolicyName, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner>>>() {
-                @Override
-                public Observable<ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner> clientResponse = getSslPredefinedPolicyDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getSslPredefinedPolicy(this.client.subscriptionId(), predefinedPolicyName, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<ApplicationGatewaySslPredefinedPolicyInner> getSslPredefinedPolicyDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<ApplicationGatewaySslPredefinedPolicyInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<ApplicationGatewaySslPredefinedPolicyInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets Ssl predefined policy with the specified policy name.
+     *
+     * @param predefinedPolicyName Name of Ssl predefined policy.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<ApplicationGatewaySslPredefinedPolicyInner> getSslPredefinedPolicyAsync(@NonNull String predefinedPolicyName) {
+        return getSslPredefinedPolicyWithRestResponseAsync(predefinedPolicyName)
+            .flatMapMaybe((BodyResponse<ApplicationGatewaySslPredefinedPolicyInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
      * Lists all application gateways in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;ApplicationGatewayInner&gt; object if successful.
      */
-    public PagedList<ApplicationGatewayInner> listByResourceGroupNext(final String nextPageLink) {
-        ServiceResponse<Page<ApplicationGatewayInner>> response = listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<ApplicationGatewayInner>(response.body()) {
+    public PagedList<ApplicationGatewayInner> listNext(@NonNull String nextPageLink) {
+        Page<ApplicationGatewayInner> response = listNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<ApplicationGatewayInner>(response) {
             @Override
             public Page<ApplicationGatewayInner> nextPage(String nextPageLink) {
-                return listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -1718,220 +1340,106 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * Lists all application gateways in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object.
      */
-    public ServiceFuture<List<ApplicationGatewayInner>> listByResourceGroupNextAsync(final String nextPageLink, final ServiceFuture<List<ApplicationGatewayInner>> serviceFuture, final ListOperationCallback<ApplicationGatewayInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listByResourceGroupNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(String nextPageLink) {
-                    return listByResourceGroupNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Lists all application gateways in a resource group.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<Page<ApplicationGatewayInner>> listByResourceGroupNextAsync(final String nextPageLink) {
-        return listByResourceGroupNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Page<ApplicationGatewayInner>>() {
-                @Override
-                public Page<ApplicationGatewayInner> call(ServiceResponse<Page<ApplicationGatewayInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Lists all application gateways in a resource group.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listByResourceGroupNextWithServiceResponseAsync(final String nextPageLink) {
-        return listByResourceGroupNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(ServiceResponse<Page<ApplicationGatewayInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listByResourceGroupNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Lists all application gateways in a resource group.
-     *
-    ServiceResponse<PageImpl<ApplicationGatewayInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;ApplicationGatewayInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listByResourceGroupNextSinglePageAsync(final String nextPageLink) {
-        if (nextPageLink == null) {
-            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
-        }
-        String nextUrl = String.format("%s", nextPageLink);
-        return service.listByResourceGroupNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<ApplicationGatewayInner>> result = listByResourceGroupNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<ApplicationGatewayInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<ApplicationGatewayInner>> listByResourceGroupNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<ApplicationGatewayInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<ApplicationGatewayInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
-     * @return the PagedList&lt;ApplicationGatewayInner&gt; object if successful.
-     */
-    public PagedList<ApplicationGatewayInner> listNext(final String nextPageLink) {
-        ServiceResponse<Page<ApplicationGatewayInner>> response = listNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<ApplicationGatewayInner>(response.body()) {
-            @Override
-            public Page<ApplicationGatewayInner> nextPage(String nextPageLink) {
-                return listNextSinglePageAsync(nextPageLink).toBlocking().single().body();
-            }
-        };
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<List<ApplicationGatewayInner>> listNextAsync(final String nextPageLink, final ServiceFuture<List<ApplicationGatewayInner>> serviceFuture, final ListOperationCallback<ApplicationGatewayInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(String nextPageLink) {
-                    return listNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<Page<ApplicationGatewayInner>> listNextAsync(final String nextPageLink) {
-        return listNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Page<ApplicationGatewayInner>>() {
-                @Override
-                public Page<ApplicationGatewayInner> call(ServiceResponse<Page<ApplicationGatewayInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all the application gateways in a subscription.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listNextWithServiceResponseAsync(final String nextPageLink) {
+    public Observable<Page<ApplicationGatewayInner>> listNextAsync(@NonNull String nextPageLink) {
         return listNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<ApplicationGatewayInner>>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(ServiceResponse<Page<ApplicationGatewayInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<ApplicationGatewayInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listNextAsync(nextPageLink1));
+            });
+    }
+
+    /**
+     * Lists all application gateways in a resource group.
+     *
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;ApplicationGatewayInner&gt;&gt; object if successful.
+     */
+    public Single<Page<ApplicationGatewayInner>> listNextSinglePageAsync(@NonNull String nextPageLink) {
+        if (nextPageLink == null) {
+            throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
+        }
+        String nextUrl = String.format("%s", nextPageLink);
+        return service.listNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<ApplicationGatewayInner>> res) -> res.body());
+    }
+
+    /**
+     * Gets all the application gateways in a subscription.
+     *
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the PagedList&lt;ApplicationGatewayInner&gt; object if successful.
+     */
+    public PagedList<ApplicationGatewayInner> listAllNext(@NonNull String nextPageLink) {
+        Page<ApplicationGatewayInner> response = listAllNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<ApplicationGatewayInner>(response) {
+            @Override
+            public Page<ApplicationGatewayInner> nextPage(String nextPageLink) {
+                return listAllNextSinglePageAsync(nextPageLink).blockingGet();
+            }
+        };
+    }
+
+    /**
+     * Gets all the application gateways in a subscription.
+     *
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;ApplicationGatewayInner&gt; object.
+     */
+    public Observable<Page<ApplicationGatewayInner>> listAllNextAsync(@NonNull String nextPageLink) {
+        return listAllNextSinglePageAsync(nextPageLink)
+            .toObservable()
+            .concatMap((Page<ApplicationGatewayInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
+                }
+                return Observable.just(page).concatWith(listAllNextAsync(nextPageLink1));
             });
     }
 
     /**
      * Gets all the application gateways in a subscription.
      *
-    ServiceResponse<PageImpl<ApplicationGatewayInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;ApplicationGatewayInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;ApplicationGatewayInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> listNextSinglePageAsync(final String nextPageLink) {
+    public Single<Page<ApplicationGatewayInner>> listAllNextSinglePageAsync(@NonNull String nextPageLink) {
         if (nextPageLink == null) {
             throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
         }
         String nextUrl = String.format("%s", nextPageLink);
-        return service.listNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<ApplicationGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewayInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<ApplicationGatewayInner>> result = listNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<ApplicationGatewayInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<ApplicationGatewayInner>> listNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<ApplicationGatewayInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<ApplicationGatewayInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listAllNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<ApplicationGatewayInner>> res) -> res.body());
     }
 
     /**
      * Lists all SSL predefined policies for configuring Ssl policy.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object if successful.
      */
-    public PagedList<ApplicationGatewaySslPredefinedPolicyInner> listAvailableSslPredefinedPoliciesNext(final String nextPageLink) {
-        ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>> response = listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<ApplicationGatewaySslPredefinedPolicyInner>(response.body()) {
+    public PagedList<ApplicationGatewaySslPredefinedPolicyInner> listAvailableSslPredefinedPoliciesNext(@NonNull String nextPageLink) {
+        Page<ApplicationGatewaySslPredefinedPolicyInner> response = listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<ApplicationGatewaySslPredefinedPolicyInner>(response) {
             @Override
             public Page<ApplicationGatewaySslPredefinedPolicyInner> nextPage(String nextPageLink) {
-                return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -1940,92 +1448,34 @@ public class ApplicationGatewaysInner implements InnerSupportsGet<ApplicationGat
      * Lists all SSL predefined policies for configuring Ssl policy.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object.
      */
-    public ServiceFuture<List<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesNextAsync(final String nextPageLink, final ServiceFuture<List<ApplicationGatewaySslPredefinedPolicyInner>> serviceFuture, final ListOperationCallback<ApplicationGatewaySslPredefinedPolicyInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> call(String nextPageLink) {
-                    return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Lists all SSL predefined policies for configuring Ssl policy.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object
-     */
-    public Observable<Page<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesNextAsync(final String nextPageLink) {
-        return listAvailableSslPredefinedPoliciesNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>, Page<ApplicationGatewaySslPredefinedPolicyInner>>() {
-                @Override
-                public Page<ApplicationGatewaySslPredefinedPolicyInner> call(ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Lists all SSL predefined policies for configuring Ssl policy.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> listAvailableSslPredefinedPoliciesNextWithServiceResponseAsync(final String nextPageLink) {
+    public Observable<Page<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesNextAsync(@NonNull String nextPageLink) {
         return listAvailableSslPredefinedPoliciesNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>, Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> call(ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listAvailableSslPredefinedPoliciesNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<ApplicationGatewaySslPredefinedPolicyInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listAvailableSslPredefinedPoliciesNextAsync(nextPageLink1));
             });
     }
 
     /**
      * Lists all SSL predefined policies for configuring Ssl policy.
      *
-    ServiceResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;ApplicationGatewaySslPredefinedPolicyInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;ApplicationGatewaySslPredefinedPolicyInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> listAvailableSslPredefinedPoliciesNextSinglePageAsync(final String nextPageLink) {
+    public Single<Page<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesNextSinglePageAsync(@NonNull String nextPageLink) {
         if (nextPageLink == null) {
             throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
         }
         String nextUrl = String.format("%s", nextPageLink);
-        return service.listAvailableSslPredefinedPoliciesNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> result = listAvailableSslPredefinedPoliciesNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<ApplicationGatewaySslPredefinedPolicyInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.listAvailableSslPredefinedPoliciesNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> res) -> res.body());
     }
-
-    private ServiceResponse<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>> listAvailableSslPredefinedPoliciesNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<ApplicationGatewaySslPredefinedPolicyInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
 }

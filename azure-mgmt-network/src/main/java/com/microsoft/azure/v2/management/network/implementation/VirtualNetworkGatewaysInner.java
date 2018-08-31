@@ -8,146 +8,237 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsGet;
-import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsDelete;
-import retrofit2.Retrofit;
-import com.google.common.reflect.TypeToken;
-import com.microsoft.azure.AzureServiceFuture;
-import com.microsoft.azure.CloudException;
-import com.microsoft.azure.ListOperationCallback;
-import com.microsoft.azure.Page;
-import com.microsoft.azure.PagedList;
-import com.microsoft.rest.ServiceCallback;
-import com.microsoft.rest.ServiceFuture;
-import com.microsoft.rest.ServiceResponse;
-import com.microsoft.rest.Validator;
-import java.io.IOException;
-import java.util.List;
-import okhttp3.ResponseBody;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.HTTP;
-import retrofit2.http.Path;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Query;
-import retrofit2.http.Url;
-import retrofit2.Response;
-import rx.functions.Func1;
-import rx.Observable;
+import com.microsoft.azure.v2.AzureProxy;
+import com.microsoft.azure.v2.CloudException;
+import com.microsoft.azure.v2.OperationStatus;
+import com.microsoft.azure.v2.Page;
+import com.microsoft.azure.v2.PagedList;
+import com.microsoft.azure.v2.management.network.VpnClientParameters;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsDelete;
+import com.microsoft.azure.v2.management.resources.fluentcore.collection.InnerSupportsGet;
+import com.microsoft.azure.v2.util.ServiceFutureUtil;
+import com.microsoft.rest.v2.BodyResponse;
+import com.microsoft.rest.v2.OperationDescription;
+import com.microsoft.rest.v2.ServiceCallback;
+import com.microsoft.rest.v2.ServiceFuture;
+import com.microsoft.rest.v2.Validator;
+import com.microsoft.rest.v2.VoidResponse;
+import com.microsoft.rest.v2.annotations.BodyParam;
+import com.microsoft.rest.v2.annotations.DELETE;
+import com.microsoft.rest.v2.annotations.ExpectedResponses;
+import com.microsoft.rest.v2.annotations.GET;
+import com.microsoft.rest.v2.annotations.HeaderParam;
+import com.microsoft.rest.v2.annotations.Host;
+import com.microsoft.rest.v2.annotations.PathParam;
+import com.microsoft.rest.v2.annotations.POST;
+import com.microsoft.rest.v2.annotations.PUT;
+import com.microsoft.rest.v2.annotations.QueryParam;
+import com.microsoft.rest.v2.annotations.ResumeOperation;
+import com.microsoft.rest.v2.annotations.UnexpectedResponseExceptionType;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
 
 /**
- * An instance of this class provides access to all the operations defined
- * in VirtualNetworkGateways.
+ * An instance of this class provides access to all the operations defined in
+ * VirtualNetworkGateways.
  */
-public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetworkGatewayInner>, InnerSupportsDelete<Void> {
-    /** The Retrofit service to perform REST calls. */
+public final class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetworkGatewayInner>, InnerSupportsDelete<Void> {
+    /**
+     * The proxy service used to perform REST calls.
+     */
     private VirtualNetworkGatewaysService service;
-    /** The service client containing this operation class. */
+
+    /**
+     * The service client containing this operation class.
+     */
     private NetworkManagementClientImpl client;
 
     /**
      * Initializes an instance of VirtualNetworkGatewaysInner.
      *
-     * @param retrofit the Retrofit instance built from a Retrofit Builder.
      * @param client the instance of the service client containing this operation class.
      */
-    public VirtualNetworkGatewaysInner(Retrofit retrofit, NetworkManagementClientImpl client) {
-        this.service = retrofit.create(VirtualNetworkGatewaysService.class);
+    public VirtualNetworkGatewaysInner(NetworkManagementClientImpl client) {
+        this.service = AzureProxy.create(VirtualNetworkGatewaysService.class, client);
         this.client = client;
     }
 
     /**
      * The interface defining all the services for VirtualNetworkGateways to be
-     * used by Retrofit to perform actually REST calls.
+     * used by the proxy service to perform REST calls.
      */
-    interface VirtualNetworkGatewaysService {
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways createOrUpdate" })
+    @Host("https://management.azure.com")
+    private interface VirtualNetworkGatewaysService {
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
-        Observable<Response<ResponseBody>> createOrUpdate(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Body VirtualNetworkGatewayInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<VirtualNetworkGatewayInner>> beginCreateOrUpdate(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") VirtualNetworkGatewayInner parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginCreateOrUpdate" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
-        Observable<Response<ResponseBody>> beginCreateOrUpdate(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Body VirtualNetworkGatewayInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<VirtualNetworkGatewayInner>> createOrUpdate(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") VirtualNetworkGatewayInner parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways getByResourceGroup" })
+        @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
+        @ExpectedResponses({200, 201, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<VirtualNetworkGatewayInner>> resumeCreateOrUpdate(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
-        Observable<Response<ResponseBody>> getByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<VirtualNetworkGatewayInner>> getByResourceGroup(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways delete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> delete(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<Void>> beginDelete(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginDelete" })
-        @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}", method = "DELETE", hasBody = true)
-        Observable<Response<ResponseBody>> beginDelete(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<VoidResponse> delete(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways listByResourceGroup" })
+        @DELETE("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<Void>> resumeDelete(OperationDescription operationDescription);
+
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways")
-        Observable<Response<ResponseBody>> listByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<VirtualNetworkGatewayInner>>> listByResourceGroup(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways listConnections" })
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/connections")
-        Observable<Response<ResponseBody>> listConnections(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>>> listConnections(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways reset" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/reset")
-        Observable<Response<ResponseBody>> reset(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("gatewayVip") String gatewayVip, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<VirtualNetworkGatewayInner>> beginReset(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("gatewayVip") String gatewayVip, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginReset" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/reset")
-        Observable<Response<ResponseBody>> beginReset(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("gatewayVip") String gatewayVip, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<VirtualNetworkGatewayInner>> reset(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("gatewayVip") String gatewayVip, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways generatevpnclientpackage" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/reset")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<VirtualNetworkGatewayInner>> resumeReset(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/generatevpnclientpackage")
-        Observable<Response<ResponseBody>> generatevpnclientpackage(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Body VpnClientParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<String>> beginGeneratevpnclientpackage(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") VpnClientParameters parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginGeneratevpnclientpackage" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/generatevpnclientpackage")
-        Observable<Response<ResponseBody>> beginGeneratevpnclientpackage(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Body VpnClientParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<String>> generatevpnclientpackage(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") VpnClientParameters parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways generateVpnProfile" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/generatevpnclientpackage")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<String>> resumeGeneratevpnclientpackage(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/generatevpnprofile")
-        Observable<Response<ResponseBody>> generateVpnProfile(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Body VpnClientParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<String>> beginGenerateVpnProfile(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") VpnClientParameters parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginGenerateVpnProfile" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/generatevpnprofile")
-        Observable<Response<ResponseBody>> beginGenerateVpnProfile(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Body VpnClientParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<String>> generateVpnProfile(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @BodyParam("application/json; charset=utf-8") VpnClientParameters parameters, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways getBgpPeerStatus" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/generatevpnprofile")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<String>> resumeGenerateVpnProfile(OperationDescription operationDescription);
+
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getvpnprofilepackageurl")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<String>> beginGetVpnProfilePackageUrl(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
+
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getvpnprofilepackageurl")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<String>> getVpnProfilePackageUrl(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
+
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getvpnprofilepackageurl")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<String>> resumeGetVpnProfilePackageUrl(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getBgpPeerStatus")
-        Observable<Response<ResponseBody>> getBgpPeerStatus(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("peer") String peer, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<BgpPeerStatusListResultInner>> beginGetBgpPeerStatus(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("peer") String peer, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginGetBgpPeerStatus" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getBgpPeerStatus")
-        Observable<Response<ResponseBody>> beginGetBgpPeerStatus(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("peer") String peer, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<BgpPeerStatusListResultInner>> getBgpPeerStatus(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("peer") String peer, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways getLearnedRoutes" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getBgpPeerStatus")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<BgpPeerStatusListResultInner>> resumeGetBgpPeerStatus(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getLearnedRoutes")
-        Observable<Response<ResponseBody>> getLearnedRoutes(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<GatewayRouteListResultInner>> beginGetLearnedRoutes(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginGetLearnedRoutes" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getLearnedRoutes")
-        Observable<Response<ResponseBody>> beginGetLearnedRoutes(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<GatewayRouteListResultInner>> getLearnedRoutes(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways getAdvertisedRoutes" })
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getLearnedRoutes")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<GatewayRouteListResultInner>> resumeGetLearnedRoutes(OperationDescription operationDescription);
+
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getAdvertisedRoutes")
-        Observable<Response<ResponseBody>> getAdvertisedRoutes(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("peer") String peer, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Observable<OperationStatus<GatewayRouteListResultInner>> beginGetAdvertisedRoutes(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("peer") String peer, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways beginGetAdvertisedRoutes" })
         @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getAdvertisedRoutes")
-        Observable<Response<ResponseBody>> beginGetAdvertisedRoutes(@Path("resourceGroupName") String resourceGroupName, @Path("virtualNetworkGatewayName") String virtualNetworkGatewayName, @Path("subscriptionId") String subscriptionId, @Query("peer") String peer, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<GatewayRouteListResultInner>> getAdvertisedRoutes(@PathParam("resourceGroupName") String resourceGroupName, @PathParam("virtualNetworkGatewayName") String virtualNetworkGatewayName, @PathParam("subscriptionId") String subscriptionId, @QueryParam("peer") String peer, @QueryParam("api-version") String apiVersion, @HeaderParam("accept-language") String acceptLanguage);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways listByResourceGroupNext" })
-        @GET
-        Observable<Response<ResponseBody>> listByResourceGroupNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @POST("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworkGateways/{virtualNetworkGatewayName}/getAdvertisedRoutes")
+        @ExpectedResponses({200, 202, 204})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        @ResumeOperation
+        Observable<OperationStatus<GatewayRouteListResultInner>> resumeGetAdvertisedRoutes(OperationDescription operationDescription);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.network.VirtualNetworkGateways listConnectionsNext" })
-        @GET
-        Observable<Response<ResponseBody>> listConnectionsNext(@Url String nextUrl, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<VirtualNetworkGatewayInner>>> listNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
 
+        @GET("{nextUrl}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(CloudException.class)
+        Single<BodyResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>>> listConnectionsNext(@PathParam(value = "nextUrl", encoded = true) String nextUrl, @HeaderParam("accept-language") String acceptLanguage);
     }
 
     /**
@@ -156,13 +247,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to create or update virtual network gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner createOrUpdate(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters) {
-        return createOrUpdateWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).toBlocking().last().body();
+    public VirtualNetworkGatewayInner beginCreateOrUpdate(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters) {
+        return beginCreateOrUpdateAsync(resourceGroupName, virtualNetworkGatewayName, parameters).blockingLast().result();
     }
 
     /**
@@ -172,11 +263,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to create or update virtual network gateway operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;VirtualNetworkGatewayInner&gt; object.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> createOrUpdateAsync(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(createOrUpdateWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> beginCreateOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginCreateOrUpdateAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -185,28 +276,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to create or update virtual network gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<VirtualNetworkGatewayInner> createOrUpdateAsync(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters) {
-        return createOrUpdateWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Creates or updates a virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param parameters Parameters supplied to create or update virtual network gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> createOrUpdateWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters) {
+    public Observable<OperationStatus<VirtualNetworkGatewayInner>> beginCreateOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -221,8 +294,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.createOrUpdate(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPutOrPatchResultAsync(observable, new TypeToken<VirtualNetworkGatewayInner>() { }.getType());
+        return service.beginCreateOrUpdate(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -231,13 +303,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to create or update virtual network gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner beginCreateOrUpdate(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters) {
-        return beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).toBlocking().single().body();
+    public VirtualNetworkGatewayInner createOrUpdate(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters) {
+        return createOrUpdateAsync(resourceGroupName, virtualNetworkGatewayName, parameters).blockingGet();
     }
 
     /**
@@ -247,11 +319,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to create or update virtual network gateway operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> beginCreateOrUpdateAsync(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> createOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFuture.fromBody(createOrUpdateAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -260,28 +332,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to create or update virtual network gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<VirtualNetworkGatewayInner> beginCreateOrUpdateAsync(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters) {
-        return beginCreateOrUpdateWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Creates or updates a virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param parameters Parameters supplied to create or update virtual network gateway operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
-     */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> beginCreateOrUpdateWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, VirtualNetworkGatewayInner parameters) {
+    public Single<BodyResponse<VirtualNetworkGatewayInner>> createOrUpdateWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -296,26 +350,35 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        return service.beginCreateOrUpdate(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<VirtualNetworkGatewayInner>>>() {
-                @Override
-                public Observable<ServiceResponse<VirtualNetworkGatewayInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<VirtualNetworkGatewayInner> clientResponse = beginCreateOrUpdateDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.createOrUpdate(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<VirtualNetworkGatewayInner> beginCreateOrUpdateDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<VirtualNetworkGatewayInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<VirtualNetworkGatewayInner>() { }.getType())
-                .register(201, new TypeToken<VirtualNetworkGatewayInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Creates or updates a virtual network gateway in the specified resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param parameters Parameters supplied to create or update virtual network gateway operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<VirtualNetworkGatewayInner> createOrUpdateAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VirtualNetworkGatewayInner parameters) {
+        return createOrUpdateWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters)
+            .flatMapMaybe((BodyResponse<VirtualNetworkGatewayInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Creates or updates a virtual network gateway in the specified resource group. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<VirtualNetworkGatewayInner>> resumeCreateOrUpdate(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeCreateOrUpdate(operationDescription);
     }
 
     /**
@@ -323,13 +386,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner getByResourceGroup(String resourceGroupName, String virtualNetworkGatewayName) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().single().body();
+    public VirtualNetworkGatewayInner getByResourceGroup(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getByResourceGroupAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
     }
 
     /**
@@ -338,11 +401,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> getByResourceGroupAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getByResourceGroupWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFuture.fromBody(getByResourceGroupAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -350,27 +413,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<VirtualNetworkGatewayInner> getByResourceGroupAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Gets the specified virtual network gateway by resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
-     */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> getByResourceGroupWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Single<BodyResponse<VirtualNetworkGatewayInner>> getByResourceGroupWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -381,25 +427,20 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.getByResourceGroup(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<VirtualNetworkGatewayInner>>>() {
-                @Override
-                public Observable<ServiceResponse<VirtualNetworkGatewayInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<VirtualNetworkGatewayInner> clientResponse = getByResourceGroupDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getByResourceGroup(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<VirtualNetworkGatewayInner> getByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<VirtualNetworkGatewayInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<VirtualNetworkGatewayInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Gets the specified virtual network gateway by resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<VirtualNetworkGatewayInner> getByResourceGroupAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getByResourceGroupWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName)
+            .flatMapMaybe((BodyResponse<VirtualNetworkGatewayInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -407,12 +448,12 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void delete(String resourceGroupName, String virtualNetworkGatewayName) {
-        deleteWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().last().body();
+    public void beginDelete(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        beginDeleteAsync(resourceGroupName, virtualNetworkGatewayName).blockingLast();
     }
 
     /**
@@ -421,11 +462,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;Void&gt; object.
      */
-    public ServiceFuture<Void> deleteAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(deleteWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<Void> beginDeleteAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginDeleteAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -433,27 +474,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<Void> deleteAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return deleteWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the specified virtual network gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Observable<OperationStatus<Void>> beginDeleteAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -464,8 +488,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.delete(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<Void>() { }.getType());
+        return service.beginDelete(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -473,12 +496,12 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
-    public void beginDelete(String resourceGroupName, String virtualNetworkGatewayName) {
-        beginDeleteWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().single().body();
+    public void delete(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        deleteAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
     }
 
     /**
@@ -487,11 +510,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<Void> beginDeleteAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<Void> serviceCallback) {
-        return ServiceFuture.fromResponse(beginDeleteWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<Void> deleteAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<Void> serviceCallback) {
+        return ServiceFuture.fromBody(deleteAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -499,27 +522,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<Void> beginDeleteAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginDeleteWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<Void>, Void>() {
-            @Override
-            public Void call(ServiceResponse<Void> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Deletes the specified virtual network gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    public Observable<ServiceResponse<Void>> beginDeleteWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Single<VoidResponse> deleteWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -530,44 +536,51 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginDelete(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
-                @Override
-                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<Void> clientResponse = beginDeleteDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.delete(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<Void> beginDeleteDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
-                .register(204, new TypeToken<Void>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .register(200, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Deletes the specified virtual network gateway.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<Void> deleteAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return deleteWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName)
+            .flatMapMaybe((VoidResponse res) -> Maybe.empty());
+    }
+
+    /**
+     * Deletes the specified virtual network gateway. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<Void>> resumeDelete(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeDelete(operationDescription);
     }
 
     /**
      * Gets all virtual network gateways by resource group.
      *
      * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;VirtualNetworkGatewayInner&gt; object if successful.
      */
-    public PagedList<VirtualNetworkGatewayInner> listByResourceGroup(final String resourceGroupName) {
-        ServiceResponse<Page<VirtualNetworkGatewayInner>> response = listByResourceGroupSinglePageAsync(resourceGroupName).toBlocking().single();
-        return new PagedList<VirtualNetworkGatewayInner>(response.body()) {
+    public PagedList<VirtualNetworkGatewayInner> listByResourceGroup(@NonNull String resourceGroupName) {
+        Page<VirtualNetworkGatewayInner> response = listByResourceGroupSinglePageAsync(resourceGroupName).blockingGet();
+        return new PagedList<VirtualNetworkGatewayInner>(response) {
             @Override
             public Page<VirtualNetworkGatewayInner> nextPage(String nextPageLink) {
-                return listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -576,68 +589,29 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * Gets all virtual network gateways by resource group.
      *
      * @param resourceGroupName The name of the resource group.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;VirtualNetworkGatewayInner&gt; object.
      */
-    public ServiceFuture<List<VirtualNetworkGatewayInner>> listByResourceGroupAsync(final String resourceGroupName, final ListOperationCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listByResourceGroupSinglePageAsync(resourceGroupName),
-            new Func1<String, Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> call(String nextPageLink) {
-                    return listByResourceGroupNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all virtual network gateways by resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayInner&gt; object
-     */
-    public Observable<Page<VirtualNetworkGatewayInner>> listByResourceGroupAsync(final String resourceGroupName) {
-        return listByResourceGroupWithServiceResponseAsync(resourceGroupName)
-            .map(new Func1<ServiceResponse<Page<VirtualNetworkGatewayInner>>, Page<VirtualNetworkGatewayInner>>() {
-                @Override
-                public Page<VirtualNetworkGatewayInner> call(ServiceResponse<Page<VirtualNetworkGatewayInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all virtual network gateways by resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> listByResourceGroupWithServiceResponseAsync(final String resourceGroupName) {
+    public Observable<Page<VirtualNetworkGatewayInner>> listByResourceGroupAsync(@NonNull String resourceGroupName) {
         return listByResourceGroupSinglePageAsync(resourceGroupName)
-            .concatMap(new Func1<ServiceResponse<Page<VirtualNetworkGatewayInner>>, Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> call(ServiceResponse<Page<VirtualNetworkGatewayInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listByResourceGroupNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<VirtualNetworkGatewayInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets all virtual network gateways by resource group.
      *
-    ServiceResponse<PageImpl<VirtualNetworkGatewayInner>> * @param resourceGroupName The name of the resource group.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;VirtualNetworkGatewayInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param resourceGroupName The name of the resource group.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;VirtualNetworkGatewayInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> listByResourceGroupSinglePageAsync(final String resourceGroupName) {
+    public Single<Page<VirtualNetworkGatewayInner>> listByResourceGroupSinglePageAsync(@NonNull String resourceGroupName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -645,25 +619,8 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listByResourceGroup(resourceGroupName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<VirtualNetworkGatewayInner>> result = listByResourceGroupDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<VirtualNetworkGatewayInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<VirtualNetworkGatewayInner>> listByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<VirtualNetworkGatewayInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<VirtualNetworkGatewayInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listByResourceGroup(resourceGroupName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<VirtualNetworkGatewayInner>> res) -> res.body());
     }
 
     /**
@@ -671,17 +628,17 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object if successful.
      */
-    public PagedList<VirtualNetworkGatewayConnectionListEntityInner> listConnections(final String resourceGroupName, final String virtualNetworkGatewayName) {
-        ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>> response = listConnectionsSinglePageAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().single();
-        return new PagedList<VirtualNetworkGatewayConnectionListEntityInner>(response.body()) {
+    public PagedList<VirtualNetworkGatewayConnectionListEntityInner> listConnections(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        Page<VirtualNetworkGatewayConnectionListEntityInner> response = listConnectionsSinglePageAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
+        return new PagedList<VirtualNetworkGatewayConnectionListEntityInner>(response) {
             @Override
             public Page<VirtualNetworkGatewayConnectionListEntityInner> nextPage(String nextPageLink) {
-                return listConnectionsNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listConnectionsNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -691,71 +648,30 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object.
      */
-    public ServiceFuture<List<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsAsync(final String resourceGroupName, final String virtualNetworkGatewayName, final ListOperationCallback<VirtualNetworkGatewayConnectionListEntityInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listConnectionsSinglePageAsync(resourceGroupName, virtualNetworkGatewayName),
-            new Func1<String, Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> call(String nextPageLink) {
-                    return listConnectionsNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all the connections in a virtual network gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object
-     */
-    public Observable<Page<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsAsync(final String resourceGroupName, final String virtualNetworkGatewayName) {
-        return listConnectionsWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName)
-            .map(new Func1<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>, Page<VirtualNetworkGatewayConnectionListEntityInner>>() {
-                @Override
-                public Page<VirtualNetworkGatewayConnectionListEntityInner> call(ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all the connections in a virtual network gateway.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> listConnectionsWithServiceResponseAsync(final String resourceGroupName, final String virtualNetworkGatewayName) {
+    public Observable<Page<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         return listConnectionsSinglePageAsync(resourceGroupName, virtualNetworkGatewayName)
-            .concatMap(new Func1<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>, Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> call(ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listConnectionsNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<VirtualNetworkGatewayConnectionListEntityInner> page) -> {
+                String nextPageLink = page.nextPageLink();
+                if (nextPageLink == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listConnectionsNextAsync(nextPageLink));
             });
     }
 
     /**
      * Gets all the connections in a virtual network gateway.
      *
-    ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> * @param resourceGroupName The name of the resource group.
-    ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;VirtualNetworkGatewayConnectionListEntityInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> listConnectionsSinglePageAsync(final String resourceGroupName, final String virtualNetworkGatewayName) {
+    public Single<Page<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsSinglePageAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -766,25 +682,8 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.listConnections(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> result = listConnectionsDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listConnections(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> res) -> res.body());
     }
 
     /**
@@ -792,13 +691,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner reset(String resourceGroupName, String virtualNetworkGatewayName) {
-        return resetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().last().body();
+    public VirtualNetworkGatewayInner beginReset(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return beginResetAsync(resourceGroupName, virtualNetworkGatewayName).blockingLast().result();
     }
 
     /**
@@ -807,11 +706,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;VirtualNetworkGatewayInner&gt; object.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> resetAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(resetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> beginResetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginResetAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -819,27 +718,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<VirtualNetworkGatewayInner> resetAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return resetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Resets the primary of the virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> resetWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Observable<OperationStatus<VirtualNetworkGatewayInner>> beginResetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -851,22 +733,22 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         final String apiVersion = "2017-08-01";
         final String gatewayVip = null;
-        Observable<Response<ResponseBody>> observable = service.reset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<VirtualNetworkGatewayInner>() { }.getType());
+        return service.beginReset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage());
     }
+
     /**
      * Resets the primary of the virtual network gateway in the specified resource group.
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner reset(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip) {
-        return resetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip).toBlocking().last().body();
+    public VirtualNetworkGatewayInner beginReset(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip) {
+        return beginResetAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip).blockingLast().result();
     }
 
     /**
@@ -876,11 +758,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;VirtualNetworkGatewayInner&gt; object.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> resetAsync(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(resetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> beginResetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginResetAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip), serviceCallback);
     }
 
     /**
@@ -889,28 +771,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<VirtualNetworkGatewayInner> resetAsync(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip) {
-        return resetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Resets the primary of the virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> resetWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip) {
+    public Observable<OperationStatus<VirtualNetworkGatewayInner>> beginResetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -921,8 +785,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.reset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<VirtualNetworkGatewayInner>() { }.getType());
+        return service.beginReset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -930,13 +793,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner beginReset(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginResetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().single().body();
+    public VirtualNetworkGatewayInner reset(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return resetAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
     }
 
     /**
@@ -945,11 +808,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> beginResetAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginResetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> resetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFuture.fromBody(resetAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -957,27 +820,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<VirtualNetworkGatewayInner> beginResetAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginResetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Resets the primary of the virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
-     */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> beginResetWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Single<BodyResponse<VirtualNetworkGatewayInner>> resetWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -989,18 +835,20 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         final String apiVersion = "2017-08-01";
         final String gatewayVip = null;
-        return service.beginReset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<VirtualNetworkGatewayInner>>>() {
-                @Override
-                public Observable<ServiceResponse<VirtualNetworkGatewayInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<VirtualNetworkGatewayInner> clientResponse = beginResetDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.reset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage());
+    }
+
+    /**
+     * Resets the primary of the virtual network gateway in the specified resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<VirtualNetworkGatewayInner> resetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return resetWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName)
+            .flatMapMaybe((BodyResponse<VirtualNetworkGatewayInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -1009,13 +857,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the VirtualNetworkGatewayInner object if successful.
      */
-    public VirtualNetworkGatewayInner beginReset(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip) {
-        return beginResetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip).toBlocking().single().body();
+    public VirtualNetworkGatewayInner reset(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip) {
+        return resetAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip).blockingGet();
     }
 
     /**
@@ -1025,11 +873,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<VirtualNetworkGatewayInner> beginResetAsync(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip, final ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginResetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip), serviceCallback);
+    public ServiceFuture<VirtualNetworkGatewayInner> resetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip, ServiceCallback<VirtualNetworkGatewayInner> serviceCallback) {
+        return ServiceFuture.fromBody(resetAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip), serviceCallback);
     }
 
     /**
@@ -1038,16 +886,21 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<VirtualNetworkGatewayInner> beginResetAsync(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip) {
-        return beginResetWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip).map(new Func1<ServiceResponse<VirtualNetworkGatewayInner>, VirtualNetworkGatewayInner>() {
-            @Override
-            public VirtualNetworkGatewayInner call(ServiceResponse<VirtualNetworkGatewayInner> response) {
-                return response.body();
-            }
-        });
+    public Single<BodyResponse<VirtualNetworkGatewayInner>> resetWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip) {
+        if (resourceGroupName == null) {
+            throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
+        }
+        if (virtualNetworkGatewayName == null) {
+            throw new IllegalArgumentException("Parameter virtualNetworkGatewayName is required and cannot be null.");
+        }
+        if (this.client.subscriptionId() == null) {
+            throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
+        }
+        final String apiVersion = "2017-08-01";
+        return service.reset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1056,40 +909,26 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param gatewayVip Virtual network gateway vip address supplied to the begin reset of the active-active feature enabled gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the VirtualNetworkGatewayInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<ServiceResponse<VirtualNetworkGatewayInner>> beginResetWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, String gatewayVip) {
-        if (resourceGroupName == null) {
-            throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
-        }
-        if (virtualNetworkGatewayName == null) {
-            throw new IllegalArgumentException("Parameter virtualNetworkGatewayName is required and cannot be null.");
-        }
-        if (this.client.subscriptionId() == null) {
-            throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
-        }
-        final String apiVersion = "2017-08-01";
-        return service.beginReset(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), gatewayVip, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<VirtualNetworkGatewayInner>>>() {
-                @Override
-                public Observable<ServiceResponse<VirtualNetworkGatewayInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<VirtualNetworkGatewayInner> clientResponse = beginResetDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+    public Maybe<VirtualNetworkGatewayInner> resetAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String gatewayVip) {
+        return resetWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName, gatewayVip)
+            .flatMapMaybe((BodyResponse<VirtualNetworkGatewayInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
-    private ServiceResponse<VirtualNetworkGatewayInner> beginResetDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<VirtualNetworkGatewayInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .register(200, new TypeToken<VirtualNetworkGatewayInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Resets the primary of the virtual network gateway in the specified resource group. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<VirtualNetworkGatewayInner>> resumeReset(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeReset(operationDescription);
     }
 
     /**
@@ -1098,13 +937,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the String object if successful.
      */
-    public String generatevpnclientpackage(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return generatevpnclientpackageWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).toBlocking().last().body();
+    public String beginGeneratevpnclientpackage(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
+        return beginGeneratevpnclientpackageAsync(resourceGroupName, virtualNetworkGatewayName, parameters).blockingLast().result();
     }
 
     /**
@@ -1114,11 +953,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;String&gt; object.
      */
-    public ServiceFuture<String> generatevpnclientpackageAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters, final ServiceCallback<String> serviceCallback) {
-        return ServiceFuture.fromResponse(generatevpnclientpackageWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
+    public ServiceFuture<String> beginGeneratevpnclientpackageAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters, ServiceCallback<String> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGeneratevpnclientpackageAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -1127,28 +966,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<String> generatevpnclientpackageAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return generatevpnclientpackageWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).map(new Func1<ServiceResponse<String>, String>() {
-            @Override
-            public String call(ServiceResponse<String> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Generates VPN client package for P2S client of the virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<String>> generatevpnclientpackageWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
+    public Observable<OperationStatus<String>> beginGeneratevpnclientpackageAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1163,8 +984,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.generatevpnclientpackage(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<String>() { }.getType());
+        return service.beginGeneratevpnclientpackage(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1173,13 +993,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the String object if successful.
      */
-    public String beginGeneratevpnclientpackage(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return beginGeneratevpnclientpackageWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).toBlocking().single().body();
+    public String generatevpnclientpackage(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
+        return generatevpnclientpackageAsync(resourceGroupName, virtualNetworkGatewayName, parameters).blockingGet();
     }
 
     /**
@@ -1189,11 +1009,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<String> beginGeneratevpnclientpackageAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters, final ServiceCallback<String> serviceCallback) {
-        return ServiceFuture.fromResponse(beginGeneratevpnclientpackageWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
+    public ServiceFuture<String> generatevpnclientpackageAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters, ServiceCallback<String> serviceCallback) {
+        return ServiceFuture.fromBody(generatevpnclientpackageAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -1202,28 +1022,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the String object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<String> beginGeneratevpnclientpackageAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return beginGeneratevpnclientpackageWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).map(new Func1<ServiceResponse<String>, String>() {
-            @Override
-            public String call(ServiceResponse<String> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Generates VPN client package for P2S client of the virtual network gateway in the specified resource group.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the String object
-     */
-    public Observable<ServiceResponse<String>> beginGeneratevpnclientpackageWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
+    public Single<BodyResponse<String>> generatevpnclientpackageWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1238,25 +1040,35 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        return service.beginGeneratevpnclientpackage(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<String>>>() {
-                @Override
-                public Observable<ServiceResponse<String>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<String> clientResponse = beginGeneratevpnclientpackageDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.generatevpnclientpackage(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<String> beginGeneratevpnclientpackageDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<String, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<String>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Generates VPN client package for P2S client of the virtual network gateway in the specified resource group.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<String> generatevpnclientpackageAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
+        return generatevpnclientpackageWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters)
+            .flatMapMaybe((BodyResponse<String> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Generates VPN client package for P2S client of the virtual network gateway in the specified resource group. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<String>> resumeGeneratevpnclientpackage(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGeneratevpnclientpackage(operationDescription);
     }
 
     /**
@@ -1265,13 +1077,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the String object if successful.
      */
-    public String generateVpnProfile(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return generateVpnProfileWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).toBlocking().last().body();
+    public String beginGenerateVpnProfile(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
+        return beginGenerateVpnProfileAsync(resourceGroupName, virtualNetworkGatewayName, parameters).blockingLast().result();
     }
 
     /**
@@ -1281,11 +1093,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;String&gt; object.
      */
-    public ServiceFuture<String> generateVpnProfileAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters, final ServiceCallback<String> serviceCallback) {
-        return ServiceFuture.fromResponse(generateVpnProfileWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
+    public ServiceFuture<String> beginGenerateVpnProfileAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters, ServiceCallback<String> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGenerateVpnProfileAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -1294,28 +1106,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<String> generateVpnProfileAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return generateVpnProfileWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).map(new Func1<ServiceResponse<String>, String>() {
-            @Override
-            public String call(ServiceResponse<String> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Generates VPN profile for P2S client of the virtual network gateway in the specified resource group. Used for IKEV2 and radius based authentication.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<String>> generateVpnProfileWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
+    public Observable<OperationStatus<String>> beginGenerateVpnProfileAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1330,8 +1124,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.generateVpnProfile(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<String>() { }.getType());
+        return service.beginGenerateVpnProfile(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1340,13 +1133,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the String object if successful.
      */
-    public String beginGenerateVpnProfile(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return beginGenerateVpnProfileWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).toBlocking().single().body();
+    public String generateVpnProfile(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
+        return generateVpnProfileAsync(resourceGroupName, virtualNetworkGatewayName, parameters).blockingGet();
     }
 
     /**
@@ -1356,11 +1149,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<String> beginGenerateVpnProfileAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters, final ServiceCallback<String> serviceCallback) {
-        return ServiceFuture.fromResponse(beginGenerateVpnProfileWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
+    public ServiceFuture<String> generateVpnProfileAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters, ServiceCallback<String> serviceCallback) {
+        return ServiceFuture.fromBody(generateVpnProfileAsync(resourceGroupName, virtualNetworkGatewayName, parameters), serviceCallback);
     }
 
     /**
@@ -1369,28 +1162,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the String object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<String> beginGenerateVpnProfileAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
-        return beginGenerateVpnProfileWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters).map(new Func1<ServiceResponse<String>, String>() {
-            @Override
-            public String call(ServiceResponse<String> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Generates VPN profile for P2S client of the virtual network gateway in the specified resource group. Used for IKEV2 and radius based authentication.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the String object
-     */
-    public Observable<ServiceResponse<String>> beginGenerateVpnProfileWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, VpnClientParametersInner parameters) {
+    public Single<BodyResponse<String>> generateVpnProfileWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1405,25 +1180,160 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         Validator.validate(parameters);
         final String apiVersion = "2017-08-01";
-        return service.beginGenerateVpnProfile(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<String>>>() {
-                @Override
-                public Observable<ServiceResponse<String>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<String> clientResponse = beginGenerateVpnProfileDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.generateVpnProfile(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), parameters, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<String> beginGenerateVpnProfileDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<String, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<String>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * Generates VPN profile for P2S client of the virtual network gateway in the specified resource group. Used for IKEV2 and radius based authentication.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param parameters Parameters supplied to the generate virtual network gateway VPN client package operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<String> generateVpnProfileAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull VpnClientParameters parameters) {
+        return generateVpnProfileWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName, parameters)
+            .flatMapMaybe((BodyResponse<String> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Generates VPN profile for P2S client of the virtual network gateway in the specified resource group. Used for IKEV2 and radius based authentication. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<String>> resumeGenerateVpnProfile(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGenerateVpnProfile(operationDescription);
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the String object if successful.
+     */
+    public String beginGetVpnProfilePackageUrl(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return beginGetVpnProfilePackageUrlAsync(resourceGroupName, virtualNetworkGatewayName).blockingLast().result();
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;String&gt; object.
+     */
+    public ServiceFuture<String> beginGetVpnProfilePackageUrlAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<String> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGetVpnProfilePackageUrlAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<String>> beginGetVpnProfilePackageUrlAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        if (resourceGroupName == null) {
+            throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
+        }
+        if (virtualNetworkGatewayName == null) {
+            throw new IllegalArgumentException("Parameter virtualNetworkGatewayName is required and cannot be null.");
+        }
+        if (this.client.subscriptionId() == null) {
+            throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
+        }
+        final String apiVersion = "2017-08-01";
+        return service.beginGetVpnProfilePackageUrl(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the String object if successful.
+     */
+    public String getVpnProfilePackageUrl(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getVpnProfilePackageUrlAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
+     */
+    public ServiceFuture<String> getVpnProfilePackageUrlAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<String> serviceCallback) {
+        return ServiceFuture.fromBody(getVpnProfilePackageUrlAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Single<BodyResponse<String>> getVpnProfilePackageUrlWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        if (resourceGroupName == null) {
+            throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
+        }
+        if (virtualNetworkGatewayName == null) {
+            throw new IllegalArgumentException("Parameter virtualNetworkGatewayName is required and cannot be null.");
+        }
+        if (this.client.subscriptionId() == null) {
+            throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
+        }
+        final String apiVersion = "2017-08-01";
+        return service.getVpnProfilePackageUrl(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<String> getVpnProfilePackageUrlAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getVpnProfilePackageUrlWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName)
+            .flatMapMaybe((BodyResponse<String> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * Gets pre-generated VPN profile for P2S client of the virtual network gateway in the specified resource group. The profile needs to be generated first using generateVpnProfile. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<String>> resumeGetVpnProfilePackageUrl(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGetVpnProfilePackageUrl(operationDescription);
     }
 
     /**
@@ -1431,13 +1341,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the BgpPeerStatusListResultInner object if successful.
      */
-    public BgpPeerStatusListResultInner getBgpPeerStatus(String resourceGroupName, String virtualNetworkGatewayName) {
-        return getBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().last().body();
+    public BgpPeerStatusListResultInner beginGetBgpPeerStatus(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return beginGetBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName).blockingLast().result();
     }
 
     /**
@@ -1446,11 +1356,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;BgpPeerStatusListResultInner&gt; object.
      */
-    public ServiceFuture<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<BgpPeerStatusListResultInner> beginGetBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGetBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -1458,27 +1368,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return getBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<BgpPeerStatusListResultInner>, BgpPeerStatusListResultInner>() {
-            @Override
-            public BgpPeerStatusListResultInner call(ServiceResponse<BgpPeerStatusListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<BgpPeerStatusListResultInner>> getBgpPeerStatusWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Observable<OperationStatus<BgpPeerStatusListResultInner>> beginGetBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1490,22 +1383,22 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         final String apiVersion = "2017-08-01";
         final String peer = null;
-        Observable<Response<ResponseBody>> observable = service.getBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<BgpPeerStatusListResultInner>() { }.getType());
+        return service.beginGetBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage());
     }
+
     /**
      * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param peer The IP address of the peer to retrieve the status of.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the BgpPeerStatusListResultInner object if successful.
      */
-    public BgpPeerStatusListResultInner getBgpPeerStatus(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return getBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).toBlocking().last().body();
+    public BgpPeerStatusListResultInner beginGetBgpPeerStatus(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer) {
+        return beginGetBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName, peer).blockingLast().result();
     }
 
     /**
@@ -1515,11 +1408,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param peer The IP address of the peer to retrieve the status of.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;BgpPeerStatusListResultInner&gt; object.
      */
-    public ServiceFuture<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer, final ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
+    public ServiceFuture<BgpPeerStatusListResultInner> beginGetBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer, ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGetBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
     }
 
     /**
@@ -1528,28 +1421,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param peer The IP address of the peer to retrieve the status of.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return getBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).map(new Func1<ServiceResponse<BgpPeerStatusListResultInner>, BgpPeerStatusListResultInner>() {
-            @Override
-            public BgpPeerStatusListResultInner call(ServiceResponse<BgpPeerStatusListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer to retrieve the status of.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<BgpPeerStatusListResultInner>> getBgpPeerStatusWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
+    public Observable<OperationStatus<BgpPeerStatusListResultInner>> beginGetBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1560,8 +1435,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.getBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<BgpPeerStatusListResultInner>() { }.getType());
+        return service.beginGetBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1569,13 +1443,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the BgpPeerStatusListResultInner object if successful.
      */
-    public BgpPeerStatusListResultInner beginGetBgpPeerStatus(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginGetBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().single().body();
+    public BgpPeerStatusListResultInner getBgpPeerStatus(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
     }
 
     /**
@@ -1584,11 +1458,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<BgpPeerStatusListResultInner> beginGetBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginGetBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(getBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -1596,27 +1470,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BgpPeerStatusListResultInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<BgpPeerStatusListResultInner> beginGetBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginGetBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<BgpPeerStatusListResultInner>, BgpPeerStatusListResultInner>() {
-            @Override
-            public BgpPeerStatusListResultInner call(ServiceResponse<BgpPeerStatusListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BgpPeerStatusListResultInner object
-     */
-    public Observable<ServiceResponse<BgpPeerStatusListResultInner>> beginGetBgpPeerStatusWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Single<BodyResponse<BgpPeerStatusListResultInner>> getBgpPeerStatusWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1628,18 +1485,20 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
         }
         final String apiVersion = "2017-08-01";
         final String peer = null;
-        return service.beginGetBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<BgpPeerStatusListResultInner>>>() {
-                @Override
-                public Observable<ServiceResponse<BgpPeerStatusListResultInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<BgpPeerStatusListResultInner> clientResponse = beginGetBgpPeerStatusDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage());
+    }
+
+    /**
+     * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getBgpPeerStatusWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName)
+            .flatMapMaybe((BodyResponse<BgpPeerStatusListResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
     }
 
     /**
@@ -1648,13 +1507,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param peer The IP address of the peer to retrieve the status of.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the BgpPeerStatusListResultInner object if successful.
      */
-    public BgpPeerStatusListResultInner beginGetBgpPeerStatus(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return beginGetBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).toBlocking().single().body();
+    public BgpPeerStatusListResultInner getBgpPeerStatus(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer) {
+        return getBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName, peer).blockingGet();
     }
 
     /**
@@ -1664,11 +1523,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param peer The IP address of the peer to retrieve the status of.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<BgpPeerStatusListResultInner> beginGetBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer, final ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginGetBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
+    public ServiceFuture<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer, ServiceCallback<BgpPeerStatusListResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(getBgpPeerStatusAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
     }
 
     /**
@@ -1677,28 +1536,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param peer The IP address of the peer to retrieve the status of.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BgpPeerStatusListResultInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<BgpPeerStatusListResultInner> beginGetBgpPeerStatusAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return beginGetBgpPeerStatusWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).map(new Func1<ServiceResponse<BgpPeerStatusListResultInner>, BgpPeerStatusListResultInner>() {
-            @Override
-            public BgpPeerStatusListResultInner call(ServiceResponse<BgpPeerStatusListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer to retrieve the status of.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the BgpPeerStatusListResultInner object
-     */
-    public Observable<ServiceResponse<BgpPeerStatusListResultInner>> beginGetBgpPeerStatusWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
+    public Single<BodyResponse<BgpPeerStatusListResultInner>> getBgpPeerStatusWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1709,26 +1550,35 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginGetBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<BgpPeerStatusListResultInner>>>() {
-                @Override
-                public Observable<ServiceResponse<BgpPeerStatusListResultInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<BgpPeerStatusListResultInner> clientResponse = beginGetBgpPeerStatusDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getBgpPeerStatus(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<BgpPeerStatusListResultInner> beginGetBgpPeerStatusDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<BgpPeerStatusListResultInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<BgpPeerStatusListResultInner>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * The GetBgpPeerStatus operation retrieves the status of all BGP peers.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param peer The IP address of the peer to retrieve the status of.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<BgpPeerStatusListResultInner> getBgpPeerStatusAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, String peer) {
+        return getBgpPeerStatusWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer)
+            .flatMapMaybe((BodyResponse<BgpPeerStatusListResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * The GetBgpPeerStatus operation retrieves the status of all BGP peers. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<BgpPeerStatusListResultInner>> resumeGetBgpPeerStatus(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGetBgpPeerStatus(operationDescription);
     }
 
     /**
@@ -1736,13 +1586,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the GatewayRouteListResultInner object if successful.
      */
-    public GatewayRouteListResultInner getLearnedRoutes(String resourceGroupName, String virtualNetworkGatewayName) {
-        return getLearnedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().last().body();
+    public GatewayRouteListResultInner beginGetLearnedRoutes(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return beginGetLearnedRoutesAsync(resourceGroupName, virtualNetworkGatewayName).blockingLast().result();
     }
 
     /**
@@ -1751,11 +1601,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;GatewayRouteListResultInner&gt; object.
      */
-    public ServiceFuture<GatewayRouteListResultInner> getLearnedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getLearnedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<GatewayRouteListResultInner> beginGetLearnedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGetLearnedRoutesAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -1763,27 +1613,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<GatewayRouteListResultInner> getLearnedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return getLearnedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<GatewayRouteListResultInner>, GatewayRouteListResultInner>() {
-            @Override
-            public GatewayRouteListResultInner call(ServiceResponse<GatewayRouteListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * This operation retrieves a list of routes the virtual network gateway has learned, including routes learned from BGP peers.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<GatewayRouteListResultInner>> getLearnedRoutesWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Observable<OperationStatus<GatewayRouteListResultInner>> beginGetLearnedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1794,8 +1627,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.getLearnedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<GatewayRouteListResultInner>() { }.getType());
+        return service.beginGetLearnedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1803,13 +1635,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the GatewayRouteListResultInner object if successful.
      */
-    public GatewayRouteListResultInner beginGetLearnedRoutes(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginGetLearnedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).toBlocking().single().body();
+    public GatewayRouteListResultInner getLearnedRoutes(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getLearnedRoutesAsync(resourceGroupName, virtualNetworkGatewayName).blockingGet();
     }
 
     /**
@@ -1818,11 +1650,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<GatewayRouteListResultInner> beginGetLearnedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName, final ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginGetLearnedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
+    public ServiceFuture<GatewayRouteListResultInner> getLearnedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(getLearnedRoutesAsync(resourceGroupName, virtualNetworkGatewayName), serviceCallback);
     }
 
     /**
@@ -1830,27 +1662,10 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the GatewayRouteListResultInner object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<GatewayRouteListResultInner> beginGetLearnedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName) {
-        return beginGetLearnedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName).map(new Func1<ServiceResponse<GatewayRouteListResultInner>, GatewayRouteListResultInner>() {
-            @Override
-            public GatewayRouteListResultInner call(ServiceResponse<GatewayRouteListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * This operation retrieves a list of routes the virtual network gateway has learned, including routes learned from BGP peers.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the GatewayRouteListResultInner object
-     */
-    public Observable<ServiceResponse<GatewayRouteListResultInner>> beginGetLearnedRoutesWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName) {
+    public Single<BodyResponse<GatewayRouteListResultInner>> getLearnedRoutesWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1861,26 +1676,34 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginGetLearnedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<GatewayRouteListResultInner>>>() {
-                @Override
-                public Observable<ServiceResponse<GatewayRouteListResultInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<GatewayRouteListResultInner> clientResponse = beginGetLearnedRoutesDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getLearnedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<GatewayRouteListResultInner> beginGetLearnedRoutesDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<GatewayRouteListResultInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<GatewayRouteListResultInner>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * This operation retrieves a list of routes the virtual network gateway has learned, including routes learned from BGP peers.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<GatewayRouteListResultInner> getLearnedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName) {
+        return getLearnedRoutesWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName)
+            .flatMapMaybe((BodyResponse<GatewayRouteListResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * This operation retrieves a list of routes the virtual network gateway has learned, including routes learned from BGP peers. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<GatewayRouteListResultInner>> resumeGetLearnedRoutes(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGetLearnedRoutes(operationDescription);
     }
 
     /**
@@ -1888,14 +1711,14 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @param peer The IP address of the peer.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the GatewayRouteListResultInner object if successful.
      */
-    public GatewayRouteListResultInner getAdvertisedRoutes(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return getAdvertisedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).toBlocking().last().body();
+    public GatewayRouteListResultInner beginGetAdvertisedRoutes(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer) {
+        return beginGetAdvertisedRoutesAsync(resourceGroupName, virtualNetworkGatewayName, peer).blockingLast().result();
     }
 
     /**
@@ -1903,13 +1726,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
+     * @param peer The IP address of the peer.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the ServiceFuture&lt;GatewayRouteListResultInner&gt; object.
      */
-    public ServiceFuture<GatewayRouteListResultInner> getAdvertisedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer, final ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getAdvertisedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
+    public ServiceFuture<GatewayRouteListResultInner> beginGetAdvertisedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer, ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
+        return ServiceFutureUtil.fromLRO(beginGetAdvertisedRoutesAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
     }
 
     /**
@@ -1917,29 +1740,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
+     * @param peer The IP address of the peer.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
      */
-    public Observable<GatewayRouteListResultInner> getAdvertisedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return getAdvertisedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).map(new Func1<ServiceResponse<GatewayRouteListResultInner>, GatewayRouteListResultInner>() {
-            @Override
-            public GatewayRouteListResultInner call(ServiceResponse<GatewayRouteListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * This operation retrieves a list of routes the virtual network gateway is advertising to the specified peer.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable for the request
-     */
-    public Observable<ServiceResponse<GatewayRouteListResultInner>> getAdvertisedRoutesWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
+    public Observable<OperationStatus<GatewayRouteListResultInner>> beginGetAdvertisedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -1953,8 +1758,7 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter peer is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        Observable<Response<ResponseBody>> observable = service.getAdvertisedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage(), this.client.userAgent());
-        return client.getAzureClient().getPostOrDeleteResultAsync(observable, new TypeToken<GatewayRouteListResultInner>() { }.getType());
+        return service.beginGetAdvertisedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage());
     }
 
     /**
@@ -1962,14 +1766,14 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @param peer The IP address of the peer.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the GatewayRouteListResultInner object if successful.
      */
-    public GatewayRouteListResultInner beginGetAdvertisedRoutes(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return beginGetAdvertisedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).toBlocking().single().body();
+    public GatewayRouteListResultInner getAdvertisedRoutes(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer) {
+        return getAdvertisedRoutesAsync(resourceGroupName, virtualNetworkGatewayName, peer).blockingGet();
     }
 
     /**
@@ -1977,13 +1781,13 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
+     * @param peer The IP address of the peer.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a ServiceFuture which will be completed with the result of the network request.
      */
-    public ServiceFuture<GatewayRouteListResultInner> beginGetAdvertisedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer, final ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(beginGetAdvertisedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
+    public ServiceFuture<GatewayRouteListResultInner> getAdvertisedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer, ServiceCallback<GatewayRouteListResultInner> serviceCallback) {
+        return ServiceFuture.fromBody(getAdvertisedRoutesAsync(resourceGroupName, virtualNetworkGatewayName, peer), serviceCallback);
     }
 
     /**
@@ -1991,29 +1795,11 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      *
      * @param resourceGroupName The name of the resource group.
      * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the GatewayRouteListResultInner object
+     * @param peer The IP address of the peer.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
      */
-    public Observable<GatewayRouteListResultInner> beginGetAdvertisedRoutesAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
-        return beginGetAdvertisedRoutesWithServiceResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer).map(new Func1<ServiceResponse<GatewayRouteListResultInner>, GatewayRouteListResultInner>() {
-            @Override
-            public GatewayRouteListResultInner call(ServiceResponse<GatewayRouteListResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * This operation retrieves a list of routes the virtual network gateway is advertising to the specified peer.
-     *
-     * @param resourceGroupName The name of the resource group.
-     * @param virtualNetworkGatewayName The name of the virtual network gateway.
-     * @param peer The IP address of the peer
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the GatewayRouteListResultInner object
-     */
-    public Observable<ServiceResponse<GatewayRouteListResultInner>> beginGetAdvertisedRoutesWithServiceResponseAsync(String resourceGroupName, String virtualNetworkGatewayName, String peer) {
+    public Single<BodyResponse<GatewayRouteListResultInner>> getAdvertisedRoutesWithRestResponseAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -2027,43 +1813,52 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
             throw new IllegalArgumentException("Parameter peer is required and cannot be null.");
         }
         final String apiVersion = "2017-08-01";
-        return service.beginGetAdvertisedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<GatewayRouteListResultInner>>>() {
-                @Override
-                public Observable<ServiceResponse<GatewayRouteListResultInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<GatewayRouteListResultInner> clientResponse = beginGetAdvertisedRoutesDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.getAdvertisedRoutes(resourceGroupName, virtualNetworkGatewayName, this.client.subscriptionId(), peer, apiVersion, this.client.acceptLanguage());
     }
 
-    private ServiceResponse<GatewayRouteListResultInner> beginGetAdvertisedRoutesDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<GatewayRouteListResultInner, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<GatewayRouteListResultInner>() { }.getType())
-                .register(202, new TypeToken<Void>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+    /**
+     * This operation retrieves a list of routes the virtual network gateway is advertising to the specified peer.
+     *
+     * @param resourceGroupName The name of the resource group.
+     * @param virtualNetworkGatewayName The name of the virtual network gateway.
+     * @param peer The IP address of the peer.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return a Single which performs the network request upon subscription.
+     */
+    public Maybe<GatewayRouteListResultInner> getAdvertisedRoutesAsync(@NonNull String resourceGroupName, @NonNull String virtualNetworkGatewayName, @NonNull String peer) {
+        return getAdvertisedRoutesWithRestResponseAsync(resourceGroupName, virtualNetworkGatewayName, peer)
+            .flatMapMaybe((BodyResponse<GatewayRouteListResultInner> res) -> res.body() == null ? Maybe.empty() : Maybe.just(res.body()));
+    }
+
+    /**
+     * This operation retrieves a list of routes the virtual network gateway is advertising to the specified peer. (resume watch).
+     *
+     * @param operationDescription The OperationDescription object.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable for the request.
+     */
+    public Observable<OperationStatus<GatewayRouteListResultInner>> resumeGetAdvertisedRoutes(OperationDescription operationDescription) {
+        if (operationDescription == null) {
+            throw new IllegalArgumentException("Parameter operationDescription is required and cannot be null.");
+        }
+        return service.resumeGetAdvertisedRoutes(operationDescription);
     }
 
     /**
      * Gets all virtual network gateways by resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;VirtualNetworkGatewayInner&gt; object if successful.
      */
-    public PagedList<VirtualNetworkGatewayInner> listByResourceGroupNext(final String nextPageLink) {
-        ServiceResponse<Page<VirtualNetworkGatewayInner>> response = listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<VirtualNetworkGatewayInner>(response.body()) {
+    public PagedList<VirtualNetworkGatewayInner> listNext(@NonNull String nextPageLink) {
+        Page<VirtualNetworkGatewayInner> response = listNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<VirtualNetworkGatewayInner>(response) {
             @Override
             public Page<VirtualNetworkGatewayInner> nextPage(String nextPageLink) {
-                return listByResourceGroupNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -2072,37 +1867,18 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * Gets all virtual network gateways by resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;VirtualNetworkGatewayInner&gt; object.
      */
-    public ServiceFuture<List<VirtualNetworkGatewayInner>> listByResourceGroupNextAsync(final String nextPageLink, final ServiceFuture<List<VirtualNetworkGatewayInner>> serviceFuture, final ListOperationCallback<VirtualNetworkGatewayInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listByResourceGroupNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> call(String nextPageLink) {
-                    return listByResourceGroupNextSinglePageAsync(nextPageLink);
+    public Observable<Page<VirtualNetworkGatewayInner>> listNextAsync(@NonNull String nextPageLink) {
+        return listNextSinglePageAsync(nextPageLink)
+            .toObservable()
+            .concatMap((Page<VirtualNetworkGatewayInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all virtual network gateways by resource group.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayInner&gt; object
-     */
-    public Observable<Page<VirtualNetworkGatewayInner>> listByResourceGroupNextAsync(final String nextPageLink) {
-        return listByResourceGroupNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<VirtualNetworkGatewayInner>>, Page<VirtualNetworkGatewayInner>>() {
-                @Override
-                public Page<VirtualNetworkGatewayInner> call(ServiceResponse<Page<VirtualNetworkGatewayInner>> response) {
-                    return response.body();
-                }
+                return Observable.just(page).concatWith(listNextAsync(nextPageLink1));
             });
     }
 
@@ -2110,71 +1886,33 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * Gets all virtual network gateways by resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayInner&gt; object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;VirtualNetworkGatewayInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> listByResourceGroupNextWithServiceResponseAsync(final String nextPageLink) {
-        return listByResourceGroupNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<VirtualNetworkGatewayInner>>, Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> call(ServiceResponse<Page<VirtualNetworkGatewayInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listByResourceGroupNextWithServiceResponseAsync(nextPageLink));
-                }
-            });
-    }
-
-    /**
-     * Gets all virtual network gateways by resource group.
-     *
-    ServiceResponse<PageImpl<VirtualNetworkGatewayInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;VirtualNetworkGatewayInner&gt; object wrapped in {@link ServiceResponse} if successful.
-     */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> listByResourceGroupNextSinglePageAsync(final String nextPageLink) {
+    public Single<Page<VirtualNetworkGatewayInner>> listNextSinglePageAsync(@NonNull String nextPageLink) {
         if (nextPageLink == null) {
             throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
         }
         String nextUrl = String.format("%s", nextPageLink);
-        return service.listByResourceGroupNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<VirtualNetworkGatewayInner>> result = listByResourceGroupNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<VirtualNetworkGatewayInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<PageImpl<VirtualNetworkGatewayInner>> listByResourceGroupNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<VirtualNetworkGatewayInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<VirtualNetworkGatewayInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
+        return service.listNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<VirtualNetworkGatewayInner>> res) -> res.body());
     }
 
     /**
      * Gets all the connections in a virtual network gateway.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @throws CloudException thrown if the request is rejected by server
-     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws CloudException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object if successful.
      */
-    public PagedList<VirtualNetworkGatewayConnectionListEntityInner> listConnectionsNext(final String nextPageLink) {
-        ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>> response = listConnectionsNextSinglePageAsync(nextPageLink).toBlocking().single();
-        return new PagedList<VirtualNetworkGatewayConnectionListEntityInner>(response.body()) {
+    public PagedList<VirtualNetworkGatewayConnectionListEntityInner> listConnectionsNext(@NonNull String nextPageLink) {
+        Page<VirtualNetworkGatewayConnectionListEntityInner> response = listConnectionsNextSinglePageAsync(nextPageLink).blockingGet();
+        return new PagedList<VirtualNetworkGatewayConnectionListEntityInner>(response) {
             @Override
             public Page<VirtualNetworkGatewayConnectionListEntityInner> nextPage(String nextPageLink) {
-                return listConnectionsNextSinglePageAsync(nextPageLink).toBlocking().single().body();
+                return listConnectionsNextSinglePageAsync(nextPageLink).blockingGet();
             }
         };
     }
@@ -2183,92 +1921,34 @@ public class VirtualNetworkGatewaysInner implements InnerSupportsGet<VirtualNetw
      * Gets all the connections in a virtual network gateway.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the {@link ServiceFuture} object
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the observable to the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object.
      */
-    public ServiceFuture<List<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsNextAsync(final String nextPageLink, final ServiceFuture<List<VirtualNetworkGatewayConnectionListEntityInner>> serviceFuture, final ListOperationCallback<VirtualNetworkGatewayConnectionListEntityInner> serviceCallback) {
-        return AzureServiceFuture.fromPageResponse(
-            listConnectionsNextSinglePageAsync(nextPageLink),
-            new Func1<String, Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> call(String nextPageLink) {
-                    return listConnectionsNextSinglePageAsync(nextPageLink);
-                }
-            },
-            serviceCallback);
-    }
-
-    /**
-     * Gets all the connections in a virtual network gateway.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object
-     */
-    public Observable<Page<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsNextAsync(final String nextPageLink) {
-        return listConnectionsNextWithServiceResponseAsync(nextPageLink)
-            .map(new Func1<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>, Page<VirtualNetworkGatewayConnectionListEntityInner>>() {
-                @Override
-                public Page<VirtualNetworkGatewayConnectionListEntityInner> call(ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>> response) {
-                    return response.body();
-                }
-            });
-    }
-
-    /**
-     * Gets all the connections in a virtual network gateway.
-     *
-     * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the observable to the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object
-     */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> listConnectionsNextWithServiceResponseAsync(final String nextPageLink) {
+    public Observable<Page<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsNextAsync(@NonNull String nextPageLink) {
         return listConnectionsNextSinglePageAsync(nextPageLink)
-            .concatMap(new Func1<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>, Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> call(ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>> page) {
-                    String nextPageLink = page.body().nextPageLink();
-                    if (nextPageLink == null) {
-                        return Observable.just(page);
-                    }
-                    return Observable.just(page).concatWith(listConnectionsNextWithServiceResponseAsync(nextPageLink));
+            .toObservable()
+            .concatMap((Page<VirtualNetworkGatewayConnectionListEntityInner> page) -> {
+                String nextPageLink1 = page.nextPageLink();
+                if (nextPageLink1 == null) {
+                    return Observable.just(page);
                 }
+                return Observable.just(page).concatWith(listConnectionsNextAsync(nextPageLink1));
             });
     }
 
     /**
      * Gets all the connections in a virtual network gateway.
      *
-    ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @throws IllegalArgumentException thrown if parameters fail the validation
-     * @return the PagedList&lt;VirtualNetworkGatewayConnectionListEntityInner&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @return the Single&lt;Page&lt;VirtualNetworkGatewayConnectionListEntityInner&gt;&gt; object if successful.
      */
-    public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> listConnectionsNextSinglePageAsync(final String nextPageLink) {
+    public Single<Page<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsNextSinglePageAsync(@NonNull String nextPageLink) {
         if (nextPageLink == null) {
             throw new IllegalArgumentException("Parameter nextPageLink is required and cannot be null.");
         }
         String nextUrl = String.format("%s", nextPageLink);
-        return service.listConnectionsNext(nextUrl, this.client.acceptLanguage(), this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>>>() {
-                @Override
-                public Observable<ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> result = listConnectionsNextDelegate(response);
-                        return Observable.just(new ServiceResponse<Page<VirtualNetworkGatewayConnectionListEntityInner>>(result.body(), result.response()));
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
+        return service.listConnectionsNext(nextUrl, this.client.acceptLanguage())
+            .map((BodyResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> res) -> res.body());
     }
-
-    private ServiceResponse<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>> listConnectionsNextDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.client.restClient().responseBuilderFactory().<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>, CloudException>newInstance(this.client.serializerAdapter())
-                .register(200, new TypeToken<PageImpl<VirtualNetworkGatewayConnectionListEntityInner>>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
 }

@@ -8,52 +8,39 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for Protocol.
  */
-public final class Protocol {
-    /** Static value TCP for Protocol. */
-    public static final Protocol TCP = new Protocol("TCP");
-
-    /** Static value UDP for Protocol. */
-    public static final Protocol UDP = new Protocol("UDP");
-
-    private String value;
+public final class Protocol extends ExpandableStringEnum<Protocol> {
+    /**
+     * Static value TCP for Protocol.
+     */
+    public static final Protocol TCP = fromString("TCP");
 
     /**
-     * Creates a custom value for Protocol.
-     * @param value the custom value
+     * Static value UDP for Protocol.
      */
-    public Protocol(String value) {
-        this.value = value;
+    public static final Protocol UDP = fromString("UDP");
+
+    /**
+     * Creates or finds a Protocol from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding Protocol.
+     */
+    @JsonCreator
+    public static Protocol fromString(String name) {
+        return fromString(name, Protocol.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Protocol)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        Protocol rhs = (Protocol) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known Protocol values.
+     */
+    public static Collection<Protocol> values() {
+        return values(Protocol.class);
     }
 }

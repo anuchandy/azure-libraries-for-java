@@ -8,52 +8,39 @@
 
 package com.microsoft.azure.v2.management.network;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.microsoft.rest.v2.ExpandableStringEnum;
+import java.util.Collection;
 
 /**
  * Defines values for ApplicationGatewayRequestRoutingRuleType.
  */
-public final class ApplicationGatewayRequestRoutingRuleType {
-    /** Static value Basic for ApplicationGatewayRequestRoutingRuleType. */
-    public static final ApplicationGatewayRequestRoutingRuleType BASIC = new ApplicationGatewayRequestRoutingRuleType("Basic");
-
-    /** Static value PathBasedRouting for ApplicationGatewayRequestRoutingRuleType. */
-    public static final ApplicationGatewayRequestRoutingRuleType PATH_BASED_ROUTING = new ApplicationGatewayRequestRoutingRuleType("PathBasedRouting");
-
-    private String value;
+public final class ApplicationGatewayRequestRoutingRuleType extends ExpandableStringEnum<ApplicationGatewayRequestRoutingRuleType> {
+    /**
+     * Static value Basic for ApplicationGatewayRequestRoutingRuleType.
+     */
+    public static final ApplicationGatewayRequestRoutingRuleType BASIC = fromString("Basic");
 
     /**
-     * Creates a custom value for ApplicationGatewayRequestRoutingRuleType.
-     * @param value the custom value
+     * Static value PathBasedRouting for ApplicationGatewayRequestRoutingRuleType.
      */
-    public ApplicationGatewayRequestRoutingRuleType(String value) {
-        this.value = value;
+    public static final ApplicationGatewayRequestRoutingRuleType PATH_BASED_ROUTING = fromString("PathBasedRouting");
+
+    /**
+     * Creates or finds a ApplicationGatewayRequestRoutingRuleType from its string representation.
+     *
+     * @param name a name to look for.
+     * @return the corresponding ApplicationGatewayRequestRoutingRuleType.
+     */
+    @JsonCreator
+    public static ApplicationGatewayRequestRoutingRuleType fromString(String name) {
+        return fromString(name, ApplicationGatewayRequestRoutingRuleType.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ApplicationGatewayRequestRoutingRuleType)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        ApplicationGatewayRequestRoutingRuleType rhs = (ApplicationGatewayRequestRoutingRuleType) obj;
-        if (value == null) {
-            return rhs.value == null;
-        } else {
-            return value.equals(rhs.value);
-        }
+    /**
+     * @return known ApplicationGatewayRequestRoutingRuleType values.
+     */
+    public static Collection<ApplicationGatewayRequestRoutingRuleType> values() {
+        return values(ApplicationGatewayRequestRoutingRuleType.class);
     }
 }

@@ -8,12 +8,12 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.microsoft.azure.v2.SubResource;
 import com.microsoft.azure.v2.management.network.Access;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
 import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.SubResource;
 
 /**
  * Route Filter Rule Resource.
@@ -82,7 +82,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the access value.
      *
-     * @return the access value
+     * @return the access value.
      */
     public Access access() {
         return this.access;
@@ -91,7 +91,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Set the access value.
      *
-     * @param access the access value to set
+     * @param access the access value to set.
      * @return the RouteFilterRuleInner object itself.
      */
     public RouteFilterRuleInner withAccess(Access access) {
@@ -102,7 +102,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the routeFilterRuleType value.
      *
-     * @return the routeFilterRuleType value
+     * @return the routeFilterRuleType value.
      */
     public String routeFilterRuleType() {
         return this.routeFilterRuleType;
@@ -111,7 +111,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Set the routeFilterRuleType value.
      *
-     * @param routeFilterRuleType the routeFilterRuleType value to set
+     * @param routeFilterRuleType the routeFilterRuleType value to set.
      * @return the RouteFilterRuleInner object itself.
      */
     public RouteFilterRuleInner withRouteFilterRuleType(String routeFilterRuleType) {
@@ -122,7 +122,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the communities value.
      *
-     * @return the communities value
+     * @return the communities value.
      */
     public List<String> communities() {
         return this.communities;
@@ -131,7 +131,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Set the communities value.
      *
-     * @param communities the communities value to set
+     * @param communities the communities value to set.
      * @return the RouteFilterRuleInner object itself.
      */
     public RouteFilterRuleInner withCommunities(List<String> communities) {
@@ -142,7 +142,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the provisioningState value.
      *
-     * @return the provisioningState value
+     * @return the provisioningState value.
      */
     public String provisioningState() {
         return this.provisioningState;
@@ -151,7 +151,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the name value.
      *
-     * @return the name value
+     * @return the name value.
      */
     public String name() {
         return this.name;
@@ -160,7 +160,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Set the name value.
      *
-     * @param name the name value to set
+     * @param name the name value to set.
      * @return the RouteFilterRuleInner object itself.
      */
     public RouteFilterRuleInner withName(String name) {
@@ -171,7 +171,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the location value.
      *
-     * @return the location value
+     * @return the location value.
      */
     public String location() {
         return this.location;
@@ -180,7 +180,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Set the location value.
      *
-     * @param location the location value to set
+     * @param location the location value to set.
      * @return the RouteFilterRuleInner object itself.
      */
     public RouteFilterRuleInner withLocation(String location) {
@@ -191,7 +191,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the etag value.
      *
-     * @return the etag value
+     * @return the etag value.
      */
     public String etag() {
         return this.etag;
@@ -200,7 +200,7 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Get the tags value.
      *
-     * @return the tags value
+     * @return the tags value.
      */
     public Map<String, String> tags() {
         return this.tags;
@@ -209,12 +209,11 @@ public class RouteFilterRuleInner extends SubResource {
     /**
      * Set the tags value.
      *
-     * @param tags the tags value to set
+     * @param tags the tags value to set.
      * @return the RouteFilterRuleInner object itself.
      */
     public RouteFilterRuleInner withTags(Map<String, String> tags) {
         this.tags = tags;
         return this;
     }
-
 }

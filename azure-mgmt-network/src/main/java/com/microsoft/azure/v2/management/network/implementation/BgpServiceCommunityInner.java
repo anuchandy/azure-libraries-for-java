@@ -8,16 +8,17 @@
 
 package com.microsoft.azure.v2.management.network.implementation;
 
-import java.util.List;
-import com.microsoft.azure.v2.management.network.BGPCommunity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
+import com.microsoft.azure.v2.Resource;
+import com.microsoft.azure.v2.management.network.BGPCommunity;
+import com.microsoft.rest.v2.serializer.JsonFlatten;
+import java.util.List;
 
 /**
  * Service Community Properties.
  */
 @JsonFlatten
+@SkipParentValidation
 public class BgpServiceCommunityInner extends Resource {
     /**
      * The name of the bgp community. e.g. Skype.
@@ -32,9 +33,15 @@ public class BgpServiceCommunityInner extends Resource {
     private List<BGPCommunity> bgpCommunities;
 
     /**
+     * Resource ID.
+     */
+    @JsonProperty(value = "id")
+    private String id;
+
+    /**
      * Get the serviceName value.
      *
-     * @return the serviceName value
+     * @return the serviceName value.
      */
     public String serviceName() {
         return this.serviceName;
@@ -43,7 +50,7 @@ public class BgpServiceCommunityInner extends Resource {
     /**
      * Set the serviceName value.
      *
-     * @param serviceName the serviceName value to set
+     * @param serviceName the serviceName value to set.
      * @return the BgpServiceCommunityInner object itself.
      */
     public BgpServiceCommunityInner withServiceName(String serviceName) {
@@ -54,7 +61,7 @@ public class BgpServiceCommunityInner extends Resource {
     /**
      * Get the bgpCommunities value.
      *
-     * @return the bgpCommunities value
+     * @return the bgpCommunities value.
      */
     public List<BGPCommunity> bgpCommunities() {
         return this.bgpCommunities;
@@ -63,7 +70,7 @@ public class BgpServiceCommunityInner extends Resource {
     /**
      * Set the bgpCommunities value.
      *
-     * @param bgpCommunities the bgpCommunities value to set
+     * @param bgpCommunities the bgpCommunities value to set.
      * @return the BgpServiceCommunityInner object itself.
      */
     public BgpServiceCommunityInner withBgpCommunities(List<BGPCommunity> bgpCommunities) {
@@ -71,4 +78,23 @@ public class BgpServiceCommunityInner extends Resource {
         return this;
     }
 
+    /**
+     * Get the id value.
+     *
+     * @return the id value.
+     */
+    public String id() {
+        return this.id;
+    }
+
+    /**
+     * Set the id value.
+     *
+     * @param id the id value to set.
+     * @return the BgpServiceCommunityInner object itself.
+     */
+    public BgpServiceCommunityInner withId(String id) {
+        this.id = id;
+        return this;
+    }
 }
