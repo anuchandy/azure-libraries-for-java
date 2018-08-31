@@ -10,7 +10,6 @@ package com.microsoft.azure.v2.management.network.implementation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microsoft.azure.v2.Resource;
-import com.microsoft.azure.v2.management.network.ApplicationGatewayAuthenticationCertificate;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayBackendHttpSettings;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendIPConfiguration;
 import com.microsoft.azure.v2.management.network.ApplicationGatewayFrontendPort;
@@ -63,7 +62,7 @@ public class ApplicationGatewayInner extends Resource {
      * Authentication certificates of the application gateway resource.
      */
     @JsonProperty(value = "properties.authenticationCertificates")
-    private List<ApplicationGatewayAuthenticationCertificate> authenticationCertificates;
+    private List<ApplicationGatewayAuthenticationCertificateInner> authenticationCertificates;
 
     /**
      * SSL certificates of the application gateway resource.
@@ -230,7 +229,7 @@ public class ApplicationGatewayInner extends Resource {
      *
      * @return the authenticationCertificates value.
      */
-    public List<ApplicationGatewayAuthenticationCertificate> authenticationCertificates() {
+    public List<ApplicationGatewayAuthenticationCertificateInner> authenticationCertificates() {
         return this.authenticationCertificates;
     }
 
@@ -241,7 +240,7 @@ public class ApplicationGatewayInner extends Resource {
      * to set.
      * @return the ApplicationGatewayInner object itself.
      */
-    public ApplicationGatewayInner withAuthenticationCertificates(List<ApplicationGatewayAuthenticationCertificate> authenticationCertificates) {
+    public ApplicationGatewayInner withAuthenticationCertificates(List<ApplicationGatewayAuthenticationCertificateInner> authenticationCertificates) {
         this.authenticationCertificates = authenticationCertificates;
         return this;
     }
